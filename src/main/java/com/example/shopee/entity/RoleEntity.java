@@ -26,4 +26,20 @@ public class RoleEntity extends AbstractEntity {
     @EqualsAndHashCode.Exclude
     private Set<UserEntity> userEntities;
 
+	public RoleEnum getName() {
+		return name;
+	}
+
+	public void setName(RoleEnum name) {
+		this.name = name;
+	}
+
+	public Set<UserEntity> getUserEntities() {
+		return userEntities;
+	}
+
+	public void setUserEntities(Set<UserEntity> userEntities) {
+		this.userEntities = userEntities;
+	}
+
 }

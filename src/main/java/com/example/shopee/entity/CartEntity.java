@@ -29,4 +29,30 @@ public class CartEntity extends AbstractEntity{
     @ToString.Exclude
     private Set<CartDetailEntity> cartDetailEntities;
 
+	public BigDecimal getTotalCost() {
+		return totalCost;
+	}
+
+	public void setTotalCost(BigDecimal totalCost) {
+		this.totalCost = totalCost;
+	}
+
+	public UserEntity getUserEntity() {
+		return userEntity;
+	}
+
+	public void setUserEntity(UserEntity userEntity) {
+		this.userEntity = userEntity;
+	}
+
+	public Set<CartDetailEntity> getCartDetailEntities() {
+		return cartDetailEntities;
+	}
+
+	public void setCartDetailEntities(Set<CartDetailEntity> cartDetailEntities) {
+		this.cartDetailEntities = cartDetailEntities;
+	}
+    
+    
+
 }
