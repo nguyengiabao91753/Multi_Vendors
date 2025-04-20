@@ -41,6 +41,11 @@ public class ProductEntity extends AbstractEntity{
     @EqualsAndHashCode.Exclude
     private CategoryEntity categoryEntity;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @EqualsAndHashCode.Exclude
+    private UserEntity user;
+
     @OneToMany(mappedBy = "productEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

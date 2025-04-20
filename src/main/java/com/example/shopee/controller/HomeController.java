@@ -17,12 +17,12 @@ public class HomeController {
 
     @GetMapping("")
     private String indexHome(Model model) {
-        return "index";
+        return "redirect:/index";
     }
 
     @GetMapping("/home")
     private String homePage(Model model) {
-        return "index";
+        return "redirect:/index";
     }
 
     @GetMapping("/index")
@@ -31,10 +31,10 @@ public class HomeController {
         Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         if (authorities.stream().anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()))) {
             model.addAttribute("email", SecurityContextHolder.getContext().getAuthentication().getName());
-            return "redirect:/admin/home";
+            return "redirect:/admin/dashboard";
         } else if (authorities.stream().anyMatch(authority -> "ROLE_VENDOR".equals(authority.getAuthority()))) {
             model.addAttribute("email", SecurityContextHolder.getContext().getAuthentication().getName());
-            return "redirect:/vendor/home";
+            return "redirect:/vendor/dashboard";
         } else {
             if (!Objects.equals(username, "")) {
                 model.addAttribute("email", SecurityContextHolder.getContext().getAuthentication().getName());

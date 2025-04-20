@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `shopee` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `shopee`;
 -- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
 --
 -- Host: localhost    Database: shopee
@@ -97,7 +95,7 @@ CREATE TABLE `categories` (
   `updated_by` varchar(255) DEFAULT NULL,
   `category_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -106,6 +104,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
+INSERT INTO `categories` VALUES (1,NULL,NULL,NULL,NULL,NULL,'Điện thoại'),(2,NULL,NULL,NULL,NULL,NULL,'Quần'),(3,NULL,NULL,NULL,NULL,NULL,'Áo'),(4,NULL,NULL,NULL,NULL,NULL,'Giày');
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -269,10 +268,13 @@ CREATE TABLE `products` (
   `sale_price` decimal(38,2) DEFAULT NULL,
   `thumbnail` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `category_id` bigint DEFAULT NULL,
+  `user_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKog2rp4qthbtt2lfyhfo32lsw9` (`category_id`),
+  KEY `FKdb050tk37qryv15hd932626th` (`user_id`),
+  CONSTRAINT `FKdb050tk37qryv15hd932626th` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `FKog2rp4qthbtt2lfyhfo32lsw9` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -281,6 +283,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
+INSERT INTO `products` VALUES (1,NULL,NULL,1,NULL,NULL,12,'RAM:	6GB\r\nBộ nhớ trong:	128-256-512GB\r\nThẻ SIM:	2 SIM\r\nDung lượng pin:	Li-Ion 3687 mAh\r\nSạc nhanh PD2.0, 50% trong 30ph (quảng cáo)\r\nSạc không dây Qi2 15W (iOS 17.4)\r\nMagSafe không dây 15W',11000000.00,'Điện thoại iPhone 12 Pro Max cũ',10000000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745159238/iwzsrjhebbndeha6xy2b.png',1,1),(2,NULL,NULL,1,NULL,NULL,12,'CPU: 	Qualcomm SM8550 Snapdragon 8 Gen 2 (4 nm)\r\n8 nhân (1x3.2 GHz & 2x2.8 GHz & 2x2.8 GHz & 3x2.0 GHz)\r\nGPU: Adreno 740\r\nRAM: 	8-12GB, LPDDR5X\r\nBộ nhớ trong: 	128GB (UFS 3.1 - 2.2GB/s)\r\n256GB/512GB (UFS 4.0 - 3.5GB/s)',10000000.00,'Xiaomi 13 Pro',9000000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160190/yewmfio5sf91ofi9u50n.png',2,4),(3,NULL,NULL,1,NULL,NULL,11,'Điện thoại iPhone 11 Pro Max cũ',6000000.00,'Điện thoại iPhone 11 Pro Max cũ',5000000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160491/k968ibp2ws1rxjyulprb.png',1,1),(4,NULL,NULL,1,NULL,NULL,12,'Giày nam size 42',500000.00,'Giày nam đen',400000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160705/vizezir2vhfqxgx9clpr.jpg',4,3),(5,NULL,NULL,1,NULL,NULL,11,'Áo Polo Vải Dry Pique Ngắn Tay 1',500000.00,'Áo Polo Vải Dry Pique Ngắn Tay 1',300000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160787/risgbcqfogw9bl4ccohd.jpg',3,4);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -337,7 +340,7 @@ CREATE TABLE `user_role` (
 
 LOCK TABLES `user_role` WRITE;
 /*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
-INSERT INTO `user_role` VALUES (1,3),(2,3);
+INSERT INTO `user_role` VALUES (3,1),(4,2),(1,3),(2,3);
 /*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -367,7 +370,7 @@ CREATE TABLE `users` (
   UNIQUE KEY `UK6dotkott2kjsp8vw4d0m25fb7` (`email`),
   UNIQUE KEY `UKpnp1baae4enifkkuq2cd01r9l` (`cart_id`),
   CONSTRAINT `FKqmifheg6lnigfifvlmpjnuny8` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -376,7 +379,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,NULL,'ADMIN',1,NULL,'ADMIN',NULL,NULL,NULL,'chuyendizz@gmail.com',NULL,'$2a$10$dhTh/g/sgKmENUvDBYatbufUcBfGy2wwaVlyMU.UqXxYTwzfUsE86','6308348000',NULL),(2,NULL,'ADMIN',1,NULL,'ADMIN',NULL,NULL,NULL,'phamminhhiep0402@gmail.com',NULL,'$2a$10$KWtPamXHqnTueHNTXZLgtuZHUKTbASsUWlCK3xta6./uDz/kD4zZq','0912345566',NULL);
+INSERT INTO `users` VALUES (1,NULL,'ADMIN',1,NULL,'ADMIN',NULL,NULL,NULL,'chuyendizz@gmail.com',NULL,'$2a$10$dhTh/g/sgKmENUvDBYatbufUcBfGy2wwaVlyMU.UqXxYTwzfUsE86','6308348000',NULL),(2,NULL,'ADMIN',1,NULL,'ADMIN',NULL,NULL,NULL,'phamminhhiep0402@gmail.com',NULL,'$2a$10$KWtPamXHqnTueHNTXZLgtuZHUKTbASsUWlCK3xta6./uDz/kD4zZq','0912345566',NULL),(3,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'admin@gmail.com',NULL,'$2a$12$ChoekAKeHq6SQpkZjN2nc.F6MYO96osDdDcgjxLNU5HUBlE9pkYba',NULL,NULL),(4,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'vendor@gmail.com',NULL,'$2a$12$ChoekAKeHq6SQpkZjN2nc.F6MYO96osDdDcgjxLNU5HUBlE9pkYba',NULL,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -430,4 +433,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-12 21:34:21
+-- Dump completed on 2025-04-20 22:03:15

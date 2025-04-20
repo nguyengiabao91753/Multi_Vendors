@@ -62,6 +62,10 @@ public class UserEntity extends AbstractEntity {
     @ToString.Exclude
     private Set<FeedbackEntity> feedbackEntities;
 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@EqualsAndHashCode.Exclude
+	@ToString.Exclude
+	private Set<ProductEntity> productEntities;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonIgnore

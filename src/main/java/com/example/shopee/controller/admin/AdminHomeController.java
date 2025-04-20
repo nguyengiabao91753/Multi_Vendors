@@ -11,8 +11,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/admin")
 public class AdminHomeController {
 
-    @GetMapping("/home")
+    @GetMapping("/dashboard")
     public String home(Model model) {
         return "admin/dashboard";
     }
+
+
 }

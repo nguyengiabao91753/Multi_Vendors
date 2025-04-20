@@ -75,7 +75,7 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/index", true)
                         .failureUrl("/loginError")
                 )
-                .authorizeHttpRequests(at ->at.requestMatchers("/home", "/login/**", "/login-google", "/","/register","/save","re-send", "/image/**", "/js/**", "/lib/**", "/style/**","/slider/**",
+                .authorizeHttpRequests(at ->at.requestMatchers("/home", "/login/**", "/login-google", "/","/register","/save","re-send", "/image/**", "/js/**", "/lib/**", "/style/**","/slider/**", "/css/**",
                                 "/api/storage/**","recover","send-otp-recover","otp-check","confirm-otp","send-otp-recover","confirm-otp-recover",
                              "/client/payment/pay", "/productListClient/**",  "save-new-password","detail","change-password","save-change-password", "/users/**",
                                 "/assets/**", "/assets_admin/**", "/client_assets/**", "/index/**", "/product/**", "/guest/**").permitAll()
