@@ -20,4 +20,21 @@ public class CategoryEntity extends AbstractEntity {
     @ToString.Exclude
     private Set<ProductEntity> productEntities;
 
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
+	public Set<ProductEntity> getProductEntities() {
+		return productEntities;
+	}
+
+	public void setProductEntities(Set<ProductEntity> productEntities) {
+		this.productEntities = productEntities;
+	}
+    
+    
 }
