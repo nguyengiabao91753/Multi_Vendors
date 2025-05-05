@@ -34,4 +34,10 @@ public class OrderEntity extends AbstractEntity{
     @ToString.Exclude
     private Set<OrderDetailEntity> orderDetailEntities;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @EqualsAndHashCode.Exclude
+    private UserEntity userEntity;
+
+
 }

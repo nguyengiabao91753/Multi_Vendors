@@ -1,11 +1,14 @@
 package com.example.shopee.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -15,10 +18,6 @@ public class ProductEntity extends AbstractEntity{
     @Basic
     @Column(length = 255,name = "product_name", nullable = true,  columnDefinition = "nvarchar(255)")
     private String productName;
-
-    @Basic
-    @Column(name = "thumbnail", nullable = true, length = 255, columnDefinition = "nvarchar(255)")
-    private String thumbnail;
 
     @Basic
     @Column(name = "description", nullable = true, length = 255, columnDefinition = "nvarchar(255)")
@@ -36,14 +35,25 @@ public class ProductEntity extends AbstractEntity{
     @Column(name = "sale_price", nullable = true)
     private BigDecimal salePrice;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
+    @ManyToMany
+    @JoinTable(
+            name = "product_category",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
     @EqualsAndHashCode.Exclude
-    private CategoryEntity categoryEntity;
+    @ToString.Exclude
+    @JsonManagedReference
+    private List<CategoryEntity> categories;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<ProductImageEntity> productImage;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     @EqualsAndHashCode.Exclude
+    @JsonBackReference
     private UserEntity user;
 
     @OneToMany(mappedBy = "productEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)

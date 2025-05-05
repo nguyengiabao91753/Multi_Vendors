@@ -2,12 +2,15 @@ package com.example.shopee.controller.vendor;
 
 import com.example.shopee.entity.CategoryEntity;
 import com.example.shopee.entity.ProductEntity;
+import com.example.shopee.entity.ProductImageEntity;
 import com.example.shopee.entity.UserEntity;
 import com.example.shopee.payload.dto.ProductDto;
 import com.example.shopee.repository.CategoryRepository;
+import com.example.shopee.repository.ProductImageRepository;
 import com.example.shopee.repository.ProductRepository;
 import com.example.shopee.repository.UserRepository;
 import com.example.shopee.service.CloudinaryService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -16,8 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -28,6 +30,9 @@ public class VendorProductController {
     private ProductRepository productRepository;
 
     @Autowired
+    private ProductImageRepository productImageRepository;
+
+    @Autowired
     private CategoryRepository categoryRepository;
 
     @Autowired
@@ -36,20 +41,53 @@ public class VendorProductController {
     @Autowired
     private CloudinaryService cloudinaryService;
 
-    // Hiển thị danh sách sản phẩm
     @GetMapping("")
-    public String productPage(Model model) {
+    public String productPage(Model model,
+                              @RequestParam(value = "categoryId", required = false) Long categoryId,
+                              @RequestParam(value = "status", required = false) Integer status,
+                              @RequestParam(value = "page", defaultValue = "0") int page,
+                              @RequestParam(value = "size", defaultValue = "5") int size) {
+
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity user = userRepository.findByEmail(email).get();
 
-        List<ProductDto> products = productRepository.findAllByUserId(user.getId())
-                .stream()
+
+        List<ProductEntity> productEntities = productRepository.findAllByUserId(user.getId());
+
+        if (categoryId != null) {
+            productEntities = productEntities.stream()
+                    .filter(p -> p.getCategories().stream().anyMatch(c -> c.getId().equals(categoryId)))
+                    .collect(Collectors.toList());
+        }
+
+        if (status != null) {
+            productEntities = productEntities.stream()
+                    .filter(p -> p.getStatus() == status)
+                    .collect(Collectors.toList());
+        }
+
+        int totalItems = productEntities.size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        int start = page * size;
+        int end = Math.min(start + size, totalItems);
+
+        List<ProductDto> products = productEntities.subList(start, end).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
 
         model.addAttribute("products", products);
+        model.addAttribute("categories", categoryRepository.findAll());
+
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("status", status);
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
         return "vendor/product/list";
     }
+
 
     @GetMapping("/insert")
     public String insertProductPage(Model model) {
@@ -60,20 +98,33 @@ public class VendorProductController {
 
     @PostMapping("/save")
     public String save(@ModelAttribute("product") ProductDto dto,
-                       @RequestParam("file") MultipartFile file) {
-
-
-        String urlImg = "";
-        if (!file.isEmpty()) {
-            urlImg = cloudinaryService.uploadFile(file);
-        }
+                       @ModelAttribute("listImage") MultipartFile[] listImage) {
         ProductEntity entity = convertToEntity(dto);
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity user = userRepository.findByEmail(email).get();
         entity.setUser(user);
-        entity.setThumbnail(urlImg);
         entity.setStatus(0);
-        productRepository.save(entity);
+
+        List<CategoryEntity> categories = new ArrayList<>();
+        if (dto.getCategoryIds() != null) {
+            for (Long categoryId : dto.getCategoryIds()) {
+                categoryRepository.findById(categoryId).ifPresent(categories::add);
+            }
+        }
+        entity.setCategories(categories);
+
+        ProductEntity save = productRepository.save(entity);
+
+        if (listImage.length != 0) {
+            for (MultipartFile y : listImage) {
+                String urlImg = cloudinaryService.uploadFile(y);
+                ProductImageEntity img = new ProductImageEntity();
+                img.setProduct(save);
+                img.setUrl_Image(urlImg);
+                productImageRepository.save(img);
+            }
+        }
+
         return "redirect:/vendor/product";
     }
 
@@ -92,37 +143,45 @@ public class VendorProductController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute("product") ProductDto dto,
-                         @RequestParam("file") MultipartFile file) {
+                         @ModelAttribute("listImage") MultipartFile[] listImage) {
         ProductEntity entity = productRepository.findById(dto.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Sản phẩm không tồn tại"));
-
-        UserEntity user = entity.getUser();
-
-        if (!file.isEmpty()) {
-            String urlImg = cloudinaryService.uploadFile(file);
-            entity.setThumbnail(urlImg);
-        } else {
-            entity.setThumbnail(entity.getThumbnail());
-        }
 
         entity.setProductName(dto.getProductName());
         entity.setDescription(dto.getDescription());
         entity.setAmount(dto.getAmount());
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = userRepository.findByEmail(email).get();
+        entity.setUser(user);
         entity.setPrice(dto.getPrice() != null ? dto.getPrice() : BigDecimal.ZERO);
         entity.setSalePrice(dto.getSalePrice() != null ? dto.getSalePrice() : BigDecimal.ZERO);
-        entity.setStatus(dto.getStatus());
 
-        if (dto.getCategoryId() != null) {
-            Optional<CategoryEntity> category = categoryRepository.findById(dto.getCategoryId());
-            category.ifPresent(entity::setCategoryEntity);
+        List<CategoryEntity> categories = new ArrayList<>();
+        if (dto.getCategoryIds() != null) {
+            for (Long categoryId : dto.getCategoryIds()) {
+                categoryRepository.findById(categoryId).ifPresent(categories::add);
+            }
+        }
+        entity.setCategories(categories);
+
+        ProductEntity save = productRepository.save(entity);
+
+        if (listImage != null) {
+            for (MultipartFile y : listImage) {
+                if (!y.isEmpty()) {
+                    String urlImg = cloudinaryService.uploadFile(y);
+                    ProductImageEntity img = new ProductImageEntity();
+                    img.setProduct(save);
+                    img.setUrl_Image(urlImg);
+                    productImageRepository.save(img);
+                }
+            }
         }
 
         productRepository.save(entity);
 
         return "redirect:/vendor/product/update/" + dto.getId();
     }
-
-
 
 
     @GetMapping("/delete/{id}")
@@ -139,11 +198,25 @@ public class VendorProductController {
         dto.setAmount(entity.getAmount());
         dto.setPrice(entity.getPrice());
         dto.setSalePrice(entity.getSalePrice());
-        dto.setThumbnail(entity.getThumbnail());
         dto.setStatus(entity.getStatus());
         dto.setEmail(entity.getUser().getEmail());
-        dto.setCategoryId(entity.getCategoryEntity() != null ? entity.getCategoryEntity().getId() : null);
-        dto.setCategoryName(entity.getCategoryEntity() != null ? entity.getCategoryEntity().getCategoryName() : "");
+        dto.setProductImage(entity.getProductImage());
+        if (entity.getCategories() != null) {
+            List<Long> categoryIds = entity.getCategories()
+                    .stream()
+                    .map(CategoryEntity::getId)
+                    .collect(Collectors.toList());
+            dto.setCategoryIds(categoryIds);
+        }
+
+        dto.setCategoryNames(entity.getCategories().stream()
+                .map(CategoryEntity::getCategoryName)
+                .collect(Collectors.toList()));
+
+        dto.setImageUrls(entity.getProductImage().stream()
+                .map(ProductImageEntity::getUrl_Image)
+                .collect(Collectors.toList()));
+
         return dto;
     }
 
@@ -155,13 +228,22 @@ public class VendorProductController {
         entity.setAmount(dto.getAmount());
         entity.setPrice(dto.getPrice() != null ? dto.getPrice() : BigDecimal.ZERO);
         entity.setSalePrice(dto.getSalePrice() != null ? dto.getSalePrice() : BigDecimal.ZERO);
-        entity.setThumbnail(dto.getThumbnail());
         entity.setStatus(dto.getStatus());
+        entity.setProductImage(dto.getProductImage());
 
-        if (dto.getCategoryId() != null) {
-            Optional<CategoryEntity> category = categoryRepository.findById(dto.getCategoryId());
-            category.ifPresent(entity::setCategoryEntity);
+        if (dto.getCategoryIds() != null) {
+            List<CategoryEntity> categories = categoryRepository.findAllById(dto.getCategoryIds());
+            entity.setCategories(categories);
         }
+
         return entity;
     }
+
+    @GetMapping("/delete-image/{id}")
+    public String DeleteImage(@PathVariable Long id, HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        productImageRepository.deleteById(id);
+        return "redirect:" + referer;
+    }
+
 }

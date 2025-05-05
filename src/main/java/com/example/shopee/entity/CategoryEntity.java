@@ -1,10 +1,13 @@
 package com.example.shopee.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -15,9 +18,10 @@ public class CategoryEntity extends AbstractEntity {
     @Column(name = "CategoryName", nullable = true, length = 255, columnDefinition = "nvarchar(255)")
     private String categoryName;
 
-    @OneToMany(mappedBy = "categoryEntity", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "categories")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+
     private Set<ProductEntity> productEntities;
 
 	public String getCategoryName() {
@@ -37,4 +41,7 @@ public class CategoryEntity extends AbstractEntity {
 	}
     
     
+
+    @JsonBackReference
+    private List<ProductEntity> products;
 }

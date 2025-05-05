@@ -15,6 +15,10 @@
                 </div>
                 <div class="card-body">
                     <form th:action="@{/admin/category/save}" method="post">
+                        <div th:if="${error}" class="alert alert-danger">
+                            <p th:text="${error}"></p>
+                        </div>
+
                         <div class="mb-3">
                             <label class="form-label">Tên danh mục</label>
                             <input type="text" class="form-control" th:field="*{category.categoryName}" placeholder="Nhập tên danh mục" required>
