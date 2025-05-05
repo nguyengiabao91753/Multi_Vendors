@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin/category")
@@ -17,7 +18,6 @@ public class AdminCategoryController {
     private CategoryRepository categoryRepository;
 
 
-    // List all categories
     @GetMapping("")
     public String categoryPage(Model model) {
         List<CategoryEntity> categories = categoryRepository.findAll();
@@ -25,7 +25,6 @@ public class AdminCategoryController {
         return "admin/category/list";
     }
 
-    // Show form to insert a new category
     @GetMapping("/insertCategoryPage")
     public String insertCategoryPage(Model model) {
         CategoryEntity categoryEntity = new CategoryEntity();
@@ -33,14 +32,18 @@ public class AdminCategoryController {
         return "admin/category/insert";
     }
 
-    // Save a new category
     @PostMapping("/save")
-    public String save(@ModelAttribute(name = "category") CategoryEntity categoryEntity) {
+    public String save(@ModelAttribute(name = "category") CategoryEntity categoryEntity, Model model) {
+        Optional<CategoryEntity> existingCategory = categoryRepository.findByCategoryName(categoryEntity.getCategoryName());
+        if (existingCategory.isPresent()) {
+            model.addAttribute("error", "Danh mục này đã tồn tại.");
+            return "admin/category/insert";
+        }
+
         categoryRepository.save(categoryEntity);
         return "redirect:/admin/category";
     }
 
-    // Show form to update an existing category
     @GetMapping("/updateCategory/{id}")
     public String getFormUpdateCategory(@PathVariable("id") Long id, Model model) {
         CategoryEntity categoryEntity = categoryRepository.findById(id).get();
@@ -48,14 +51,19 @@ public class AdminCategoryController {
         return "admin/category/update";
     }
 
-    // Update an existing category
     @PostMapping("/update")
-    public String update(@ModelAttribute(name = "category") CategoryEntity categoryEntity) {
+    public String update(@ModelAttribute(name = "category") CategoryEntity categoryEntity, Model model) {
+        Optional<CategoryEntity> existingCategory = categoryRepository.findByCategoryName(categoryEntity.getCategoryName());
+        if (existingCategory.isPresent() && !existingCategory.get().getId().equals(categoryEntity.getId())) {
+            model.addAttribute("error", "Danh mục này đã tồn tại.");
+            model.addAttribute("category", categoryEntity);
+            return "admin/category/update";
+        }
+
         categoryRepository.save(categoryEntity);
         return "redirect:/admin/category/updateCategory/" + categoryEntity.getId();
     }
 
-    // Delete a category
     @GetMapping("/deleteCategory/{id}")
     public String delete(@PathVariable("id") Long id) {
         categoryRepository.deleteById(id);

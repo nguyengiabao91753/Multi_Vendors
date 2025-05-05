@@ -14,8 +14,9 @@
                     <h4>Cập Nhật Sản Phẩm</h4>
                 </div>
                 <div class="card-body">
-                    <form th:action="@{/vendor/product/update}" method="post" enctype="multipart/form-data" th:object="${product}">
-                        <input type="hidden" th:field="*{id}" />
+                    <form th:action="@{/vendor/product/update}" method="post" enctype="multipart/form-data"
+                          th:object="${product}">
+                        <input type="hidden" th:field="*{id}"/>
 
                         <div class="mb-3">
                             <label class="form-label">Tên sản phẩm</label>
@@ -42,30 +43,65 @@
                             <input type="number" class="form-control" th:field="*{amount}" required>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Danh mục</label>
-                            <select class="form-select" th:field="*{categoryId}">
-                                <option value="" disabled>-- Chọn danh mục --</option>
+                        <div class="col-md-4 select-container">
+                            <h5>Danh mục</h5>
+                            <select name="categoryIds" multiple class="form-control">
                                 <option th:each="cat : ${categories}"
                                         th:value="${cat.id}"
                                         th:text="${cat.categoryName}"
-                                        th:selected="${cat.id == product.categoryId}">
+                                        th:selected="${product.categoryIds != null} ? ${product.categoryIds.contains(cat.id)} : false">
                                 </option>
                             </select>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Ảnh sản phẩm mới</label>
-                            <input type="file" class="form-control" name="file" accept="image/*">
+                        <!-- Section -->
+                        <div class="add-listing-section margin-top-45">
+                            <!-- Headline -->
+                            <div class="add-listing-headline">
+                                <h3>
+                                    <i class="sl sl-icon-picture"></i> Images
+                                </h3>
+                            </div>
+                            <!-- Thẻ Chứa Slideshow -->
+                            <div class="slideshow-container" style="width: 30%;">
+                                <!-- Kết hợp hình ảnh và nội dung cho mội phần tử trong slideshow-->
+                                <th:block th:each="y: ${product.productImage}">
+                                    <div class="mySlides">
+                                        <a th:href="@{/vendor/product/delete-image/{id}(id=${y.id})}" class="delete_img"> <i
+                                                style="color: #fff; line-height: 30px;"
+                                                class="sl sl-icon-close"></i>
+
+                                        </a> <img th:src="${y.url_Image}" style="width: 100%">
+                                    </div>
+                                </th:block>
+                                <!-- Nút điều khiển mũi tên-->
+                                <a class="prev" onclick="plusSlides(-1)">❮</a> <a class="next"
+                                                                                  onclick="plusSlides(1)">❯</a>
+                            </div>
+                            <br>
+                            <!-- Nút tròn điều khiển slideshow-->
+                            <div style="text-align: center">
+                                <th:block th:each="y: ${product.productImage}">
+                                    <span class="dotw" th:onclick="'currentSlide('+ ${yStat.index+1} +')'"></span>
+                                </th:block>
+
+                            </div>
+                            <!-- Dropzone -->
+                            <div class="submit-section">
+
+                                <div class="upload__box" style="padding-top: 40px;">
+                                    <div class="upload__btn-box">
+                                        <label class="upload__btn" style="border-radius: 50px;">
+                                            <p style="margin-bottom: 0px;">Add images</p> <input
+                                                name="listImage" accept="image/*" type="file"
+                                                data-max_length="20" class="upload__inputfile" multiple>
+                                        </label>
+                                    </div>
+                                    <div class="upload__img-wrap"></div>
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="mb-3" th:if="${product.thumbnail != null}">
-                            <label class="form-label">Ảnh hiện tại:</label><br>
-                            <img th:src="@{${product.thumbnail}}" alt="Ảnh hiện tại" style="height: 100px;">
-                        </div>
-
-
-
+                        <!-- Section / End -->
 
                         <div class="mb-3">
                             <button type="submit" class="btn btn-primary">Cập Nhật</button>
@@ -77,5 +113,125 @@
         </div>
     </th:block>
 </th:block>
+<script>
+    var slideIndex = 1;
+    showSlides(slideIndex);
+
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+        var i;
+        var slides = document.getElementsByClassName("mySlides");
+        var dots = document.getElementsByClassName("dot");
+        if (n > slides.length) {
+            slideIndex = 1
+        }
+        if (n < 1) {
+            slideIndex = slides.length
+        }
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" active", "");
+        }
+        slides[slideIndex - 1].style.display = "block";
+        /* dots[slideIndex - 1].className += " active"; */
+    }
+</script>
+<script>
+    jQuery(document).ready(function () {
+        ImgUpload();
+    });
+
+    function ImgUpload() {
+        var imgWrap = "";
+        var imgArray = [];
+
+        $('.upload__inputfile')
+            .each(
+                function () {
+                    $(this)
+                        .on(
+                            'change',
+                            function (e) {
+                                imgWrap = $(this)
+                                    .closest(
+                                        '.upload__box')
+                                    .find(
+                                        '.upload__img-wrap');
+                                var maxLength = $(this)
+                                    .attr(
+                                        'data-max_length');
+
+                                var files = e.target.files;
+                                var filesArr = Array.prototype.slice
+                                    .call(files);
+                                var iterator = 0;
+                                filesArr
+                                    .forEach(function (
+                                        f, index) {
+
+                                        if (!f.type
+                                            .match('image.*')) {
+                                            return;
+                                        }
+
+                                        if (imgArray.length > maxLength) {
+                                            return false
+                                        } else {
+                                            var len = 0;
+                                            for (var i = 0; i < imgArray.length; i++) {
+                                                if (imgArray[i] !== undefined) {
+                                                    len++;
+                                                }
+                                            }
+                                            if (len > maxLength) {
+                                                return false;
+                                            } else {
+                                                imgArray
+                                                    .push(f);
+
+                                                var reader = new FileReader();
+                                                reader.onload = function (
+                                                    e) {
+                                                    var html = "<div class='upload__img-box'><div style='background-image: url("
+                                                        + e.target.result
+                                                        + ")' data-number='"
+                                                        + $(".upload__img-close").length
+                                                        + "' data-file='"
+                                                        + f.name
+                                                        + "' class='img-bg'><div class='upload__img-close'></div></div></div>";
+                                                    imgWrap
+                                                        .append(html);
+                                                    iterator++;
+                                                }
+                                                reader
+                                                    .readAsDataURL(f);
+                                            }
+                                        }
+                                    });
+                            });
+                });
+
+        $('body').on('click', ".upload__img-close", function (e) {
+            var file = $(this).parent().data("file");
+            for (var i = 0; i < imgArray.length; i++) {
+                if (imgArray[i].name === file) {
+                    imgArray.splice(i, 1);
+                    break;
+                }
+            }
+            $(this).parent().parent().remove();
+        });
+    }
+</script>
+
 </body>
 </html>

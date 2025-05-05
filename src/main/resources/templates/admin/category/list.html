@@ -10,16 +10,13 @@
 <th:block th:replace="layout/admin-layout :: layout">
     <th:block th:fragment="pageContent">
         <div class="container mt-4">
-
             <!-- Form Thêm Category -->
             <div class="card mb-4">
                 <div class="card-header">
                     <h4>Thêm Danh Mục</h4>
                     <a class="btn btn-primary" th:href="@{/admin/category/insertCategoryPage}">Thêm danh mục</a>
                 </div>
-
             </div>
-
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Danh sách danh mục</h4>
@@ -51,7 +48,6 @@
                     </table>
                 </div>
             </div>
-
         </div>
     </th:block>
 </th:block>

@@ -40,11 +40,14 @@
                             <input type="number" class="form-control" th:field="*{amount}" required>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Danh mục</label>
-                            <select class="form-select" th:field="*{categoryId}" required>
-                                <option value="" disabled selected>-- Chọn danh mục --</option>
-                                <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.categoryName}"></option>
+                        <div class="col-md-4 select-container">
+                            <h5>Danh mục</h5>
+                            <select name="categoryIds" multiple class="form-control">
+                                <option th:each="cat : ${categories}"
+                                        th:value="${cat.id}"
+                                        th:text="${cat.categoryName}"
+                                        th:selected="${product.categoryIds != null} ? ${product.categoryIds.contains(cat.id)} : false">
+                                </option>
                             </select>
                         </div>
 

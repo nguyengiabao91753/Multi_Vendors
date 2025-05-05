@@ -2,6 +2,7 @@ package com.example.shopee.entity;
 
 import com.example.shopee.utils.DateUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -65,7 +66,18 @@ public class UserEntity extends AbstractEntity {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
+	@JsonManagedReference
 	private Set<ProductEntity> productEntities;
+
+	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@EqualsAndHashCode.Exclude
+	@ToString.Exclude
+	private Set<OrderEntity> orderEntities;
+
+	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@EqualsAndHashCode.Exclude
+	@ToString.Exclude
+	private Set<ReceiptEntity> receiptEntities;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonIgnore

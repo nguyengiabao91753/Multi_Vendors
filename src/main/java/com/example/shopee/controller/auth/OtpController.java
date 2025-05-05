@@ -37,7 +37,6 @@ public class OtpController {
     public String indexOtp() {
         return "otpConfirm";
     }
-
     @RequestMapping(value = "confirm-otp", method = RequestMethod.POST)
     public String checkOtp(HttpSession session, @RequestParam("otp") String otp, Model model) {
         String otpRegister = (String) session.getAttribute("otp-register");
