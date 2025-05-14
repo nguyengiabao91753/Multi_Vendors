@@ -23,4 +23,23 @@ public class CategoryEntity extends AbstractEntity {
     @ToString.Exclude
     @JsonBackReference
     private List<ProductEntity> products;
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
+	public List<ProductEntity> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<ProductEntity> products) {
+		this.products = products;
+	}
+    
+    
+    
 }

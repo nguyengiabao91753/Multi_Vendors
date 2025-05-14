@@ -71,6 +71,95 @@ public class ProductEntity extends AbstractEntity{
     @ToString.Exclude
     private Set<OrderDetailEntity> orderDetailEntities;
 
+	public String getProductName() {
+		return productName;
+	}
 
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Integer getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Integer amount) {
+		this.amount = amount;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+	public BigDecimal getSalePrice() {
+		return salePrice;
+	}
+
+	public void setSalePrice(BigDecimal salePrice) {
+		this.salePrice = salePrice;
+	}
+
+	public List<CategoryEntity> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<CategoryEntity> categories) {
+		this.categories = categories;
+	}
+
+	public List<ProductImageEntity> getProductImage() {
+		return productImage;
+	}
+
+	public void setProductImage(List<ProductImageEntity> productImage) {
+		this.productImage = productImage;
+	}
+
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
+
+	public Set<FeedbackEntity> getFeedbackEntities() {
+		return feedbackEntities;
+	}
+
+	public void setFeedbackEntities(Set<FeedbackEntity> feedbackEntities) {
+		this.feedbackEntities = feedbackEntities;
+	}
+
+	public Set<ProductVoucherEntity> getProductVoucherEntities() {
+		return productVoucherEntities;
+	}
+
+	public void setProductVoucherEntities(Set<ProductVoucherEntity> productVoucherEntities) {
+		this.productVoucherEntities = productVoucherEntities;
+	}
+
+	public Set<OrderDetailEntity> getOrderDetailEntities() {
+		return orderDetailEntities;
+	}
+
+	public void setOrderDetailEntities(Set<OrderDetailEntity> orderDetailEntities) {
+		this.orderDetailEntities = orderDetailEntities;
+	}
+    
+    
+    
 
 }
