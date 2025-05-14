@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Shopee Việt Nam | Mua và Bán Trên Ứng Dụng Di Động hoặc Website</title>
+    <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+    />
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+    />
+    <link
+            rel="stylesheet"
+            href="style/fontawesome-free-5.15.3-web/css/all.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" th:href="@{/style/reset.css}"/>
+    <link rel="stylesheet" th:href="@{/style/style.css}"/>
+</head>
+<body>
+<div class="wrapper">
+
+    <header id="header" class="header-cart-page">
+        <div class="header-inner">
+            <div class="header-navbar-wrapper">
+                <ul class="header-navbar-left">
+                    <li><a href="#">Kênh Người Bán</a></li>
+                    <li><a href="#">Tải ứng dụng</a></li>
+                    <li><a href="#">Kết nối</a></li>
+                    <li>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </li>
+                </ul>
+                <ul class="header-navbar-right">
+                    <li><a href="#"><i class="far fa-bell"></i>Thông Báo</a></li>
+                    <li><a href="#"><i class="far fa-question-circle"></i>Hỗ Trợ</a></li>
+                    <?php
+                        $loginCheck = Session::get('customer_login');
+                        if (!$loginCheck) {
+                    ?>
+                    <li><a th:href="@{/register}">Đăng Ký</a></li>
+                    <li><a th:href="@{/login}">Đăng Nhập</a></li>
+                    <?php } else { ?>
+                    <li class="user">
+                        <a href="#" class="dropdown-toggle">
+                            <div class="user-avt"><img
+                                    src="admin/uploads/customer/<?php echo empty(Session::get('customer_image')) ? 'customer_avt.jpg' : Session::get('customer_image'); ?>"
+                                    alt="avt"/></div>
+                            <span><?php echo Session::get('customer_account'); ?></span>
+                        </a>
+                        <div class="dropdown-menu show">
+                            <a href="#" class="dropdown-item">Tài khoản của tôi</a>
+                            <a href="#" class="dropdown-item">Đơn mua</a>
+                            <a href="#" class="dropdown-item">Đổi mật khẩu</a>
+                            <a th:href="@{/logout}" class="dropdown-item">Đăng xuất</a>
+                        </div>
+                    </li>
+                    <?php } ?>
+                </ul>
+            </div>
+        </div>
+    </header>
+</div>

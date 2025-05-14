@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cập nhật Voucher</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<th:block th:replace="layout/vendor-layout :: layout">
+    <th:block th:fragment="pageContent">
+        <div class="container mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Cập nhật Voucher</h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/vendor/voucher/update}" method="post" th:object="${voucher}">
+                        <input type="hidden" th:field="*{id}"/>
+
+                        <div class="row">
+                            <!-- Left Column -->
+                            <div class="col-md-6">
+                                <!-- Tên voucher -->
+                                <div class="mb-3">
+                                    <label class="form-label">Tên Voucher <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" th:field="*{name}" placeholder="Tên voucher"
+                                           required>
+                                </div>
+
+                                <!-- Mã voucher -->
+                                <div class="mb-3">
+                                    <label class="form-label">Mã <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" th:field="*{code}" placeholder="Mã giảm giá"
+                                           required>
+                                </div>
+
+                                <!-- Số lượng -->
+                                <div class="mb-3">
+                                    <label class="form-label">Số lượng <span class="text-danger">*</span></label>
+                                    <input type="number" min="1" class="form-control" th:field="*{amount}" required>
+                                </div>
+                            </div>
+
+                            <!-- Right Column -->
+                            <div class="col-md-6">
+                                <!-- % giảm -->
+                                <div class="mb-3">
+                                    <label class="form-label">% Giảm <span class="text-danger">*</span></label>
+                                    <input type="number" min="1" max="100" class="form-control"
+                                           th:field="*{percentDecrease}" required>
+                                </div>
+
+                                <!-- Ngày bắt đầu -->
+                                <div class="mb-3">
+                                    <label class="form-label">Bắt đầu <span class="text-danger">*</span></label>
+                                    <input type="datetime-local" class="form-control" th:field="*{startTime}" required>
+                                </div>
+
+                                <!-- Ngày kết thúc -->
+                                <div class="mb-3">
+                                    <label class="form-label">Kết thúc <span class="text-danger">*</span></label>
+                                    <input type="datetime-local" class="form-control" th:field="*{endTime}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-end mt-4">
+                            <a th:href="@{/vendor/voucher}" class="btn btn-outline-secondary me-2">Hủy</a>
+                            <button type="submit" class="btn btn-primary">Cập nhật</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</th:block>
+</body>
+</html>

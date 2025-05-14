@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm User</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<th:block th:replace="layout/admin-layout :: layout">
+    <th:block th:fragment="pageContent">
+        <div class="container mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Thêm User</h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/admin/user/save}" method="post" th:object="${user}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Email <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" th:field="*{email}" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Mật khẩu <span class="text-danger">*</span></label>
+                                    <input type="password" class="form-control" th:field="*{password}" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Họ và tên</label>
+                                    <input type="text" class="form-control" th:field="*{fullName}">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Số điện thoại</label>
+                                    <input type="text" class="form-control" th:field="*{phone}">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Địa chỉ</label>
+                                    <input type="text" class="form-control" th:field="*{address}">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Ngày sinh</label>
+                                    <input type="date" class="form-control" th:field="*{dob}">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Phân quyền</label>
+                                    <select class="form-select" multiple name="role">
+                                        <option th:each="role : ${roles}" th:value="${role.name}"
+                                                th:text="${role.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-4">
+                            <a th:href="@{/admin/user}" class="btn btn-outline-secondary me-2">Hủy</a>
+                            <button type="submit" class="btn btn-primary">Lưu</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </th:block>
+</th:block>
+</body>
+</html>
