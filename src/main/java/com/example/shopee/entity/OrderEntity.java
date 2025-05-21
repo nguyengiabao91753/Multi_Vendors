@@ -40,4 +40,51 @@ public class OrderEntity extends AbstractEntity{
     private UserEntity userEntity;
 
 
+    public LocalDateTime getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(LocalDateTime orderTime) {
+        this.orderTime = orderTime;
+    }
+
+    public BigDecimal getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(BigDecimal totalCost) {
+        this.totalCost = totalCost;
+    }
+
+    public BigDecimal getShippingFee() {
+        return shippingFee;
+    }
+
+    public void setShippingFee(BigDecimal shippingFee) {
+        this.shippingFee = shippingFee;
+    }
+
+    public BigDecimal getFullCost() {
+        return fullCost;
+    }
+
+    public void setFullCost(BigDecimal fullCost) {
+        this.fullCost = fullCost;
+    }
+
+    public Set<OrderDetailEntity> getOrderDetailEntities() {
+        return orderDetailEntities;
+    }
+
+    public void setOrderDetailEntities(Set<OrderDetailEntity> orderDetailEntities) {
+        this.orderDetailEntities = orderDetailEntities;
+    }
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
 }

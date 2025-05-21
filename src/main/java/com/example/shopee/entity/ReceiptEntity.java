@@ -29,4 +29,35 @@ public class ReceiptEntity extends AbstractEntity{
     @ToString.Exclude
     private List<ReceiptDetailEntity> receiptDetailEntities;
 
+    public String getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
+    }
+
+    public BigDecimal getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(BigDecimal totalCost) {
+        this.totalCost = totalCost;
+    }
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
+
+    public List<ReceiptDetailEntity> getReceiptDetailEntities() {
+        return receiptDetailEntities;
+    }
+
+    public void setReceiptDetailEntities(List<ReceiptDetailEntity> receiptDetailEntities) {
+        this.receiptDetailEntities = receiptDetailEntities;
+    }
 }

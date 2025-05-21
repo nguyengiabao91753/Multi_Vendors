@@ -22,4 +22,6 @@ public class SecurityUser extends User {
         return "MySecurityUser[email=" + email
                 + "] " + super.toString();
     }
+
+
 }

@@ -32,4 +32,44 @@ public class FeedbackEntity extends AbstractEntity {
     @JoinColumn(name = "product_id")
     @EqualsAndHashCode.Exclude
     private ProductEntity productEntity;
+
+    public Integer getFeedbackDateTime() {
+        return feedbackDateTime;
+    }
+
+    public void setFeedbackDateTime(Integer feedbackDateTime) {
+        this.feedbackDateTime = feedbackDateTime;
+    }
+
+    public Integer getRatedStar() {
+        return ratedStar;
+    }
+
+    public void setRatedStar(Integer ratedStar) {
+        this.ratedStar = ratedStar;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
+
+    public ProductEntity getProductEntity() {
+        return productEntity;
+    }
+
+    public void setProductEntity(ProductEntity productEntity) {
+        this.productEntity = productEntity;
+    }
 }

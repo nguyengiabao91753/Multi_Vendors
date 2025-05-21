@@ -42,4 +42,5 @@ public class RoleEntity extends AbstractEntity {
 		this.userEntities = userEntities;
 	}
 
+
 }

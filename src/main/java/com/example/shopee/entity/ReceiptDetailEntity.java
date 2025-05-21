@@ -23,4 +23,28 @@ public class ReceiptDetailEntity extends AbstractEntity{
     @JoinColumn(name = "product_id")
     @EqualsAndHashCode.Exclude
     private ProductEntity productEntity;
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public ReceiptEntity getReceiptEntity() {
+        return receiptEntity;
+    }
+
+    public void setReceiptEntity(ReceiptEntity receiptEntity) {
+        this.receiptEntity = receiptEntity;
+    }
+
+    public ProductEntity getProductEntity() {
+        return productEntity;
+    }
+
+    public void setProductEntity(ProductEntity productEntity) {
+        this.productEntity = productEntity;
+    }
 }

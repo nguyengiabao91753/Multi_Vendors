@@ -36,4 +36,52 @@ public class OrderDetailEntity extends AbstractEntity{
     @JoinColumn(name = "product_id")
     @EqualsAndHashCode.Exclude
     private ProductEntity productEntity;
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public BigDecimal getPriceOfOne() {
+        return priceOfOne;
+    }
+
+    public void setPriceOfOne(BigDecimal priceOfOne) {
+        this.priceOfOne = priceOfOne;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public VoucherEntity getVoucherEntity() {
+        return voucherEntity;
+    }
+
+    public void setVoucherEntity(VoucherEntity voucherEntity) {
+        this.voucherEntity = voucherEntity;
+    }
+
+    public OrderEntity getOrderEntity() {
+        return orderEntity;
+    }
+
+    public void setOrderEntity(OrderEntity orderEntity) {
+        this.orderEntity = orderEntity;
+    }
+
+    public ProductEntity getProductEntity() {
+        return productEntity;
+    }
+
+    public void setProductEntity(ProductEntity productEntity) {
+        this.productEntity = productEntity;
+    }
 }

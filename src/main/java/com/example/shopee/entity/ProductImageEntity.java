@@ -24,4 +24,28 @@ public class ProductImageEntity {
 	@ToString.Exclude
 	@JsonBackReference
 	private ProductEntity product;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getUrl_Image() {
+		return url_Image;
+	}
+
+	public void setUrl_Image(String url_Image) {
+		this.url_Image = url_Image;
+	}
+
+	public ProductEntity getProduct() {
+		return product;
+	}
+
+	public void setProduct(ProductEntity product) {
+		this.product = product;
+	}
 }

@@ -46,4 +46,44 @@ public class CartDetailEntity extends AbstractEntity{
     public int hashCode() {
         return Objects.hash(super.hashCode(), quantity, priceOfOne, totalPrice, cartEntity, productEntity);
     }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public BigDecimal getPriceOfOne() {
+        return priceOfOne;
+    }
+
+    public void setPriceOfOne(BigDecimal priceOfOne) {
+        this.priceOfOne = priceOfOne;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public CartEntity getCartEntity() {
+        return cartEntity;
+    }
+
+    public void setCartEntity(CartEntity cartEntity) {
+        this.cartEntity = cartEntity;
+    }
+
+    public ProductEntity getProductEntity() {
+        return productEntity;
+    }
+
+    public void setProductEntity(ProductEntity productEntity) {
+        this.productEntity = productEntity;
+    }
 }

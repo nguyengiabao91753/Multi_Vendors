@@ -21,4 +21,20 @@ public class ProductVoucherEntity extends AbstractEntity{
     @JoinColumn(name = "voucher_id")
     @EqualsAndHashCode.Exclude
     private VoucherEntity voucherEntity;
+
+    public ProductEntity getProductEntity() {
+        return productEntity;
+    }
+
+    public void setProductEntity(ProductEntity productEntity) {
+        this.productEntity = productEntity;
+    }
+
+    public VoucherEntity getVoucherEntity() {
+        return voucherEntity;
+    }
+
+    public void setVoucherEntity(VoucherEntity voucherEntity) {
+        this.voucherEntity = voucherEntity;
+    }
 }

@@ -193,4 +193,35 @@ public class UserEntity extends AbstractEntity {
 		this.roleEntities = roleEntities;
 	}
 
+	public Set<ProductEntity> getProductEntities() {
+		return productEntities;
+	}
+
+	public void setProductEntities(Set<ProductEntity> productEntities) {
+		this.productEntities = productEntities;
+	}
+
+	public Set<OrderEntity> getOrderEntities() {
+		return orderEntities;
+	}
+
+	public void setOrderEntities(Set<OrderEntity> orderEntities) {
+		this.orderEntities = orderEntities;
+	}
+
+	public Set<VoucherEntity> getVouchers() {
+		return vouchers;
+	}
+
+	public void setVouchers(Set<VoucherEntity> vouchers) {
+		this.vouchers = vouchers;
+	}
+
+	public Set<ReceiptEntity> getReceiptEntities() {
+		return receiptEntities;
+	}
+
+	public void setReceiptEntities(Set<ReceiptEntity> receiptEntities) {
+		this.receiptEntities = receiptEntities;
+	}
 }
