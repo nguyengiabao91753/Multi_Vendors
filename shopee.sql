@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `shopee` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `shopee`;
--- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
 --
 -- Host: localhost    Database: shopee
 -- ------------------------------------------------------
--- Server version	8.0.41
+-- Server version	8.0.39
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -242,7 +242,7 @@ CREATE TABLE `product_category` (
 
 LOCK TABLES `product_category` WRITE;
 /*!40000 ALTER TABLE `product_category` DISABLE KEYS */;
-INSERT INTO `product_category` VALUES (6,1),(6,5),(5,2),(5,3),(2,1),(2,5);
+INSERT INTO `product_category` VALUES (6,1),(6,5),(5,2),(5,3),(2,1),(2,5),(7,1);
 /*!40000 ALTER TABLE `product_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -260,7 +260,7 @@ CREATE TABLE `product_image` (
   PRIMARY KEY (`id`),
   KEY `FK1n91c4vdhw8pa4frngs4qbbvs` (`product_id`),
   CONSTRAINT `FK1n91c4vdhw8pa4frngs4qbbvs` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -269,7 +269,7 @@ CREATE TABLE `product_image` (
 
 LOCK TABLES `product_image` WRITE;
 /*!40000 ALTER TABLE `product_image` DISABLE KEYS */;
-INSERT INTO `product_image` VALUES (3,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1746262566/otecdyad6ldloajhvztn.jpg',6),(4,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1746262567/u4frja7j1brkfz9yi7dw.jpg',6),(5,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1746262838/bj31whuz2zbp0kwpfn3y.jpg',6),(6,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1746262998/odeaqaaqmzlrzv2cjvxx.jpg',2),(7,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1746262999/pfnezxyliy5ty3aihtt7.jpg',2),(8,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1746263059/ifrvrq6vztoyd33fpwd7.jpg',5);
+INSERT INTO `product_image` VALUES (3,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1746262566/otecdyad6ldloajhvztn.jpg',6),(4,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1746262567/u4frja7j1brkfz9yi7dw.jpg',6),(5,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1746262838/bj31whuz2zbp0kwpfn3y.jpg',6),(6,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1746262998/odeaqaaqmzlrzv2cjvxx.jpg',2),(7,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1746262999/pfnezxyliy5ty3aihtt7.jpg',2),(8,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1746263059/ifrvrq6vztoyd33fpwd7.jpg',5),(12,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1747197722/nsfivtt7thpkzf3k3z12.png',7),(13,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1747800830/pfne2nf7x0qe4t8zlqz4.jpg',1),(14,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1747800831/bl7nszlqhsaodn9fte02.jpg',1),(15,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1747800832/k6gm0w7ucemnico0bhxg.jpg',1),(16,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1747801069/xyznagnaxaehwn0dbwwj.jpg',3),(17,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1747801071/w3dzu7rihxocstuoktno.jpg',3),(18,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1747801072/vsq6sxpcm91ithdqtqcx.jpg',3);
 /*!40000 ALTER TABLE `product_image` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -330,7 +330,7 @@ CREATE TABLE `products` (
   PRIMARY KEY (`id`),
   KEY `FKdb050tk37qryv15hd932626th` (`user_id`),
   CONSTRAINT `FKdb050tk37qryv15hd932626th` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -339,7 +339,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,NULL,NULL,1,NULL,NULL,12,'RAM:	6GB\r\nBộ nhớ trong:	128-256-512GB\r\nThẻ SIM:	2 SIM\r\nDung lượng pin:	Li-Ion 3687 mAh\r\nSạc nhanh PD2.0, 50% trong 30ph (quảng cáo)\r\nSạc không dây Qi2 15W (iOS 17.4)\r\nMagSafe không dây 15W',11000000.00,'Điện thoại iPhone 12 Pro Max cũ',10000000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745159238/iwzsrjhebbndeha6xy2b.png',1),(2,NULL,NULL,NULL,NULL,NULL,12,'CPU: 	Qualcomm SM8550 Snapdragon 8 Gen 2 (4 nm)\r\n8 nhân (1x3.2 GHz & 2x2.8 GHz & 2x2.8 GHz & 3x2.0 GHz)\r\nGPU: Adreno 740\r\nRAM: 	8-12GB, LPDDR5X\r\nBộ nhớ trong: 	128GB (UFS 3.1 - 2.2GB/s)\r\n256GB/512GB (UFS 4.0 - 3.5GB/s)',10000000.00,'Xiaomi 13 Pro',9000000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160190/yewmfio5sf91ofi9u50n.png',4),(3,NULL,NULL,1,NULL,NULL,11,'Điện thoại iPhone 11 Pro Max cũ',6000000.00,'Điện thoại iPhone 11 Pro Max cũ',5000000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160491/k968ibp2ws1rxjyulprb.png',1),(4,NULL,NULL,1,NULL,NULL,12,'Giày nam size 42',500000.00,'Giày nam đen',400000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160705/vizezir2vhfqxgx9clpr.jpg',3),(5,NULL,NULL,1,NULL,NULL,11,'Áo Polo Vải Dry Pique Ngắn Tay 1',500000.00,'Áo Polo Vải Dry Pique Ngắn Tay 1',300000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160787/risgbcqfogw9bl4ccohd.jpg',4),(6,NULL,NULL,0,NULL,NULL,12,'\r\n    Hệ điều hành:\r\n    iOS 14\r\n    Chip xử lý (CPU):\r\n    Apple A12 Bionic\r\n    Tốc độ CPU:\r\n    2 nhân 2.5 GHz & 4 nhân 1.6 GHz\r\n    Chip đồ họa (GPU):\r\n    Apple GPU 4 nhân\r\n    RAM:\r\n    4 GB\r\n    Dung lượng lưu trữ:\r\n    64 GB\r\n    Dung lượng còn lại (khả dụng) khoảng:\r\n    Khoảng 57 GB\r\n    Danh bạ:\r\n    Không giới hạn\r\n',6000000.00,'XS Max',5500000.00,NULL,4);
+INSERT INTO `products` VALUES (1,'2025-05-21 00:00:00.000000',NULL,1,NULL,NULL,12,'RAM:	6GB\r\nBộ nhớ trong:	128-256-512GB\r\nThẻ SIM:	2 SIM\r\nDung lượng pin:	Li-Ion 3687 mAh\r\nSạc nhanh PD2.0, 50% trong 30ph (quảng cáo)\r\nSạc không dây Qi2 15W (iOS 17.4)\r\nMagSafe không dây 15W',11000000.00,'Điện thoại iPhone 12 Pro Max cũ',10000000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745159238/iwzsrjhebbndeha6xy2b.png',3),(2,'2025-05-21 00:00:00.000000',NULL,NULL,NULL,NULL,12,'CPU: 	Qualcomm SM8550 Snapdragon 8 Gen 2 (4 nm)\r\n8 nhân (1x3.2 GHz & 2x2.8 GHz & 2x2.8 GHz & 3x2.0 GHz)\r\nGPU: Adreno 740\r\nRAM: 	8-12GB, LPDDR5X\r\nBộ nhớ trong: 	128GB (UFS 3.1 - 2.2GB/s)\r\n256GB/512GB (UFS 4.0 - 3.5GB/s)',10000000.00,'Xiaomi 13 Pro',9000000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160190/yewmfio5sf91ofi9u50n.png',4),(3,'2025-05-21 00:00:00.000000',NULL,1,NULL,NULL,11,'Điện thoại iPhone 11 Pro Max cũ',6000000.00,'Điện thoại iPhone 11 Pro Max cũ',5000000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160491/k968ibp2ws1rxjyulprb.png',3),(4,'2025-05-19 00:00:00.000000',NULL,0,NULL,NULL,12,'Giày nam size 42',500000.00,'Giày nam đen',400000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160705/vizezir2vhfqxgx9clpr.jpg',3),(5,'2025-05-19 00:00:00.000000',NULL,1,NULL,NULL,11,'Áo Polo Vải Dry Pique Ngắn Tay 1',500000.00,'Áo Polo Vải Dry Pique Ngắn Tay 1',300000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160787/risgbcqfogw9bl4ccohd.jpg',4),(6,'2025-05-19 00:00:00.000000',NULL,0,NULL,NULL,12,'\r\n    Hệ điều hành:\r\n    iOS 14\r\n    Chip xử lý (CPU):\r\n    Apple A12 Bionic\r\n    Tốc độ CPU:\r\n    2 nhân 2.5 GHz & 4 nhân 1.6 GHz\r\n    Chip đồ họa (GPU):\r\n    Apple GPU 4 nhân\r\n    RAM:\r\n    4 GB\r\n    Dung lượng lưu trữ:\r\n    64 GB\r\n    Dung lượng còn lại (khả dụng) khoảng:\r\n    Khoảng 57 GB\r\n    Danh bạ:\r\n    Không giới hạn\r\n',6000000.00,'XS Max',5500000.00,NULL,4),(7,'2025-05-19 00:00:00.000000',NULL,1,NULL,NULL,12,'Bánh ngọt mousse',123000.00,'Bánh ngọt mousse',100000.00,NULL,4);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -465,7 +465,7 @@ CREATE TABLE `user_role` (
 
 LOCK TABLES `user_role` WRITE;
 /*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
-INSERT INTO `user_role` VALUES (3,1),(4,2),(1,3),(2,3);
+INSERT INTO `user_role` VALUES (3,1),(5,1),(6,1),(4,2),(1,3),(2,3);
 /*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -495,7 +495,7 @@ CREATE TABLE `users` (
   UNIQUE KEY `UK6dotkott2kjsp8vw4d0m25fb7` (`email`),
   UNIQUE KEY `UKpnp1baae4enifkkuq2cd01r9l` (`cart_id`),
   CONSTRAINT `FKqmifheg6lnigfifvlmpjnuny8` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -504,7 +504,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,NULL,'ADMIN',1,NULL,'ADMIN',NULL,NULL,NULL,'chuyendizz@gmail.com',NULL,'$2a$10$dhTh/g/sgKmENUvDBYatbufUcBfGy2wwaVlyMU.UqXxYTwzfUsE86','6308348000',NULL),(2,NULL,'ADMIN',1,NULL,'ADMIN',NULL,NULL,NULL,'phamminhhiep0402@gmail.com',NULL,'$2a$10$KWtPamXHqnTueHNTXZLgtuZHUKTbASsUWlCK3xta6./uDz/kD4zZq','0912345566',NULL),(3,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'admin@gmail.com',NULL,'$2a$12$ChoekAKeHq6SQpkZjN2nc.F6MYO96osDdDcgjxLNU5HUBlE9pkYba',NULL,NULL),(4,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'vendor@gmail.com',NULL,'$2a$12$ChoekAKeHq6SQpkZjN2nc.F6MYO96osDdDcgjxLNU5HUBlE9pkYba',NULL,NULL);
+INSERT INTO `users` VALUES (1,NULL,'ADMIN',1,NULL,'ADMIN',NULL,NULL,NULL,'chuyendizz@gmail.com',NULL,'$2a$10$dhTh/g/sgKmENUvDBYatbufUcBfGy2wwaVlyMU.UqXxYTwzfUsE86','6308348000',NULL),(2,NULL,'ADMIN',1,NULL,'ADMIN',NULL,NULL,NULL,'phamminhhiep0402@gmail.com',NULL,'$2a$10$KWtPamXHqnTueHNTXZLgtuZHUKTbASsUWlCK3xta6./uDz/kD4zZq','0912345566',NULL),(3,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'admin@gmail.com',NULL,'$2a$12$ChoekAKeHq6SQpkZjN2nc.F6MYO96osDdDcgjxLNU5HUBlE9pkYba',NULL,NULL),(4,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'vendor@gmail.com',NULL,'$2a$12$ChoekAKeHq6SQpkZjN2nc.F6MYO96osDdDcgjxLNU5HUBlE9pkYba',NULL,NULL),(5,NULL,NULL,NULL,NULL,NULL,'3602 Gaylord Dr',NULL,'2025-05-14','lta@gmail.com','Nguyễn Thuỳ Trang','123','6308348000',NULL),(6,NULL,NULL,NULL,NULL,NULL,'3602 Gaylord Dr',NULL,'2000-12-11','hvv@gmail.com','Hoàng Văn Vinh','123','6308348000',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -528,8 +528,11 @@ CREATE TABLE `vouchers` (
   `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `percent_decrease` int DEFAULT NULL,
   `start_time` datetime(6) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `user_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK3sgwux4uor7og45vdilosjha8` (`user_id`),
+  CONSTRAINT `FK3sgwux4uor7og45vdilosjha8` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -538,6 +541,7 @@ CREATE TABLE `vouchers` (
 
 LOCK TABLES `vouchers` WRITE;
 /*!40000 ALTER TABLE `vouchers` DISABLE KEYS */;
+INSERT INTO `vouchers` VALUES (1,NULL,NULL,NULL,NULL,NULL,12,'HE2025001','2025-10-10 04:34:00.000000','Chào hè 2025',1,'2025-05-14 04:34:00.000000',3),(2,NULL,NULL,NULL,NULL,NULL,12,'304105','2025-05-17 05:41:00.000000','30/4 - 1/5',1,'2025-04-30 05:41:00.000000',3),(3,NULL,NULL,NULL,NULL,NULL,12,'KT001','2025-05-31 05:42:00.000000','Khai trương',1,'2025-05-14 05:42:00.000000',4);
 /*!40000 ALTER TABLE `vouchers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -558,4 +562,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-05 14:17:24
+-- Dump completed on 2025-05-21 13:44:08
