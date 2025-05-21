@@ -13,6 +13,6 @@ public class ClientHomeController {
 
     @GetMapping("")
     public String home(Model model) {
-        return "client/index";
+        return "index";
     }
 }

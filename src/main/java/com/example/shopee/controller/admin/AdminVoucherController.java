@@ -1,5 +1,6 @@
 package com.example.shopee.controller.admin;
 
+import com.example.shopee.entity.CategoryEntity;
 import com.example.shopee.entity.UserEntity;
 import com.example.shopee.entity.VoucherEntity;
 import com.example.shopee.repository.UserRepository;
@@ -66,7 +67,14 @@ public class AdminVoucherController {
     }
 
     @PostMapping("/save")
-    public String saveVoucher(@ModelAttribute("voucher") VoucherEntity voucher) {
+    public String saveVoucher(@ModelAttribute("voucher") VoucherEntity voucher, Model model) {
+
+        Optional<VoucherEntity> byName = voucherRepository.findByName(voucher.getName());
+        if (byName.isPresent()) {
+            model.addAttribute("error", "Voucher này đã tồn tại.");
+            return "admin/voucher/insert";
+        }
+
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity user = userRepository.findByEmail(email).orElseThrow();
         voucher.setUserEntity(user);
@@ -86,7 +94,14 @@ public class AdminVoucherController {
     }
 
     @PostMapping("/update")
-    public String updateVoucher(@ModelAttribute VoucherEntity voucher) {
+    public String updateVoucher(@ModelAttribute VoucherEntity voucher, Model model) {
+        Optional<VoucherEntity> byName = voucherRepository.findByName(voucher.getName());
+        if (byName.isPresent() && !byName.get().getId().equals(voucher.getId())) {
+            model.addAttribute("error", "Voucher này đã tồn tại.");
+            model.addAttribute("voucher", voucher);
+            return "admin/voucher/update";
+        }
+
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity user = userRepository.findByEmail(email).orElse(null);
         voucher.setUserEntity(user);

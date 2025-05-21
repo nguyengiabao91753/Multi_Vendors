@@ -20,7 +20,7 @@ public class ProductEntity extends AbstractEntity{
     private String productName;
 
     @Basic
-    @Column(name = "description", nullable = true, length = 255, columnDefinition = "nvarchar(255)")
+    @Column(name = "description")
     private String description;
 
     @Basic

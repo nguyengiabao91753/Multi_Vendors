@@ -15,6 +15,12 @@
                 </div>
                 <div class="card-body">
                     <form th:action="@{/admin/voucher/update}" method="post" th:object="${voucher}">
+
+                        <div th:if="${error}" class="alert alert-danger">
+                            <p th:text="${error}"></p>
+                        </div>
+
+
                         <input type="hidden" th:field="*{id}"/>
 
                         <div class="row">

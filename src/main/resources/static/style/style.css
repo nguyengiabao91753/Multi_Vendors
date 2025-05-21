@@ -313,6 +313,8 @@ body {
           justify-content: flex-start;
   -ms-flex-wrap: nowrap;
       flex-wrap: nowrap;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(var(--color-header-bg-top)), to(var(--color-header-bg-bottom)));
+  background-image: linear-gradient(180deg, var(--color-header-bg-top), var(--color-header-bg-bottom));
 }
 
 #header .header-with-search__logo {

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:if="${product != null}" th:text="${product.productName} + ' | Shopee Việt Nam'"></title>
+    <title th:unless="${product != null}">Chi Tiết Sản Phẩm | Shopee Việt Nam</title>
+    <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+    />
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+    />
+    <link
+            rel="stylesheet"
+            href="/style/fontawesome-free-5.15.3-web/css/all.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" th:href="@{/style/reset.css}"/>
+    <link rel="stylesheet" th:href="@{/style/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/product-detail.css}"/>
+</head>
+<body>
+
+<th:block th:replace="layout/user-layout :: layout">
+    <th:block th:fragment="pageContent">
+        <div id="page-product" th:if="${product != null}">
+            <div class="container">
+                <div class="page-product__breadcrumb">
+                    <a th:href="@{/}">Shopee</a>
+                    <svg enable-background="new 0 0 11 11" viewBox="0 0 11 11" x="0" y="0" class="bQfo7W">
+                        <path d="m2.5 11c .1 0 .2 0 .3-.1l6-5c .1-.1.2-.3.2-.4s-.1-.3-.2-.4l-6-5c-.2-.2-.5-.1-.7.1s-.1.5.1.7l5.5 4.6-5.5 4.6c-.2.2-.2.5-.1.7.1.1.3.2.4.2z"></path>
+                    </svg>
+                    <th:block th:each="category : ${product.categories}">
+                        <a th:href="@{/list(keyword=${category.categoryName})}" th:text="${category.categoryName}"></a>
+                        <svg enable-background="new 0 0 11 11" viewBox="0 0 11 11" x="0" y="0" class="bQfo7W">
+                            <path d="m2.5 11c .1 0 .2 0 .3-.1l6-5c .1-.1.2-.3.2-.4s-.1-.3-.2-.4l-6-5c-.2-.2-.5-.1-.7.1s-.1.5.1.7l5.5 4.6-5.5 4.6c-.2.2-.2.5-.1.7.1.1.3.2.4.2z"></path>
+                        </svg>
+                    </th:block>
+                    <span th:text="${product.productName}"></span>
+                </div>
+                <div class="page-product__briefing">
+                    <div class="page-product__briefing-left">
+                        <div class="briefing-slider">
+                            <div class="briefing-slider-item" th:each="image : ${product.productImage}">
+                                <img th:src="${image.url_Image}" alt="Product Image"/>
+                            </div>
+                        </div>
+                        <div class="briefing-slider-nav">
+                            <div class="briefing-slider-item" th:each="image : ${product.productImage}">
+                                <img th:src="${image.url_Image}" alt="Product Image"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-product__briefing-right">
+                        <div class="product-name">
+                            <span th:text="${product.productName}"></span>
+                        </div>
+                        <div class="product-rate">
+                            <p>Chưa Có Đánh Giá</p>
+                            <p th:if="${product.amount != null}">Đã Bán <span th:text="${product.amount}"></span></p>
+                        </div>
+                        <div class="product-price">
+                            <p th:if="${product.salePrice != null}">
+                                ₫<span
+                                    th:text="${#numbers.formatDecimal(product.salePrice, 0, 'COMMA', 0, 'POINT')}"></span>
+                                <del>₫<span
+                                        th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span>
+                                </del>
+                            </p>
+                            <p th:if="${product.salePrice == null}">
+                                ₫<span
+                                    th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span>
+                            </p>
+                        </div>
+                        <form action="" method="post">
+                            <div class="product-quantity">
+                                <label>Số Lượng</label>
+                                <div class="product-quantity-form">
+                                    <div class="product-quantity-control">
+                                        <button type="button"
+                                                onclick="this.parentNode.querySelector('input[type=number]').stepDown(); return false;">
+                                            -
+                                        </button>
+                                        <input type="number" name="quantity" value="1" min="1"
+                                               th:max="${product.amount}"/>
+                                        <button type="button"
+                                                onclick="this.parentNode.querySelector('input[type=number]').stepUp(); return false;">
+                                            +
+                                        </button>
+                                    </div>
+                                    <p th:if="${product.amount != null}"
+                                       th:text="${product.amount} + ' sản phẩm có sẵn'"></p>
+                                    <p th:unless="${product.amount != null}">Số lượng không xác định</p>
+                                </div>
+                            </div>
+                            <div class="product-add">
+                                <button type="submit" name="addcart"><i class="fas fa-cart-plus"></i>Thêm Vào Giỏ Hàng
+                                </button>
+                                <button type="submit" name="buynow">Mua Ngay</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="page-product__details">
+                    <div class="page-product__details-section">
+                        <div class="details-title">Chi Tiết Sản Phẩm</div>
+                        <div class="details-inner">
+                            <div class="details-item">
+                                <label>Danh Mục</label>
+                                <div class="details-item--link">
+                                    <a th:href="@{/}">Shopee</a>
+                                    <svg enable-background="new 0 0 11 11" viewBox="0 0 11 11" x="0" y="0"
+                                         class="bQfo7W">
+                                        <path d="m2.5 11c .1 0 .2 0 .3-.1l6-5c .1-.1.2-.3.2-.4s-.1-.3-.2-.4l-6-5c-.2-.2-.5-.1-.7.1s-.1.5.1.7l5.5 4.6-5.5 4.6c-.2.2-.2.5-.1.7.1.1.3.2.4.2z"></path>
+                                    </svg>
+                                    <th:block th:each="category : ${product.categories}">
+                                        <a th:href="@{/list(keyword=${category.categoryName})}"
+                                           th:text="${category.categoryName}"></a>
+                                        <svg enable-background="new 0 0 11 11" viewBox="0 0 11 11" x="0" y="0"
+                                             class="bQfo7W">
+                                            <path d="m2.5 11c .1 0 .2 0 .3-.1l6-5c .1-.1.2-.3.2-.4s-.1-.3-.2-.4l-6-5c-.2-.2-.5-.1-.7.1s-.1.5.1.7l5.5 4.6-5.5 4.6c-.2.2-.2.5-.1.7.1.1.3.2.4.2z"></path>
+                                        </svg>
+                                    </th:block>
+                                    <span th:text="${product.productName}"></span>
+                                </div>
+                            </div>
+                            <div class="details-item">
+                                <label>Thương hiệu</label>
+                                <p>No Brand</p></div>
+                            <div class="details-item">
+                                <label>Xuất xứ</label>
+                                <p th:if="${product.user != null}" th:text="${product.user.address}"></p>
+                                <p th:unless="${product.user != null}">Không rõ</p>
+                            </div>
+                            <div class="details-item">
+                                <label>Kho hàng</label>
+                                <p th:if="${product.amount != null}" th:text="${product.amount}"></p>
+                                <p th:unless="${product.amount != null}">Không xác định</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-product__details-section">
+                        <div class="details-title">Mô tả sản phẩm</div>
+                        <div class="details-inner">
+                            <div class="details-area" th:utext="${product.description}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="page-product__comment">
+                    <div class="comment-title">Đánh giá sản phẩm</div>
+                    <div class="comment-inner">
+                        <div class="comment-empty">
+                            <img src="/image/button/comment.png" alt="Chưa có đánh giá"/>
+                            <p>Chưa có đánh giá</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page-product__similar">
+                    <div class="similar-title">Sản phẩm tương tự</div>
+                    <ul class="similar-list">
+                        <li class="similar-item" th:each="similarProduct : ${similarProducts}">
+                            <a th:href="@{/detail/{id}(id=${similarProduct.id})}">
+                                <div class="similar-item--link">
+                                    <div class="similar-item--image">
+                                        <img th:if="${not similarProduct.productImage.empty}"
+                                             th:src="${similarProduct.productImage[0].url_Image}"
+                                             alt="Similar Product Image"/>
+                                        <img th:if="${similarProduct.productImage.empty}"
+                                             src="https://via.placeholder.com/100" alt="No Image"/>
+                                    </div>
+                                    <div class="similar-item--detail">
+                                        <div class="similar-item--detail-name">
+                                            <h5 th:text="${similarProduct.productName}"></h5>
+                                        </div>
+                                        <div class="similar-item--detail-price">
+                                            <p class="price" th:if="${similarProduct.salePrice != null}">
+                                                ₫<span
+                                                    th:text="${#numbers.formatDecimal(similarProduct.salePrice, 0, 'COMMA', 0, 'POINT')}"></span>
+                                                <del>₫<span
+                                                        th:text="${#numbers.formatDecimal(similarProduct.price, 0, 'COMMA', 0, 'POINT')}"></span>
+                                                </del>
+                                            </p>
+                                            <p class="price" th:if="${similarProduct.salePrice == null}">
+                                                ₫<span
+                                                    th:text="${#numbers.formatDecimal(similarProduct.price, 0, 'COMMA', 0, 'POINT')}"></span>
+                                            </p>
+                                            <p class="sole" th:if="${similarProduct.amount != null}">Đã bán <span
+                                                    th:text="${similarProduct.amount}"></span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="similar-item" th:if="${#lists.isEmpty(similarProducts)}">
+                            <p class="none-similar-item">Hiện không có sản phẩm tương tự.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div th:unless="${product != null}">
+            <div class="container">
+                <h1>Không tìm thấy sản phẩm</h1>
+                <p>Sản phẩm bạn đang tìm kiếm có thể không tồn tại hoặc đã bị xóa.</p>
+                <a th:href="@{/}">Quay lại trang chủ</a>
+            </div>
+        </div>
+    </th:block>
+</th:block>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script type="text/javascript" th:src="@{/js/custom.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.briefing-slider').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: false,
+            fade: true,
+            asNavFor: '.briefing-slider-nav'
+        });
+        $('.briefing-slider-nav').slick({
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            asNavFor: '.briefing-slider',
+            dots: false,
+            centerMode: false,
+            focusOnSelect: true
+        });
+    });
+</script>
+</body>
+</html>

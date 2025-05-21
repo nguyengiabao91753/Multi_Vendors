@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Shopee Việt Nam | Mua và Bán Trên Ứng Dụng Di Động hoặc Website</title>
+    <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+    />
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+    />
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" th:href="@{/style/fontawesome-free-5.15.3-web/css/all.min.css}"/>
+    <link rel="stylesheet" th:href="@{/style/reset.css}"/>
+    <link rel="stylesheet" th:href="@{/style/style.css}"/>
+</head>
+<body>
+<div class="wrapper">
+    <div th:replace="fragments/header-user :: header"></div>
+
+    <th:block th:insert="~{::pageContent}"></th:block>
+
+    <div th:replace="fragments/footer-user :: footer"></div>
+
+    <div id="shopee-skinny-banner">
+        <a href="#">
+            <img src="image/banner/9.png" alt="image"/>
+        </a>
+    </div>
+</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script type="text/javascript" th:src="@{/js/custom.js}"></script>
+</body>
+</html>
+
+</body>
+</html>

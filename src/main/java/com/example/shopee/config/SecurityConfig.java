@@ -26,7 +26,7 @@ public class SecurityConfig {
     private UserService userService;
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(){
+    public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userService);
         authenticationProvider.setPasswordEncoder(passwordEncoder());
@@ -39,7 +39,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -69,19 +69,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .formLogin(f->f.loginPage("/login")
+                .formLogin(f -> f.loginPage("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
                         .defaultSuccessUrl("/index", true)
                         .failureUrl("/loginError")
                 )
-                .authorizeHttpRequests(at ->at.requestMatchers("/home", "/login/**", "/login-google", "/","/register","/save","re-send", "/image/**", "/js/**", "/lib/**", "/style/**","/slider/**", "/css/**",
-                                "/api/storage/**","recover","send-otp-recover","otp-check","confirm-otp","send-otp-recover","confirm-otp-recover",
-                             "/client/payment/pay", "/productListClient/**",  "save-new-password","detail","change-password","save-change-password", "/users/**",
+                .authorizeHttpRequests(at -> at
+                        .requestMatchers("/", "/home", "/login/**", "/login-google", "/register", "/save", "re-send", "/image/**", "/js/**", "/lib/**", "/style/**", "/slider/**", "/css/**", "/list/**", "/detail/**",
+                                "/api/storage/**", "recover", "send-otp-recover", "otp-check", "confirm-otp", "send-otp-recover", "confirm-otp-recover",
+                                "/client/payment/pay", "/productListClient/**", "save-new-password", "detail", "change-password", "save-change-password", "/users/**",
                                 "/assets/**", "/assets_admin/**", "/client_assets/**", "/index/**", "/product/**", "/guest/**").permitAll()
-                        .requestMatchers("/test", "/admin/**", "/userList/**").hasAnyRole( "ADMIN")
-                        .requestMatchers( "/vendor/**").hasAnyRole("VENDOR")
-                        .requestMatchers( "/client/**").hasAnyRole("CLIENT")
+                        .requestMatchers("/test", "/admin/**", "/userList/**").hasAnyRole("ADMIN")
+                        .requestMatchers("/user/profile/**").hasAnyRole("ADMIN", "VENDOR", "CLIENT")
+                        .requestMatchers("/vendor/**").hasAnyRole("VENDOR")
+                        .requestMatchers("/client/**").hasAnyRole("CLIENT")
                         .anyRequest().authenticated());
         return http.build();
     }

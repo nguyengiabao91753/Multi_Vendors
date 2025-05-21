@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -62,6 +62,27 @@
                     </li>
                     <?php } ?>
                 </ul>
+            </div>
+            <div class="header-with-search">
+                <a th:href="@{/}" class="header-with-search__logo"><img th:src="@{/image/logo/shopee-logo.png}" alt="logo"/></a>
+                <div class="header-with-search__section">
+                    <div class="shopee-searchbar">
+                        <form action="search.php" method="post">
+                            <input type="text" name="keyword" placeholder="Mua kèm deal 0Đ"/>
+                            <button type="submit" name="search"><i class="fas fa-search"></i></button>
+                        </form>
+                    </div>
+                    <div class="header-with-search__keyword">
+                        <?php
+                            $headerCategory = $category->show_category(6);
+                        if ($headerCategory) {
+                        while ($result = $headerCategory->fetch_assoc()) {
+                        ?>
+                        <a href="pageproductbycat.php?categoryID=<?php echo $result['categoryID']; ?>"><?php echo $result['categoryName']; ?></a>
+                        <?php } } ?>
+                    </div>
+                </div>
+                <a href="cart.php" class="header-with-search__cart"><i class="fas fa-cart-plus"></i></a>
             </div>
         </div>
     </header>

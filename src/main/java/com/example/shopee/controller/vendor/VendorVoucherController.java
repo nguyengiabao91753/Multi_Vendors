@@ -66,7 +66,14 @@ public class VendorVoucherController {
     }
 
     @PostMapping("/save")
-    public String saveVoucher(@ModelAttribute("voucher") VoucherEntity voucher) {
+    public String saveVoucher(@ModelAttribute("voucher") VoucherEntity voucher, Model model) {
+
+        Optional<VoucherEntity> byName = voucherRepository.findByName(voucher.getName());
+        if (byName.isPresent()) {
+            model.addAttribute("error", "Voucher này đã tồn tại.");
+            return "vendor/voucher/insert";
+        }
+
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity user = userRepository.findByEmail(email).orElseThrow();
         voucher.setUserEntity(user);
@@ -86,7 +93,14 @@ public class VendorVoucherController {
     }
 
     @PostMapping("/update")
-    public String updateVoucher(@ModelAttribute VoucherEntity voucher) {
+    public String updateVoucher(@ModelAttribute VoucherEntity voucher, Model model) {
+        Optional<VoucherEntity> byName = voucherRepository.findByName(voucher.getName());
+        if (byName.isPresent() && !byName.get().getId().equals(voucher.getId())) {
+            model.addAttribute("error", "Voucher này đã tồn tại.");
+            model.addAttribute("voucher", voucher);
+            return "vendor/voucher/update";
+        }
+
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity user = userRepository.findByEmail(email).orElse(null);
         voucher.setUserEntity(user);
