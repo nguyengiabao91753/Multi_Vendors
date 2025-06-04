@@ -17,6 +17,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     Page<ProductEntity> findAll(Pageable pageable);
 
     Page<ProductEntity> findAllByStatus(int status, Pageable pageable);
+    Page<ProductEntity> findAllByUserIdAndStatus(Long id, int status, Pageable pageable);
 
     @Query("SELECT p FROM ProductEntity p " +
             "WHERE p.status = 1 AND " +

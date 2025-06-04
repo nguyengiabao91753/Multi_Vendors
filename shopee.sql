@@ -33,7 +33,7 @@ CREATE TABLE `cart` (
   `updated_by` varchar(255) DEFAULT NULL,
   `total_cost` decimal(38,2) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,6 +42,7 @@ CREATE TABLE `cart` (
 
 LOCK TABLES `cart` WRITE;
 /*!40000 ALTER TABLE `cart` DISABLE KEYS */;
+INSERT INTO `cart` VALUES (1,NULL,NULL,NULL,NULL,NULL,NULL),(2,NULL,NULL,NULL,NULL,NULL,NULL),(3,NULL,NULL,NULL,NULL,NULL,NULL),(4,NULL,NULL,NULL,NULL,NULL,NULL),(5,NULL,NULL,NULL,NULL,NULL,NULL),(6,NULL,NULL,NULL,NULL,NULL,NULL),(7,NULL,NULL,NULL,NULL,NULL,NULL),(8,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `cart` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -69,7 +70,7 @@ CREATE TABLE `cart_details` (
   KEY `FK9rlic3aynl3g75jvedkx84lhv` (`product_id`),
   CONSTRAINT `FK9rlic3aynl3g75jvedkx84lhv` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
   CONSTRAINT `FKhq1m50l0ke2fkqxxd6ubo3x4b` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -78,6 +79,7 @@ CREATE TABLE `cart_details` (
 
 LOCK TABLES `cart_details` WRITE;
 /*!40000 ALTER TABLE `cart_details` DISABLE KEYS */;
+INSERT INTO `cart_details` VALUES (1,NULL,NULL,NULL,NULL,NULL,5000000.00,1,5000000.00,4,3),(2,NULL,NULL,NULL,NULL,NULL,5000000.00,1,5000000.00,6,3),(6,NULL,NULL,NULL,NULL,NULL,300000.00,2,600000.00,8,5),(7,NULL,NULL,NULL,NULL,NULL,5000000.00,1,5000000.00,8,3);
 /*!40000 ALTER TABLE `cart_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -504,7 +506,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,NULL,'ADMIN',1,NULL,'ADMIN',NULL,NULL,NULL,'chuyendizz@gmail.com',NULL,'$2a$10$dhTh/g/sgKmENUvDBYatbufUcBfGy2wwaVlyMU.UqXxYTwzfUsE86','6308348000',NULL),(2,NULL,'ADMIN',1,NULL,'ADMIN',NULL,NULL,NULL,'phamminhhiep0402@gmail.com',NULL,'$2a$10$KWtPamXHqnTueHNTXZLgtuZHUKTbASsUWlCK3xta6./uDz/kD4zZq','0912345566',NULL),(3,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'admin@gmail.com',NULL,'$2a$12$ChoekAKeHq6SQpkZjN2nc.F6MYO96osDdDcgjxLNU5HUBlE9pkYba',NULL,NULL),(4,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'vendor@gmail.com',NULL,'$2a$12$ChoekAKeHq6SQpkZjN2nc.F6MYO96osDdDcgjxLNU5HUBlE9pkYba',NULL,NULL),(5,NULL,NULL,NULL,NULL,NULL,'3602 Gaylord Dr',NULL,'2025-05-14','lta@gmail.com','Nguyễn Thuỳ Trang','123','6308348000',NULL),(6,NULL,NULL,NULL,NULL,NULL,'3602 Gaylord Dr',NULL,'2000-12-11','hvv@gmail.com','Hoàng Văn Vinh','123','6308348000',NULL);
+INSERT INTO `users` VALUES (1,NULL,'ADMIN',1,NULL,'ADMIN',NULL,NULL,NULL,'chuyendizz@gmail.com','Chuyen Dizz','$2a$10$8spsPyyT1G4Ol7nPffFV4etGfURQA7EYS9vxH25fiqRxG6zbBpt2u','6308348000',8),(2,NULL,'ADMIN',1,NULL,'ADMIN',NULL,NULL,NULL,'phamminhhiep0402@gmail.com','Pham Huy','$2a$10$KWtPamXHqnTueHNTXZLgtuZHUKTbASsUWlCK3xta6./uDz/kD4zZq','0912345566',NULL),(3,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'admin@gmail.com','Shopee','$2a$12$ChoekAKeHq6SQpkZjN2nc.F6MYO96osDdDcgjxLNU5HUBlE9pkYba',NULL,NULL),(4,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'vendor@gmail.com','Bemi Store','$2a$12$ChoekAKeHq6SQpkZjN2nc.F6MYO96osDdDcgjxLNU5HUBlE9pkYba',NULL,NULL),(5,NULL,NULL,NULL,NULL,NULL,'3602 Gaylord Dr',NULL,'2025-05-14','lta@gmail.com','Nguyễn Thuỳ Trang','123','6308348000',NULL),(6,NULL,NULL,NULL,NULL,NULL,'3602 Gaylord Dr',NULL,'2000-12-11','hvv@gmail.com','Hoàng Văn Vinh','123','6308348000',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -546,6 +548,39 @@ INSERT INTO `vouchers` VALUES (1,NULL,NULL,NULL,NULL,NULL,12,'HE2025001','2025-1
 UNLOCK TABLES;
 
 --
+-- Table structure for table `wishlist`
+--
+
+DROP TABLE IF EXISTS `wishlist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `wishlist` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `created_date_time` datetime(6) DEFAULT NULL,
+  `created_by` varchar(255) DEFAULT NULL,
+  `status` int DEFAULT NULL,
+  `modified_date_time` datetime(6) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  `product_id` bigint DEFAULT NULL,
+  `user_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK6p7qhvy1bfkri13u29x6pu8au` (`product_id`),
+  KEY `FKtrd6335blsefl2gxpb8lr0gr7` (`user_id`),
+  CONSTRAINT `FK6p7qhvy1bfkri13u29x6pu8au` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
+  CONSTRAINT `FKtrd6335blsefl2gxpb8lr0gr7` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `wishlist`
+--
+
+LOCK TABLES `wishlist` WRITE;
+/*!40000 ALTER TABLE `wishlist` DISABLE KEYS */;
+/*!40000 ALTER TABLE `wishlist` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Dumping events for database 'shopee'
 --
 
@@ -562,4 +597,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-21 13:44:08
+-- Dump completed on 2025-06-04 15:02:58

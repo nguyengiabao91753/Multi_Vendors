@@ -76,9 +76,9 @@ public class SecurityConfig {
                         .failureUrl("/loginError")
                 )
                 .authorizeHttpRequests(at -> at
-                        .requestMatchers("/", "/home", "/login/**", "/login-google", "/register", "/save", "re-send", "/image/**", "/js/**", "/lib/**", "/style/**", "/slider/**", "/css/**", "/list/**", "/detail/**",
+                        .requestMatchers("/", "/home", "/login/**", "/view/**", "/login-google", "/register", "/save", "re-send", "/image/**", "/js/**", "/lib/**", "/style/**", "/slider/**", "/css/**", "/list/**", "/detail/**",
                                 "/api/storage/**", "recover", "send-otp-recover", "otp-check", "confirm-otp", "send-otp-recover", "confirm-otp-recover",
-                                "/client/payment/pay", "/productListClient/**", "save-new-password", "detail", "change-password", "save-change-password", "/users/**",
+                                "/client/payment/pay", "/productListClient/**", "save-new-password", "detail", "change-password", "save-change-password", "/users/**", "/forgot/**", "/forgotPass/**", "/otp-check-pass/**" , "/confirm-otp-pass/**",
                                 "/assets/**", "/assets_admin/**", "/client_assets/**", "/index/**", "/product/**", "/guest/**").permitAll()
                         .requestMatchers("/test", "/admin/**", "/userList/**").hasAnyRole("ADMIN")
                         .requestMatchers("/user/profile/**").hasAnyRole("ADMIN", "VENDOR", "CLIENT")

@@ -23,6 +23,136 @@
     <link rel="stylesheet" th:href="@{/style/reset.css}"/>
     <link rel="stylesheet" th:href="@{/style/style.css}"/>
     <link rel="stylesheet" th:href="@{/css/product-detail.css}"/>
+    <style>
+        .shop-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 1000px;
+            margin: 20px auto;
+        }
+
+        .shop-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .shop-info img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+        }
+
+        .shop-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .shop-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .shop-online {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .shop-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .chat-btn {
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-btn::before {
+            content: '💬';
+            margin-right: 6px;
+        }
+
+        .view-btn {
+            display: inline-block;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: white;
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+
+        .shop-stats {
+            display: flex;
+            gap: 40px;
+            font-size: 14px;
+        }
+
+        .stat-group {
+            display: flex;
+            flex-direction: column;
+            color: #888;
+        }
+
+        .stat-value {
+            color: #e53935;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+
+        .highlight {
+            color: #e53935;
+        }
+
+        /* --- Wishlist Button Styling --- */
+
+        /* Base style for both add/remove wishlist buttons */
+        .btn-add-wishlist,
+        .btn-remove-wishlist {
+            display: inline-flex; /* Use flexbox for icon and text alignment */
+            align-items: center;
+            justify-content: center;
+            min-width: 160px; /* Give it a similar width to "Thêm vào giỏ hàng" */
+            height: 48px; /* Match height of cart button */
+            padding: 0 20px;
+            font-size: 1.1em;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s ease; /* Smooth transitions for hover effects */
+            text-decoration: none; /* In case it's an anchor */
+            white-space: nowrap; /* Prevent text from wrapping */
+        }
+
+        .btn-add-wishlist i,
+        .btn-remove-wishlist i {
+            margin-right: 8px; /* Space between icon and text */
+            font-size: 1.2em; /* Adjust icon size */
+        }
+
+        .btn-add-wishlist i:hover,
+        .btn-remove-wishlist i:hover {
+            color: red;
+            cursor: pointer;
+        }
+
+    </style>
 </head>
 <body>
 
@@ -77,7 +207,15 @@
                                     th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span>
                             </p>
                         </div>
-                        <form action="" method="post">
+                        <form th:action="@{/client/wishlist/toggle(productId=${product.id})}" method="post">
+                            <button type="submit"
+                                    th:classappend="${inWishlist} ? 'btn-remove-wishlist' : 'btn-add-wishlist'"
+                                    style="background: none; border: none;">
+                                <i th:class="${inWishlist} ? 'fas fa-heart text-danger' : 'far fa-heart text-dark'"></i>
+                            </button>
+                        </form>
+                        <form th:action="@{/client/cart/add}" method="post">
+                            <input type="hidden" name="productId" th:value="${product.id}"/>
                             <div class="product-quantity">
                                 <label>Số Lượng</label>
                                 <div class="product-quantity-form">
@@ -98,14 +236,48 @@
                                     <p th:unless="${product.amount != null}">Số lượng không xác định</p>
                                 </div>
                             </div>
+
                             <div class="product-add">
-                                <button type="submit" name="addcart"><i class="fas fa-cart-plus"></i>Thêm Vào Giỏ Hàng
+                                <button type="submit" name="addcart"><i class="fas fa-cart-plus"></i> Thêm Vào Giỏ Hàng
                                 </button>
                                 <button type="submit" name="buynow">Mua Ngay</button>
                             </div>
                         </form>
                     </div>
                 </div>
+                <div class="shop-container">
+                    <div class="shop-info">
+                        <img src="https://vieclam.ueh.edu.vn/images/company/avatar/KhKYCBSjQQ_Shopee-logo-512x512.png"
+                             alt="Logo">
+                        <div class="shop-details">
+                            <div class="shop-name"><span th:text="${product.user.fullName}"></span></div>
+                            <div class="shop-online">Online 17 Phút Trước</div>
+                            <div class="shop-actions">
+                                <button class="chat-btn">Chat Ngay</button>
+                                <a th:href="@{/view/vendor(id=${product.user.id})}" class="view-btn">Xem Shop</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="shop-stats">
+                        <div class="stat-group">
+                            <div>Đánh Giá</div>
+                            <div class="stat-value">957</div>
+                        </div>
+                        <div class="stat-group">
+                            <div>Tỉ Lệ Phản Hồi</div>
+                            <div class="stat-value">29%</div>
+                        </div>
+                        <div class="stat-group">
+                            <div>Tham Gia</div>
+                            <div class="stat-value highlight">5 năm trước</div>
+                        </div>
+                        <div class="stat-group">
+                            <div>Thời Gian Phản Hồi</div>
+                            <div class="stat-value highlight">trong vài giờ</div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="page-product__details">
                     <div class="page-product__details-section">
                         <div class="details-title">Chi Tiết Sản Phẩm</div>
@@ -131,11 +303,15 @@
                             </div>
                             <div class="details-item">
                                 <label>Thương hiệu</label>
-                                <p>No Brand</p></div>
+                                <p th:if="${product.user != null and product.user.fullName != null}"
+                                   th:text="${product.user.fullName}"></p>
+                                <p th:unless="${product.user != null and product.user.fullName != null}">No Brand</p>
+                            </div>
                             <div class="details-item">
                                 <label>Xuất xứ</label>
-                                <p th:if="${product.user != null}" th:text="${product.user.address}"></p>
-                                <p th:unless="${product.user != null}">Không rõ</p>
+                                <p th:if="${product.user != null and product.user.address != null}"
+                                   th:text="${product.user.address}"></p>
+                                <p th:unless="${product.user != null and product.user.address != null}">Không rõ</p>
                             </div>
                             <div class="details-item">
                                 <label>Kho hàng</label>

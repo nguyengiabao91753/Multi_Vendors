@@ -45,6 +45,7 @@
                         <div class="dropdown-menu show">
                             <a href="#" class="dropdown-item">Tài khoản của tôi</a>
                             <a href="#" class="dropdown-item">Đơn mua</a>
+                            <a th:href="@{/client/wishlist}" class="dropdown-item">Yêu thích</a>
                             <a href="#" class="dropdown-item">Đổi mật khẩu</a>
                             <a th:href="@{/logout}" class="dropdown-item">Đăng xuất</a>
                         </div>
@@ -63,7 +64,7 @@
                         </form>
                     </div>
                 </div>
-                <a th:href="@{/cart}" class="header-with-search__cart"><i class="fas fa-cart-plus"></i></a>
+                <a th:href="@{/client/cart}" class="header-with-search__cart"><i class="fas fa-cart-plus"></i></a>
             </div>
         </div>
     </header>
