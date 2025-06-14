@@ -53,21 +53,21 @@ public class OtpController {
             String phone = (String) session.getAttribute("phone");
             String fullName = (String) session.getAttribute("fullName");
             String address = (String) session.getAttribute("address");
-            String type = (String) session.getAttribute("type");
             userEntity.setPhone(phone);
             userEntity.setStatus(1);
 
-            RoleEntity role = new RoleEntity();
-            
-            if(type.equals("VENDOR")) {
-                role = roleService.findById(2L).get();
-            } else if(type.equals("CLIENT")) {
-                role = roleService.findById(3L).get();
-            }
+            RoleEntity role1 = new RoleEntity();
+            RoleEntity role2 = new RoleEntity();
+
+
+            role1 = roleService.findById(2L).get();
+            role2 = roleService.findById(3L).get();
 
             Set<RoleEntity> roleEntities = new HashSet<>();
 
-            roleEntities.add(role);
+            roleEntities.add(role1);
+            roleEntities.add(role2);
+
             UserEntity userNew = new UserEntity();
             userNew.setFullName(fullName);
             userNew.setStatus(1);

@@ -32,24 +32,17 @@ public class HomeController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("")
-    private String indexHome() {
-        return "index";
-    }
-
-    @GetMapping("/home")
-    private String homePage(Model model) {
+    @GetMapping({"", "/home", "/index"})
+    public String handleHomeAndIndex(Model model) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+
         if (authorities.stream().anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()))) {
-            model.addAttribute("email", SecurityContextHolder.getContext().getAuthentication().getName());
+            model.addAttribute("email", username);
             return "redirect:/admin/dashboard";
-        } else if (authorities.stream().anyMatch(authority -> "ROLE_VENDOR".equals(authority.getAuthority()))) {
-            model.addAttribute("email", SecurityContextHolder.getContext().getAuthentication().getName());
-            return "redirect:/vendor/dashboard";
         } else {
-            if (!Objects.equals(username, "")) {
-                model.addAttribute("email", SecurityContextHolder.getContext().getAuthentication().getName());
+            if (!username.isEmpty() && !"anonymousUser".equals(username)) {
+                model.addAttribute("email", username);
                 return "redirect:/client/home";
             } else {
                 return "index";
@@ -57,25 +50,6 @@ public class HomeController {
         }
     }
 
-    @GetMapping("/index")
-    private String index(Model model) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-        if (authorities.stream().anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()))) {
-            model.addAttribute("email", SecurityContextHolder.getContext().getAuthentication().getName());
-            return "redirect:/admin/dashboard";
-        } else if (authorities.stream().anyMatch(authority -> "ROLE_VENDOR".equals(authority.getAuthority()))) {
-            model.addAttribute("email", SecurityContextHolder.getContext().getAuthentication().getName());
-            return "redirect:/vendor/dashboard";
-        } else {
-            if (!Objects.equals(username, "")) {
-                model.addAttribute("email", SecurityContextHolder.getContext().getAuthentication().getName());
-                return "redirect:/client/home";
-            } else {
-                return "index";
-            }
-        }
-    }
 
     @Autowired
     private ProductRepository productRepository;
@@ -143,8 +117,8 @@ public class HomeController {
                 inWishlist = wishlistRepository
                         .findByUserEntityAndProductEntity(userEntity, productEntity)
                         .isPresent();
+                model.addAttribute("user", optionalUser.get());
             }
-
             model.addAttribute("inWishlist", inWishlist);
             model.addAttribute("product", productOptional.get());
             return "detail";

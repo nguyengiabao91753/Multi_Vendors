@@ -48,7 +48,6 @@ public class ClientCartController {
         Optional<CartEntity> cartEntityOpt = cartRepository.findByUserEntity(userEntity);
 
         if (cartEntityOpt.isEmpty()) {
-            // Tạo giỏ hàng nếu chưa có
             CartEntity newCart = new CartEntity();
             newCart.setUserEntity(userEntity);
             newCart.setCartDetailEntities(Set.of());
@@ -64,7 +63,7 @@ public class ClientCartController {
 
             int totalQuantity = cartDetails.stream().mapToInt(CartDetailEntity::getQuantity).sum();
             BigDecimal totalPrice = cartDetails.stream()
-                    .map(detail -> detail.getProductEntity().getPrice().multiply(BigDecimal.valueOf(detail.getQuantity())))
+                    .map(detail -> detail.getPriceOfOne().multiply(BigDecimal.valueOf(detail.getQuantity())))
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
             model.addAttribute("cartDetails", cartDetails);
@@ -97,6 +96,7 @@ public class ClientCartController {
             cartDetail.setTotalPrice(priceOfOne.multiply(BigDecimal.valueOf(quantity)));
 
             cartDetailRepository.save(cartDetail);
+            updateCartTotalCost(cartDetail.getCartEntity());
         }
         return "redirect:/client/cart";
     }
@@ -104,7 +104,13 @@ public class ClientCartController {
 
     @GetMapping("/remove/{id}")
     public String removeItem(@PathVariable("id") Long cartDetailId) {
-        cartDetailRepository.deleteById(cartDetailId);
+        Optional<CartDetailEntity> opt = cartDetailRepository.findById(cartDetailId);
+        if (opt.isPresent()) {
+            CartDetailEntity detail = opt.get();
+            CartEntity cart = detail.getCartEntity();
+            cartDetailRepository.deleteById(cartDetailId);
+            updateCartTotalCost(cart);
+        }
         return "redirect:/client/cart";
     }
 
@@ -158,7 +164,19 @@ public class ClientCartController {
         }
 
         cartRepository.save(cart);
+        updateCartTotalCost(cart);
+
         return "redirect:/client/cart";
     }
+
+    private void updateCartTotalCost(CartEntity cart) {
+        BigDecimal total = cart.getCartDetailEntities().stream()
+                .map(CartDetailEntity::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        cart.setTotalCost(total);
+        cartRepository.save(cart);
+    }
+
 
 }

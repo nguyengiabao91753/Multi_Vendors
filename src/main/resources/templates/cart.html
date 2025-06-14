@@ -101,18 +101,9 @@
                                             </a>
                                         </div>
 
-                                        <!-- Product Category -->
-                                        <div class="cart-item__cell-variation">
-                                            <p>Phân loại hàng:
-                                                <span th:if="${item.productEntity.categories != null and !item.productEntity.categories.isEmpty()}"
-                                                      th:text="${item.productEntity.categories[0].categoryName}">Danh mục</span>
-                                                <span th:unless="${item.productEntity.categories != null and !item.productEntity.categories.isEmpty()}">Không phân loại</span>
-                                            </p>
-                                        </div>
-
                                         <!-- Unit Price -->
                                         <div class="cart-item__cell-unit-price">
-                                            <span class="vnd-price" th:text="${item.productEntity.price}"></span>
+                                            <span class="vnd-price" th:text="${item.productEntity.salePrice}"></span>
                                         </div>
 
                                         <!-- Quantity -->
@@ -129,7 +120,7 @@
 
                                         <!-- Total Price -->
                                         <div class="cart-item__cell-total-price">
-                                            <span class="vnd-price" th:text="${item.quantity * item.productEntity.price}"></span>
+                                            <span class="vnd-price" th:text="${item.quantity * item.productEntity.salePrice}"></span>
                                         </div>
 
                                         <!-- Delete -->
@@ -148,7 +139,7 @@
                             <div class="price"><span class="vnd-price" th:text="${totalPrice}"></span></div>
                         </div>
                         <div class="cart-page-footer__checkout">
-                            <a href="#">Mua Hàng</a>
+                            <a th:href="@{/client/checkout}">Thanh toán</a>
                         </div>
                     </div>
                 </div>

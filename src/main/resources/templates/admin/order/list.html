@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản Lý Đơn Hàng</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body>
+
+<th:block th:replace="layout/admin-layout :: layout">
+    <th:block th:fragment="pageContent">
+        <div class="container mt-4">
+
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Danh sách đơn hàng</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Tên khách hàng</th>
+                            <th>Email</th>
+                            <th>Số điện thoại</th>
+                            <th>Địa chỉ</th>
+                            <th>Tổng tiền</th>
+                            <th>Phương thức thanh toán</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="order, iterStat : ${orders}">
+                            <td th:text="${iterStat.index + 1}">1</td>
+                            <td th:text="${order.fullName}">Nguyễn Văn A</td>
+                            <td th:text="${order.email}">example@email.com</td>
+                            <td th:text="${order.phone}">0123456789</td>
+                            <td th:text="${order.address}">Hà Nội</td>
+                            <td th:text="${#numbers.formatDecimal(order.totalCost, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+                                1.000.000 đ
+                            </td>
+                            <td th:text="${order.method}">Thanh toán khi nhận hàng</td>
+                            <td th:text="${order.status == -1 ? 'Đang chờ xác nhận' :
+              order.status == 0 ? 'Đã huỷ' :
+              order.status == 1 ? 'Đã thanh toán' :
+              order.status == 2 ? 'Đang giao hàng' : 'Đã giao hàng'}">Đang xử lý
+                            </td>
+
+                            <td>
+                                <a th:href="@{'/admin/order/detail/' + ${order.id}}"
+                                   class="btn btn-info btn-sm" title="Chi tiết">
+                                    <i class="bi bi-eye-fill"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(orders)}">
+                            <td colspan="9" class="text-center">Không có đơn hàng nào.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Phân trang (nếu có) -->
+                    <nav th:if="${totalPages > 1}">
+                        <ul class="pagination justify-content-center mt-3">
+                            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/admin/orders(page=${currentPage - 1})}">
+                                    Trước
+                                </a>
+                            </li>
+
+                            <li class="page-item"
+                                th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                                th:classappend="${i == currentPage} ? 'active'">
+                                <a class="page-link"
+                                   th:href="@{/admin/orders(page=${i})}"
+                                   th:text="${i + 1}"></a>
+                            </li>
+
+                            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/admin/orders(page=${currentPage + 1})}">
+                                    Sau
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</th:block>
+
+</body>
+</html>

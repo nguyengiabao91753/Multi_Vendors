@@ -42,7 +42,7 @@ public class AuthController {
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public String save(@RequestParam String email, @RequestParam String name, @RequestParam String phone, @RequestParam String password, @RequestParam String type, Model model, HttpSession session) {
+    public String save(@RequestParam String email, @RequestParam String name, @RequestParam String phone, @RequestParam String password, Model model, HttpSession session) {
         if (userService.findByEmail(email).isPresent()) {
             model.addAttribute("mess", "Email đã tồn tại. Hãy nhập Email mới!");
             return "register";
@@ -54,7 +54,6 @@ public class AuthController {
         this.emailSenderService.sendEmail(email, subject, mess);
         session.setAttribute("email", email);
         session.setAttribute("name", name);
-        session.setAttribute("type", type);
         session.setAttribute("phone", phone);
         session.setAttribute("password", password);
         return "redirect:/otp-check";

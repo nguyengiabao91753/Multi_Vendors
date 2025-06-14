@@ -207,7 +207,7 @@
                                     th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span>
                             </p>
                         </div>
-                        <form th:action="@{/client/wishlist/toggle(productId=${product.id})}" method="post">
+                        <form th:if="${user != null}" th:action="@{/client/wishlist/toggle(productId=${product.id})}" method="post">
                             <button type="submit"
                                     th:classappend="${inWishlist} ? 'btn-remove-wishlist' : 'btn-add-wishlist'"
                                     style="background: none; border: none;">
@@ -237,7 +237,7 @@
                                 </div>
                             </div>
 
-                            <div class="product-add">
+                            <div class="product-add" th:if="${user != null and product.user.id != user.id}">
                                 <button type="submit" name="addcart"><i class="fas fa-cart-plus"></i> Thêm Vào Giỏ Hàng
                                 </button>
                                 <button type="submit" name="buynow">Mua Ngay</button>

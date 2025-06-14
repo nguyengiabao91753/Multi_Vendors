@@ -32,6 +32,11 @@ public class VoucherEntity extends AbstractEntity {
     @Column(name = "start_time", nullable = true)
     private LocalDateTime startTime;
 
+    @OneToMany(mappedBy = "voucherEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<OrderEntity> orders;
+
     @Basic
     @Column(name = "end_time", nullable = true)
     private LocalDateTime endTime;

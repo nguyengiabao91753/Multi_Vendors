@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,7 +88,15 @@ public class AdminVoucherController {
     public String updateVoucherPage(@PathVariable("id") Long id, Model model) {
         Optional<VoucherEntity> voucherOpt = voucherRepository.findById(id);
         if (voucherOpt.isPresent()) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+            voucherOpt.ifPresent(voucher -> {
+                model.addAttribute("voucher", voucher);
+                model.addAttribute("startTimeFormatted", voucher.getStartTime().format(formatter));
+                model.addAttribute("endTimeFormatted", voucher.getEndTime().format(formatter));
+            });
+
             model.addAttribute("voucher", voucherOpt.get());
+
             return "admin/voucher/update";
         }
         return "redirect:/admin/voucher";

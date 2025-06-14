@@ -23,6 +23,104 @@
     <link rel="stylesheet" th:href="@{/style/style.css}"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* Vùng content tổng thể */
+        .cart-page-content {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            margin-top: 20px;
+        }
+
+        /* Header */
+        .cart-page-content-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #f2f2f2;
+            font-size: 16px;
+        }
+
+        /* Vùng chứa từng item */
+        .cart-page-content-section {
+            border-bottom: 1px solid #eee;
+            padding: 16px 0;
+            transition: background-color 0.3s ease;
+        }
+        .cart-page-content-section:hover {
+            background-color: #fafafa;
+        }
+
+        /* Cấu trúc từng item */
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-item__content {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        /* Thông tin sản phẩm */
+        .cart-item__cell-overview {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 75%;
+        }
+
+        .cart-item__cell-overview--image {
+            width: 80px;
+            height: 80px;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            background-color: #f9f9f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-item__cell-overview--image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+
+        .cart-item__cell-overview p {
+            font-size: 15px;
+            font-weight: 500;
+            margin: 0;
+            color: #212121;
+        }
+
+        /* Nút hành động */
+        .cart-item__cell-action {
+            width: 25%;
+            text-align: right;
+        }
+
+        .cart-item__cell-action form button {
+            background-color: #ee4d2d;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .cart-item__cell-action form button:hover {
+            background-color: #d8431e;
+        }
+    </style>
 </head>
 <body>
 

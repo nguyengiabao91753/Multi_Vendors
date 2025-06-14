@@ -21,6 +21,26 @@ public class OrderEntity extends AbstractEntity{
     @Column(name = "total_cost", nullable = true)
     private BigDecimal totalCost;
 
+    private String address;
+    private String email;
+    private String phone;
+    private String fullName;
+    private String method;
+    private String paymentStatus;
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "voucher_id")
+    @EqualsAndHashCode.Exclude
+    private VoucherEntity voucherEntity;
+
     @Basic
     @Column(name = "shipping_fee", nullable = true)
     private BigDecimal shippingFee;
@@ -39,6 +59,53 @@ public class OrderEntity extends AbstractEntity{
     @EqualsAndHashCode.Exclude
     private UserEntity userEntity;
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public VoucherEntity getVoucherEntity() {
+        return voucherEntity;
+    }
+
+    public void setVoucherEntity(VoucherEntity voucherEntity) {
+        this.voucherEntity = voucherEntity;
+    }
 
     public LocalDateTime getOrderTime() {
         return orderTime;

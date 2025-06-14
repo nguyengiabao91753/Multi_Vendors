@@ -52,7 +52,4 @@ public class CartEntity extends AbstractEntity{
 	public void setCartDetailEntities(Set<CartDetailEntity> cartDetailEntities) {
 		this.cartDetailEntities = cartDetailEntities;
 	}
-    
-    
-
 }

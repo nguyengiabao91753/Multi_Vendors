@@ -19,8 +19,6 @@ public class ProductEntity extends AbstractEntity{
     @Column(length = 255,name = "product_name", nullable = true,  columnDefinition = "nvarchar(255)")
     private String productName;
 
-    @Basic
-    @Column(name = "description")
     private String description;
 
     @Basic

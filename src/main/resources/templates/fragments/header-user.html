@@ -12,8 +12,7 @@
         <div class="header-inner">
             <div class="header-navbar-wrapper">
                 <ul class="header-navbar-left">
-                    <li><a href="#">Kênh Người Bán</a></li>
-                    <li><a href="#">Trở thành Người bán Shopee</a></li>
+                    <li><a th:href="@{/vendor/dashboard}">Trở thành Người bán Shopee</a></li>
                     <li><a href="#">Tải ứng dụng</a></li>
                     <li><a href="#">Kết nối</a></li>
                     <li>
@@ -44,9 +43,8 @@
                         </a>
                         <div class="dropdown-menu show">
                             <a href="#" class="dropdown-item">Tài khoản của tôi</a>
-                            <a href="#" class="dropdown-item">Đơn mua</a>
+                            <a th:href="@{/client/orders}" class="dropdown-item">Đơn mua</a>
                             <a th:href="@{/client/wishlist}" class="dropdown-item">Yêu thích</a>
-                            <a href="#" class="dropdown-item">Đổi mật khẩu</a>
                             <a th:href="@{/logout}" class="dropdown-item">Đăng xuất</a>
                         </div>
                     </li>

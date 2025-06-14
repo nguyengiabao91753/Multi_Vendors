@@ -59,13 +59,17 @@
                                 <!-- Ngày bắt đầu -->
                                 <div class="mb-3">
                                     <label class="form-label">Bắt đầu <span class="text-danger">*</span></label>
-                                    <input type="datetime-local" class="form-control" th:field="*{startTime}" required>
+                                    <input type="datetime-local" class="form-control"
+                                           name="startTime"
+                                           th:value="${startTimeFormatted}" required>
                                 </div>
 
                                 <!-- Ngày kết thúc -->
                                 <div class="mb-3">
                                     <label class="form-label">Kết thúc <span class="text-danger">*</span></label>
-                                    <input type="datetime-local" class="form-control" th:field="*{endTime}" required>
+                                    <input type="datetime-local" class="form-control"
+                                           name="endTime"
+                                           th:value="${endTimeFormatted}" required>
                                 </div>
                             </div>
                         </div>
