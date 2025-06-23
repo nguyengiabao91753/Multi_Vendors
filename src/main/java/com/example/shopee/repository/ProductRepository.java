@@ -27,4 +27,8 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
             "   OR EXISTS (SELECT c FROM p.categories c WHERE LOWER(c.categoryName) LIKE %:keyword%)" +
             ")")
     Page<ProductEntity> searchProducts(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT COUNT(p) FROM ProductEntity p WHERE p.user.id = :userId")
+    int countByUserId(@Param("userId") Long userId);
+
 }

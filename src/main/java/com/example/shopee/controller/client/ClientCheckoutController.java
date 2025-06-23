@@ -135,7 +135,6 @@ public class ClientCheckoutController {
             return "redirect:/client/cart";
         }
 
-
         OrderEntity order = new OrderEntity();
         BigDecimal totalCost = cartEntity.getTotalCost();
 
@@ -232,13 +231,13 @@ public class ClientCheckoutController {
                 this.voucherId = voucherId;
             }
 
-            String vnp_TxnRef = VNPayConfig.getRandomNumber(8); // Unique order reference
+            String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
             String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
             String vnp_Version = "2.1.0";
             String vnp_Command = "pay";
             String vnp_IpAddr = "127.0.0.1";
             String vnp_CurrCode = "VND";
-            String vnp_OrderInfo = "Thanh toán đơn hàng " + vnp_TxnRef;
+            String vnp_OrderInfo = "Thanh toan don hang " + vnp_TxnRef;
             String vnp_BankCode = "NCB";
             order.setMethod("VNPay");
             HttpSession session = request.getSession();
@@ -294,13 +293,11 @@ public class ClientCheckoutController {
         return "checkout";
     }
 
-    // Handle VNPay payment callback
     @GetMapping("/getPaymentInfo")
     public String getPaymentInfo(@RequestParam("vnp_TransactionNo") String transactionNo,
                                  @RequestParam("vnp_OrderInfo") String orderInfo,
                                  @RequestParam("vnp_ResponseCode") String vnp_ResponseCode,
-                                 @RequestParam("vnp_TransactionStatus") String transactionStatus,
-                                 Model model) {
+                                 @RequestParam("vnp_TransactionStatus") String transactionStatus) {
 
         this.transactionNo = transactionNo;
         this.orderInfo = orderInfo;
@@ -417,6 +414,6 @@ public class ClientCheckoutController {
         String mess = "Xin chào @" + " \n" + email + "Bạn đã thanh toán thành công đơn hàng có mã đơn hàng là: " + transactionNo + ", tổng giá trị là " + totalCost + " !" + "\n Cảm ơn đã tin tưởng chúng tôi để mua hàng!";
         this.emailSenderService.sendEmail(email, subject, mess);
 
-        return "after-checkout";
+        return "invoice";
     }
 }

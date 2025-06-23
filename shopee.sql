@@ -33,7 +33,7 @@ CREATE TABLE `cart` (
   `updated_by` varchar(255) DEFAULT NULL,
   `total_cost` decimal(38,2) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,7 +70,7 @@ CREATE TABLE `cart_details` (
   KEY `FK9rlic3aynl3g75jvedkx84lhv` (`product_id`),
   CONSTRAINT `FK9rlic3aynl3g75jvedkx84lhv` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
   CONSTRAINT `FKhq1m50l0ke2fkqxxd6ubo3x4b` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,7 +136,7 @@ CREATE TABLE `feedback` (
   KEY `FKpwwmhguqianghvi1wohmtsm8l` (`user_id`),
   CONSTRAINT `FKc3p4lovbwrtqqkd3ci5t0g84u` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
   CONSTRAINT `FKpwwmhguqianghvi1wohmtsm8l` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -145,6 +145,7 @@ CREATE TABLE `feedback` (
 
 LOCK TABLES `feedback` WRITE;
 /*!40000 ALTER TABLE `feedback` DISABLE KEYS */;
+INSERT INTO `feedback` VALUES (1,'2025-06-23 13:19:54.568711',NULL,NULL,NULL,NULL,'Sản phẩm ok',NULL,3,3,1),(3,'2025-06-23 15:34:03.182482',NULL,NULL,NULL,NULL,'Sản phẩm ok',NULL,3,5,1);
 /*!40000 ALTER TABLE `feedback` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -175,7 +176,7 @@ CREATE TABLE `order_details` (
   CONSTRAINT `FK4q98utpd73imf4yhttm3w0eax` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
   CONSTRAINT `FKjyu2qbqt8gnvno9oe9j2s2ldk` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
   CONSTRAINT `FKs5pemrd6ksp3k38hti17i1jx7` FOREIGN KEY (`voucher_id`) REFERENCES `vouchers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -184,7 +185,7 @@ CREATE TABLE `order_details` (
 
 LOCK TABLES `order_details` WRITE;
 /*!40000 ALTER TABLE `order_details` DISABLE KEYS */;
-INSERT INTO `order_details` VALUES (2,NULL,NULL,NULL,NULL,NULL,5000000.00,1,5000000.00,2,3,NULL),(3,NULL,NULL,NULL,NULL,NULL,10000000.00,1,10000000.00,3,1,NULL),(4,NULL,NULL,NULL,NULL,NULL,5000000.00,1,5000000.00,4,3,NULL),(5,NULL,NULL,NULL,NULL,NULL,5000000.00,1,5000000.00,5,3,NULL),(6,NULL,NULL,NULL,NULL,NULL,300000.00,1,300000.00,6,5,NULL),(7,NULL,NULL,NULL,NULL,NULL,5000000.00,1,5000000.00,7,3,NULL),(8,NULL,NULL,NULL,NULL,NULL,5000000.00,1,5000000.00,8,3,NULL),(9,NULL,NULL,NULL,NULL,NULL,5000000.00,1,5000000.00,9,3,NULL);
+INSERT INTO `order_details` VALUES (2,NULL,NULL,NULL,NULL,NULL,5000000.00,1,5000000.00,2,3,NULL),(3,NULL,NULL,NULL,NULL,NULL,10000000.00,1,10000000.00,3,1,NULL),(4,NULL,NULL,NULL,NULL,NULL,5000000.00,1,5000000.00,4,3,NULL),(5,NULL,NULL,NULL,NULL,NULL,5000000.00,1,5000000.00,5,3,NULL),(6,NULL,NULL,NULL,NULL,NULL,300000.00,1,300000.00,6,5,NULL),(7,NULL,NULL,NULL,NULL,NULL,5000000.00,1,5000000.00,7,3,NULL),(8,NULL,NULL,NULL,NULL,NULL,5000000.00,1,5000000.00,8,3,NULL),(9,NULL,NULL,NULL,NULL,NULL,5000000.00,1,5000000.00,9,3,NULL),(10,NULL,NULL,NULL,NULL,NULL,300000.00,1,300000.00,10,5,NULL);
 /*!40000 ALTER TABLE `order_details` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -213,12 +214,13 @@ CREATE TABLE `orders` (
   `method` varchar(255) DEFAULT NULL,
   `phone` varchar(255) DEFAULT NULL,
   `voucher_id` bigint DEFAULT NULL,
+  `payment_status` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK32ql8ubntj5uh44ph9659tiih` (`user_id`),
   KEY `FKdimvsocblb17f45ikjr6xn1wj` (`voucher_id`),
   CONSTRAINT `FK32ql8ubntj5uh44ph9659tiih` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `FKdimvsocblb17f45ikjr6xn1wj` FOREIGN KEY (`voucher_id`) REFERENCES `vouchers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -227,7 +229,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (2,'2025-06-13 12:49:22.501362',NULL,-1,'2025-06-13 12:49:22.501362',NULL,NULL,NULL,NULL,5000000.00,1,'3602 Gaylord Dr','ntt@gmail.com','Nguyễn Thuỳ Trang','COD','6308348000',NULL),(3,'2025-06-13 12:50:33.805032',NULL,-1,'2025-06-13 12:50:33.806034',NULL,NULL,NULL,NULL,10000000.00,1,'3602 Gaylord Dr','hvv@gmail.com','Hoàng Văn Vinh','COD','6308348000',NULL),(4,'2025-06-13 12:53:17.075540',NULL,-1,'2025-06-13 12:53:17.075540',NULL,NULL,NULL,NULL,5000000.00,1,'3602 Gaylord Dr','ntt@gmail.com','Nguyễn Trang','COD','6308348000',NULL),(5,'2025-06-14 02:31:30.404955',NULL,-1,'2025-06-14 02:31:30.404955',NULL,NULL,NULL,NULL,4949988.00,1,'3602 Gaylord Dr','ntt@gmail.com','Nguyễn Thuỳ Trang','COD','6308348000',1),(6,'2025-06-14 03:03:29.505310',NULL,2,'2025-06-14 03:03:29.505310',NULL,NULL,NULL,NULL,296989.00,7,'3602 Gaylord Dr','ntt@gmail.com','Tùng Lâm','VNPay','6308348000',1),(7,'2025-06-14 03:10:41.905825',NULL,1,'2025-06-14 03:10:41.905825',NULL,NULL,NULL,NULL,4949991.00,1,'3602 Gaylord Dr','hvv@gmail.com','Hoàng Văn Trường','VNPay','6308348000',1),(8,'2025-06-14 04:06:12.051379',NULL,1,'2025-06-14 04:06:12.051379',NULL,NULL,NULL,NULL,4949993.00,1,'3602 Gaylord Dr','ntt@gmail.com','Nguyễn Thuỳ Trang','VNPay','6308348000',1),(9,'2025-06-14 04:10:44.805816',NULL,1,'2025-06-14 04:10:44.805816',NULL,NULL,NULL,NULL,4949995.00,1,'3602 Gaylord Dr','phamminhhiep301@gmail.com','Hoàng Văn Vinh','VNPay','6308348000',1);
+INSERT INTO `orders` VALUES (2,'2025-06-13 12:49:22.501362',NULL,-1,'2025-06-13 12:49:22.501362',NULL,NULL,NULL,NULL,5000000.00,1,'3602 Gaylord Dr','ntt@gmail.com','Nguyễn Thuỳ Trang','COD','6308348000',NULL,NULL),(3,'2025-06-13 12:50:33.805032',NULL,-1,'2025-06-13 12:50:33.806034',NULL,NULL,NULL,NULL,10000000.00,1,'3602 Gaylord Dr','hvv@gmail.com','Hoàng Văn Vinh','COD','6308348000',NULL,NULL),(4,'2025-06-13 12:53:17.075540',NULL,-1,'2025-06-13 12:53:17.075540',NULL,NULL,NULL,NULL,5000000.00,1,'3602 Gaylord Dr','ntt@gmail.com','Nguyễn Trang','COD','6308348000',NULL,NULL),(5,'2025-06-14 02:31:30.404955',NULL,-1,'2025-06-14 02:31:30.404955',NULL,NULL,NULL,NULL,4949988.00,1,'3602 Gaylord Dr','ntt@gmail.com','Nguyễn Thuỳ Trang','COD','6308348000',1,NULL),(6,'2025-04-14 03:03:29.505310',NULL,3,'2025-04-14 03:03:29.505310',NULL,NULL,NULL,NULL,296989.00,7,'3602 Gaylord Dr','ntt@gmail.com','Tùng Lâm','VNPay','6308348000',1,NULL),(7,'2025-06-14 03:10:41.905825',NULL,1,'2025-06-14 03:10:41.905825',NULL,NULL,NULL,NULL,4949991.00,1,'3602 Gaylord Dr','hvv@gmail.com','Hoàng Văn Trường','VNPay','6308348000',1,NULL),(8,'2025-06-14 04:06:12.051379',NULL,1,'2025-06-14 04:06:12.051379',NULL,NULL,NULL,NULL,4949993.00,1,'3602 Gaylord Dr','ntt@gmail.com','Nguyễn Thuỳ Trang','VNPay','6308348000',1,NULL),(9,'2025-06-14 04:10:44.805816',NULL,1,'2025-06-14 04:10:44.805816',NULL,NULL,NULL,NULL,4949995.00,1,'3602 Gaylord Dr','phamminhhiep301@gmail.com','Hoàng Văn Vinh','VNPay','6308348000',1,NULL),(10,'2025-06-23 13:21:11.041630',NULL,3,'2025-06-23 13:21:11.041630',NULL,NULL,NULL,NULL,296997.00,1,'3602 Gaylord Dr','ntt@gmail.com','Nguyễn Thuỳ Trang','VNPay','6308348000',1,NULL);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -351,7 +353,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,'2025-05-21 00:00:00.000000',NULL,1,NULL,NULL,12,'RAM:	6GB\r\nBộ nhớ trong:	128-256-512GB\r\nThẻ SIM:	2 SIM\r\nDung lượng pin:	Li-Ion 3687 mAh\r\nSạc nhanh PD2.0, 50% trong 30ph (quảng cáo)\r\nSạc không dây Qi2 15W (iOS 17.4)\r\nMagSafe không dây 15W',11000000.00,'Điện thoại iPhone 12 Pro Max cũ',10000000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745159238/iwzsrjhebbndeha6xy2b.png',3),(2,'2025-05-21 00:00:00.000000',NULL,NULL,NULL,NULL,12,'CPU: 	Qualcomm SM8550 Snapdragon 8 Gen 2 (4 nm)\r\n8 nhân (1x3.2 GHz & 2x2.8 GHz & 2x2.8 GHz & 3x2.0 GHz)\r\nGPU: Adreno 740\r\nRAM: 	8-12GB, LPDDR5X\r\nBộ nhớ trong: 	128GB (UFS 3.1 - 2.2GB/s)\r\n256GB/512GB (UFS 4.0 - 3.5GB/s)',10000000.00,'Xiaomi 13 Pro',9000000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160190/yewmfio5sf91ofi9u50n.png',4),(3,'2025-05-21 00:00:00.000000',NULL,1,NULL,NULL,6,'Điện thoại iPhone 11 Pro Max cũ',6000000.00,'Điện thoại iPhone 11 Pro Max cũ',5000000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160491/k968ibp2ws1rxjyulprb.png',3),(4,'2025-05-19 00:00:00.000000',NULL,0,NULL,NULL,12,'Giày nam size 42',500000.00,'Giày nam đen',400000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160705/vizezir2vhfqxgx9clpr.jpg',3),(5,'2025-05-19 00:00:00.000000',NULL,1,NULL,NULL,10,'Áo Polo Vải Dry Pique Ngắn Tay 1',500000.00,'Áo Polo Vải Dry Pique Ngắn Tay 1',300000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160787/risgbcqfogw9bl4ccohd.jpg',4),(6,'2025-05-19 00:00:00.000000',NULL,0,NULL,NULL,12,'\r\n    Hệ điều hành:\r\n    iOS 14\r\n    Chip xử lý (CPU):\r\n    Apple A12 Bionic\r\n    Tốc độ CPU:\r\n    2 nhân 2.5 GHz & 4 nhân 1.6 GHz\r\n    Chip đồ họa (GPU):\r\n    Apple GPU 4 nhân\r\n    RAM:\r\n    4 GB\r\n    Dung lượng lưu trữ:\r\n    64 GB\r\n    Dung lượng còn lại (khả dụng) khoảng:\r\n    Khoảng 57 GB\r\n    Danh bạ:\r\n    Không giới hạn\r\n',6000000.00,'XS Max',5500000.00,NULL,4),(7,'2025-05-19 00:00:00.000000',NULL,1,NULL,NULL,12,'Bánh ngọt mousse',123000.00,'Bánh ngọt mousse',100000.00,NULL,4);
+INSERT INTO `products` VALUES (1,'2025-05-21 00:00:00.000000',NULL,1,NULL,NULL,12,'RAM:	6GB\r\nBộ nhớ trong:	128-256-512GB\r\nThẻ SIM:	2 SIM\r\nDung lượng pin:	Li-Ion 3687 mAh\r\nSạc nhanh PD2.0, 50% trong 30ph (quảng cáo)\r\nSạc không dây Qi2 15W (iOS 17.4)\r\nMagSafe không dây 15W',11000000.00,'Điện thoại iPhone 12 Pro Max cũ',10000000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745159238/iwzsrjhebbndeha6xy2b.png',3),(2,'2025-05-21 00:00:00.000000',NULL,NULL,NULL,NULL,12,'CPU: 	Qualcomm SM8550 Snapdragon 8 Gen 2 (4 nm)\r\n8 nhân (1x3.2 GHz & 2x2.8 GHz & 2x2.8 GHz & 3x2.0 GHz)\r\nGPU: Adreno 740\r\nRAM: 	8-12GB, LPDDR5X\r\nBộ nhớ trong: 	128GB (UFS 3.1 - 2.2GB/s)\r\n256GB/512GB (UFS 4.0 - 3.5GB/s)',10000000.00,'Xiaomi 13 Pro',9000000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160190/yewmfio5sf91ofi9u50n.png',4),(3,'2025-05-21 00:00:00.000000',NULL,1,NULL,NULL,6,'Điện thoại iPhone 11 Pro Max cũ',6000000.00,'Điện thoại iPhone 11 Pro Max cũ',5000000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160491/k968ibp2ws1rxjyulprb.png',3),(4,'2025-05-19 00:00:00.000000',NULL,0,NULL,NULL,12,'Giày nam size 42',500000.00,'Giày nam đen',400000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160705/vizezir2vhfqxgx9clpr.jpg',3),(5,'2025-05-19 00:00:00.000000',NULL,1,NULL,NULL,9,'Áo Polo Vải Dry Pique Ngắn Tay 1',500000.00,'Áo Polo Vải Dry Pique Ngắn Tay 1',300000.00,'http://res.cloudinary.com/djyw3ytjd/image/upload/v1745160787/risgbcqfogw9bl4ccohd.jpg',4),(6,'2025-05-19 00:00:00.000000',NULL,0,NULL,NULL,12,'\r\n    Hệ điều hành:\r\n    iOS 14\r\n    Chip xử lý (CPU):\r\n    Apple A12 Bionic\r\n    Tốc độ CPU:\r\n    2 nhân 2.5 GHz & 4 nhân 1.6 GHz\r\n    Chip đồ họa (GPU):\r\n    Apple GPU 4 nhân\r\n    RAM:\r\n    4 GB\r\n    Dung lượng lưu trữ:\r\n    64 GB\r\n    Dung lượng còn lại (khả dụng) khoảng:\r\n    Khoảng 57 GB\r\n    Danh bạ:\r\n    Không giới hạn\r\n',6000000.00,'XS Max',5500000.00,NULL,4),(7,'2025-05-19 00:00:00.000000',NULL,1,NULL,NULL,12,'Bánh ngọt mousse',123000.00,'Bánh ngọt mousse',100000.00,NULL,4);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -553,7 +555,7 @@ CREATE TABLE `vouchers` (
 
 LOCK TABLES `vouchers` WRITE;
 /*!40000 ALTER TABLE `vouchers` DISABLE KEYS */;
-INSERT INTO `vouchers` VALUES (1,NULL,NULL,1,NULL,NULL,4,'HE2025001','2025-10-10 04:34:00.000000','Chào hè 2025',1,'2025-05-14 04:34:00.000000',3),(2,NULL,NULL,1,NULL,NULL,12,'304105','2025-05-17 05:41:00.000000','30/4 - 1/5',1,'2025-04-30 05:41:00.000000',3),(3,NULL,NULL,1,NULL,NULL,12,'KT001','2025-07-24 05:42:00.000000','Khai trương',1,'2025-05-14 05:42:00.000000',4);
+INSERT INTO `vouchers` VALUES (1,NULL,NULL,1,NULL,NULL,2,'HE2025001','2025-10-10 04:34:00.000000','Chào hè 2025',1,'2025-05-14 04:34:00.000000',3),(2,NULL,NULL,1,NULL,NULL,12,'304105','2025-05-17 05:41:00.000000','30/4 - 1/5',1,'2025-04-30 05:41:00.000000',3),(3,NULL,NULL,1,NULL,NULL,12,'KT001','2025-07-24 05:42:00.000000','Khai trương',1,'2025-05-14 05:42:00.000000',4);
 /*!40000 ALTER TABLE `vouchers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -608,4 +610,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-14 11:22:14
+-- Dump completed on 2025-06-23 22:46:22

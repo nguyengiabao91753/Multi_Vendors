@@ -1,10 +1,9 @@
 package com.example.shopee.controller;
 
+import com.example.shopee.entity.FeedbackEntity;
 import com.example.shopee.entity.ProductEntity;
 import com.example.shopee.entity.UserEntity;
-import com.example.shopee.repository.ProductRepository;
-import com.example.shopee.repository.UserRepository;
-import com.example.shopee.repository.WishlistRepository;
+import com.example.shopee.repository.*;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -101,31 +100,48 @@ public class HomeController {
     @Autowired
     private WishlistRepository wishlistRepository;
 
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
+
+    @Autowired
+    private FeedbackRepository feedbackRepository;
+
     @GetMapping("/detail/{id}")
-    private String detail(@PathVariable("id") Long id, Model model) {
+    public String detail(@PathVariable("id") Long id, Model model) {
         Optional<ProductEntity> productOptional = productRepository.findById(id);
-        if (productOptional.isPresent()) {
-            boolean inWishlist = false;
 
-            String email = SecurityContextHolder.getContext().getAuthentication().getName();
-            Optional<UserEntity> optionalUser = userRepository.findByEmail(email);
+        if (productOptional.isEmpty()) return "redirect:/list";
 
-            ProductEntity productEntity = productOptional.get();
+        ProductEntity product = productOptional.get();
+        model.addAttribute("product", product);
 
-            if (!optionalUser.isEmpty()) {
-                UserEntity userEntity = optionalUser.get();
-                inWishlist = wishlistRepository
-                        .findByUserEntityAndProductEntity(userEntity, productEntity)
-                        .isPresent();
-                model.addAttribute("user", optionalUser.get());
-            }
-            model.addAttribute("inWishlist", inWishlist);
-            model.addAttribute("product", productOptional.get());
-            return "detail";
-        } else {
-            return "redirect:/list";
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<UserEntity> userOptional = userRepository.findByEmail(email);
+
+        boolean inWishlist = false;
+        boolean canFeedback = false;
+        boolean hasFeedback = false;
+
+        if (userOptional.isPresent()) {
+            UserEntity user = userOptional.get();
+
+            inWishlist = wishlistRepository.findByUserEntityAndProductEntity(user, product).isPresent();
+            model.addAttribute("user", user);
+
+            canFeedback = orderDetailRepository.hasUserBoughtProduct(product.getId(), user.getId());
+            hasFeedback = feedbackRepository.existsByUserEntityAndProductEntity(user, product);
         }
+
+        List<FeedbackEntity> feedbackList = feedbackRepository.findByProductEntityOrderByCreatedAtDesc(product);
+        model.addAttribute("inWishlist", inWishlist);
+        model.addAttribute("canFeedback", canFeedback);
+        model.addAttribute("hasFeedback", hasFeedback);
+        model.addAttribute("feedbackList", feedbackList);
+
+        return "detail";
     }
+
+
 
     private static Long id = 0L;
 

@@ -23,136 +23,6 @@
     <link rel="stylesheet" th:href="@{/style/reset.css}"/>
     <link rel="stylesheet" th:href="@{/style/style.css}"/>
     <link rel="stylesheet" th:href="@{/css/product-detail.css}"/>
-    <style>
-        .shop-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid #eee;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 1000px;
-            margin: 20px auto;
-        }
-
-        .shop-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .shop-info img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 1px solid #ddd;
-        }
-
-        .shop-details {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .shop-name {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .shop-online {
-            color: #888;
-            font-size: 14px;
-        }
-
-        .shop-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .chat-btn {
-            background-color: #ff5722;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .chat-btn::before {
-            content: '💬';
-            margin-right: 6px;
-        }
-
-        .view-btn {
-            display: inline-block;
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background-color: white;
-            color: #333;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-
-        .shop-stats {
-            display: flex;
-            gap: 40px;
-            font-size: 14px;
-        }
-
-        .stat-group {
-            display: flex;
-            flex-direction: column;
-            color: #888;
-        }
-
-        .stat-value {
-            color: #e53935;
-            font-weight: bold;
-            margin-top: 4px;
-        }
-
-        .highlight {
-            color: #e53935;
-        }
-
-        /* --- Wishlist Button Styling --- */
-
-        /* Base style for both add/remove wishlist buttons */
-        .btn-add-wishlist,
-        .btn-remove-wishlist {
-            display: inline-flex; /* Use flexbox for icon and text alignment */
-            align-items: center;
-            justify-content: center;
-            min-width: 160px; /* Give it a similar width to "Thêm vào giỏ hàng" */
-            height: 48px; /* Match height of cart button */
-            padding: 0 20px;
-            font-size: 1.1em;
-            font-weight: 500;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.2s ease; /* Smooth transitions for hover effects */
-            text-decoration: none; /* In case it's an anchor */
-            white-space: nowrap; /* Prevent text from wrapping */
-        }
-
-        .btn-add-wishlist i,
-        .btn-remove-wishlist i {
-            margin-right: 8px; /* Space between icon and text */
-            font-size: 1.2em; /* Adjust icon size */
-        }
-
-        .btn-add-wishlist i:hover,
-        .btn-remove-wishlist i:hover {
-            color: red;
-            cursor: pointer;
-        }
-
-    </style>
 </head>
 <body>
 
@@ -207,7 +77,8 @@
                                     th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span>
                             </p>
                         </div>
-                        <form th:if="${user != null}" th:action="@{/client/wishlist/toggle(productId=${product.id})}" method="post">
+                        <form th:if="${user != null}" th:action="@{/client/wishlist/toggle(productId=${product.id})}"
+                              method="post">
                             <button type="submit"
                                     th:classappend="${inWishlist} ? 'btn-remove-wishlist' : 'btn-add-wishlist'"
                                     style="background: none; border: none;">
@@ -331,52 +202,57 @@
                 <div class="page-product__comment">
                     <div class="comment-title">Đánh giá sản phẩm</div>
                     <div class="comment-inner">
-                        <div class="comment-empty">
-                            <img src="/image/button/comment.png" alt="Chưa có đánh giá"/>
-                            <p>Chưa có đánh giá</p>
+                        <div th:if="${feedbackList.size() > 0}">
+                            <div th:each="feedback : ${feedbackList}"
+                                 style="margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                                <strong th:text="${feedback.userEntity.fullName}">Tên người dùng</strong>
+                                <div>
+                                    <span th:each="i : ${#numbers.sequence(1, feedback.ratedStar)}">⭐</span>
+                                    <span th:each="i : ${#numbers.sequence(feedback.ratedStar + 1, 5)}">☆</span>
+                                </div>
+                                <p th:text="${feedback.comment}">Nội dung đánh giá</p>
+                                <small th:text="${#temporals.format(feedback.createdAt, 'dd/MM/yyyy HH:mm')}">Thời
+                                    gian</small>
+                            </div>
+                        </div>
+
+
+                        <div th:if="${canFeedback and !hasFeedback}">
+                            <form th:action="@{/client/feedback/submit}" method="post">
+                                <input type="hidden" name="productId" th:value="${product.id}"/>
+                                <div class="mb-3">
+                                    <label for="ratedStar">Số sao</label>
+                                    <select id="ratedStar" name="ratedStar" class="form-control" required>
+                                        <option th:each="i : ${#numbers.sequence(1,5)}" th:value="${i}"
+                                                th:text="${i} + ' sao'"></option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="comment">Nội dung đánh giá</label>
+                                    <textarea id="comment" name="comment" class="form-control" rows="3"
+                                              required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+                            </form>
+                        </div>
+
+                        <div th:if="${hasFeedback}">
+                            <p class="text-success">Bạn đã đánh giá sản phẩm này.</p>
+                        </div>
+
+                        <div th:if="${!canFeedback and user != null}">
+                            <p class="text-warning">Chỉ những người đã mua sản phẩm mới có thể đánh giá.</p>
+                        </div>
+
+                        <div th:if="${user == null}">
+                            <p>Vui lòng <a th:href="@{/login}">đăng nhập</a> để đánh giá.</p>
                         </div>
                     </div>
                 </div>
+
                 <div class="page-product__similar">
                     <div class="similar-title">Sản phẩm tương tự</div>
-                    <ul class="similar-list">
-                        <li class="similar-item" th:each="similarProduct : ${similarProducts}">
-                            <a th:href="@{/detail/{id}(id=${similarProduct.id})}">
-                                <div class="similar-item--link">
-                                    <div class="similar-item--image">
-                                        <img th:if="${not similarProduct.productImage.empty}"
-                                             th:src="${similarProduct.productImage[0].url_Image}"
-                                             alt="Similar Product Image"/>
-                                        <img th:if="${similarProduct.productImage.empty}"
-                                             src="https://via.placeholder.com/100" alt="No Image"/>
-                                    </div>
-                                    <div class="similar-item--detail">
-                                        <div class="similar-item--detail-name">
-                                            <h5 th:text="${similarProduct.productName}"></h5>
-                                        </div>
-                                        <div class="similar-item--detail-price">
-                                            <p class="price" th:if="${similarProduct.salePrice != null}">
-                                                ₫<span
-                                                    th:text="${#numbers.formatDecimal(similarProduct.salePrice, 0, 'COMMA', 0, 'POINT')}"></span>
-                                                <del>₫<span
-                                                        th:text="${#numbers.formatDecimal(similarProduct.price, 0, 'COMMA', 0, 'POINT')}"></span>
-                                                </del>
-                                            </p>
-                                            <p class="price" th:if="${similarProduct.salePrice == null}">
-                                                ₫<span
-                                                    th:text="${#numbers.formatDecimal(similarProduct.price, 0, 'COMMA', 0, 'POINT')}"></span>
-                                            </p>
-                                            <p class="sole" th:if="${similarProduct.amount != null}">Đã bán <span
-                                                    th:text="${similarProduct.amount}"></span></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="similar-item" th:if="${#lists.isEmpty(similarProducts)}">
-                            <p class="none-similar-item">Hiện không có sản phẩm tương tự.</p>
-                        </li>
-                    </ul>
+
                 </div>
             </div>
         </div>

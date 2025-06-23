@@ -16,9 +16,9 @@ public class ProductDto {
     private String email; // dùng để map với CategoryEntity
     private Integer status;
     private List<Long> categoryIds; // mới
-    private List<ProductImageEntity> productImage; // mới
     private List<String> categoryNames;
     private List<String> imageUrls;
+    private List<ProductImageEntity> productImage; // mới
 
     public Long getId() {
         return id;

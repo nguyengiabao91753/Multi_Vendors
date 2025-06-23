@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch sử đơn hàng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .order-history {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        th {
+            background-color: #eee;
+        }
+
+        .btn-detail {
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .btn-detail:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="order-history">
+    <h2>Lịch sử đơn hàng của tôi</h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Mã đơn</th>
+            <th>Ngày đặt</th>
+            <th>Trạng thái</th>
+            <th>Tổng tiền</th>
+            <th>Chi tiết</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}">123</td>
+            <td th:text="${#temporals.format(order.createdAt, 'dd-MM-yyyy HH:mm')}">01-01-2025</td>
+            <td th:text="${order.status == -1 ? 'Đang chờ xác nhận' :
+              order.status == 0 ? 'Đã huỷ' :
+              order.status == 1 ? 'Đã thanh toán' :
+              order.status == 2 ? 'Đang giao hàng' : 'Đã giao hàng'}">Đang xử lý
+            </td>
+            <td th:text="${order.totalCost}" class="vnd-price">0</td>
+            <td>
+                <a th:href="@{'/client/order/detail/' + ${order.id}}" class="btn-detail">Xem</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>
+        <a th:href="@{/}">Quay về trang chủ</a>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".vnd-price").forEach(el => {
+            const value = parseFloat(el.innerText.replace(/[^\d.-]/g, ""));
+            if (!isNaN(value)) {
+                el.innerText = new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                }).format(value);
+            }
+        });
+    });
+</script>
+</body>
+</html>

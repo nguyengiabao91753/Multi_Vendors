@@ -1,0 +1,238 @@
+.shop-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #eee;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 1000px;
+    margin: 20px auto;
+}
+
+.shop-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.shop-info img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+}
+
+.shop-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.shop-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.shop-online {
+    color: #888;
+    font-size: 14px;
+}
+
+.shop-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.chat-btn {
+    background-color: #ff5722;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.chat-btn::before {
+    content: '💬';
+    margin-right: 6px;
+}
+
+.view-btn {
+    display: inline-block;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+.shop-stats {
+    display: flex;
+    gap: 40px;
+    font-size: 14px;
+}
+
+.stat-group {
+    display: flex;
+    flex-direction: column;
+    color: #888;
+}
+
+.stat-value {
+    color: #e53935;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+.highlight {
+    color: #e53935;
+}
+
+/* --- Wishlist Button Styling --- */
+
+/* Base style for both add/remove wishlist buttons */
+.btn-add-wishlist,
+.btn-remove-wishlist {
+    display: inline-flex; /* Use flexbox for icon and text alignment */
+    align-items: center;
+    justify-content: center;
+    min-width: 160px; /* Give it a similar width to "Thêm vào giỏ hàng" */
+    height: 48px; /* Match height of cart button */
+    padding: 0 20px;
+    font-size: 1.1em;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease; /* Smooth transitions for hover effects */
+    text-decoration: none; /* In case it's an anchor */
+    white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.btn-add-wishlist i,
+.btn-remove-wishlist i {
+    margin-right: 8px; /* Space between icon and text */
+    font-size: 1.2em; /* Adjust icon size */
+}
+
+.btn-add-wishlist i:hover,
+.btn-remove-wishlist i:hover {
+    color: red;
+    cursor: pointer;
+}
+.page-product__comment {
+    margin-top: 40px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.comment-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+    border-left: 4px solid #ff5722;
+    padding-left: 12px;
+}
+
+.comment-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.comment-inner > div {
+    background-color: #fafafa;
+    padding: 15px 20px;
+    border-radius: 6px;
+    border: 1px solid #eee;
+}
+
+.comment-inner strong {
+    font-size: 16px;
+    color: #444;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.comment-inner span {
+    font-size: 18px;
+    color: #fdd835; /* màu vàng cho sao */
+}
+
+.comment-inner p {
+    margin: 10px 0;
+    font-size: 15px;
+    color: #555;
+}
+
+.comment-inner small {
+    color: #999;
+    font-size: 13px;
+}
+
+/* Form feedback */
+.comment-inner form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.comment-inner label {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.comment-inner select,
+.comment-inner textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.comment-inner .btn-primary {
+    background-color: #ff5722;
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    align-self: flex-start;
+}
+
+.comment-inner .btn-primary:hover {
+    background-color: #e64a19;
+}
+
+.comment-empty {
+    text-align: center;
+    color: #888;
+}
+
+.comment-empty img {
+    width: 100px;
+    margin-bottom: 10px;
+}
+
+.text-success {
+    color: #28a745;
+    font-weight: 500;
+}
+
+.text-warning {
+    color: #ffc107;
+    font-weight: 500;
+}

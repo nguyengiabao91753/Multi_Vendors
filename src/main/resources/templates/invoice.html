@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đặt hàng thành công</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, saans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 30px auto;
+            padding: 30px;
+            background: white;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        .checkout-status h1 {
+            color: #28a745;
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .checkout-status p {
+            text-align: center;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .order-info, .order-details {
+            margin-top: 30px;
+        }
+
+        .order-info h3,
+        .order-details h3 {
+            font-size: 22px;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .order-info ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .order-info li {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #444;
+        }
+
+        .order-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .order-details th, .order-details td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .order-details th {
+            background-color: #f7f7f7;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="checkout-status">
+        <h1>Đặt hàng thành công!</h1>
+        <p>Cảm ơn bạn đã mua hàng tại MultiVendors. Dưới đây là thông tin đơn hàng của bạn:</p>
+    </div>
+
+    <div class="order-info">
+        <h3>Thông tin đơn hàng</h3>
+        <ul>
+            <li><strong>Mã giao dịch:</strong> <span th:text="${transactionNo}">Mã giao dịch</span></li>
+            <li><strong>Thông tin đơn hàng:</strong> <span th:text="${orderInfo}">Thông tin đơn hàng</span></li>
+            <li><strong>Trạng thái giao dịch:</strong>
+                <span th:text="${transactionStatus == '0' ? 'Thất bại' : 'Thành công'}">Thành công</span>
+            </li>
+            <li><strong>Phương thức thanh toán:</strong> <span th:text="${method}">COD</span></li>
+            <li><strong>Voucher sử dụng:</strong>
+                <span th:if="${voucherName != null}" th:text="${voucherName}"></span>
+                <span th:if="${voucherName == null}">Không áp dụng</span>
+            </li>
+            <li><strong>Tổng thanh toán:</strong> <span th:text="${totalCost}" class="vnd-price">0</span></li>
+        </ul>
+    </div>
+
+    <div class="order-details">
+        <h3>Chi tiết sản phẩm</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Tên sản phẩm</th>
+                <th>Đơn giá</th>
+                <th>Số lượng</th>
+                <th>Thành tiền</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${order.orderDetailEntities}">
+                <td th:text="${item.productEntity.productName}">Tên sản phẩm</td>
+                <td th:text="${item.priceOfOne}" class="vnd-price">0</td>
+                <td th:text="${item.quantity}">0</td>
+                <td th:text="${item.totalPrice}" class="vnd-price">0</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer">
+        <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>
+        <a th:href="@{/}">Quay về trang chủ</a>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".vnd-price").forEach(el => {
+            const value = parseFloat(el.innerText.replace(/[^\d.-]/g, ""));
+            if (!isNaN(value)) {
+                el.innerText = new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                }).format(value);
+            }
+        });
+    });
+</script>
+</body>
+</html>

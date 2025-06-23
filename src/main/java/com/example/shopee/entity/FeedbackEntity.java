@@ -4,17 +4,13 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "Feedback",
         catalog = "")
 @Data
 public class FeedbackEntity extends AbstractEntity {
-
-    @Basic
-    @Column(name = "feedback_date_time", nullable = true)
-    private Integer feedbackDateTime;
-
-
     @Basic
     @Column(name = "rated_star", nullable = true)
     private Integer ratedStar;
@@ -32,14 +28,6 @@ public class FeedbackEntity extends AbstractEntity {
     @JoinColumn(name = "product_id")
     @EqualsAndHashCode.Exclude
     private ProductEntity productEntity;
-
-    public Integer getFeedbackDateTime() {
-        return feedbackDateTime;
-    }
-
-    public void setFeedbackDateTime(Integer feedbackDateTime) {
-        this.feedbackDateTime = feedbackDateTime;
-    }
 
     public Integer getRatedStar() {
         return ratedStar;

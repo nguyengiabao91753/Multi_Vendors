@@ -19,4 +19,8 @@ public interface VoucherRepository extends JpaRepository<VoucherEntity, Long> {
 
     @Query("SELECT v FROM VoucherEntity v WHERE v.userEntity.id = :sellerId")
     List<VoucherEntity> findAllBySellerId(@Param("sellerId") Long sellerId);
+
+    @Query("SELECT COUNT(v) FROM VoucherEntity v WHERE v.userEntity.id = :userId")
+    int countByUserId(@Param("userId") Long userId);
+
 }
