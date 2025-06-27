@@ -23,4 +23,22 @@ public class WishlistEntity extends AbstractEntity{
 	@JoinColumn(name = "product_id")
 	@EqualsAndHashCode.Exclude
 	private ProductEntity productEntity;
+
+	public UserEntity getUserEntity() {
+		return userEntity;
+	}
+
+	public void setUserEntity(UserEntity userEntity) {
+		this.userEntity = userEntity;
+	}
+
+	public ProductEntity getProductEntity() {
+		return productEntity;
+	}
+
+	public void setProductEntity(ProductEntity productEntity) {
+		this.productEntity = productEntity;
+	}
+	
+	
 }

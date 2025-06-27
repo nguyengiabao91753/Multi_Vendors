@@ -12,28 +12,28 @@
         <div class="header-inner">
             <div class="header-navbar-wrapper">
                 <ul class="header-navbar-left">
-                    <li><a th:href="@{/vendor/dashboard}">Trở thành Người bán Shopee</a></li>
-                    <li><a href="#">Tải ứng dụng</a></li>
-                    <li><a href="#">Kết nối</a></li>
+                    <li><a th:href="@{/vendor/dashboard}">Kênh bán hàng</a></li>
+                    <li><a href="#">Dowload App</a></li>
+                    <li><a href="#">Contact</a></li>
                     <li>
                         <a href="#"><i class="fab fa-facebook"></i></a>
                         <a href="#"><i class="fab fa-instagram"></i></a>
                     </li>
                 </ul>
                 <ul class="header-navbar-right">
-                    <li><a href="#"><i class="far fa-bell"></i>Thông Báo</a></li>
-                    <li><a href="#"><i class="far fa-question-circle"></i>Hỗ Trợ</a></li>
+                    <li><a href="#"><i class="far fa-bell"></i>Notification</a></li>
+                    <li><a href="#"><i class="far fa-question-circle"></i>Support</a></li>
                     <!-- Đăng ký / Đăng nhập -->
                     <li th:if="${#authorization.expression('isAnonymous()')}">
-                        <a th:href="@{/register}">Đăng Ký</a>
+                        <a th:href="@{/register}">Register</a>
                     </li>
                     <li th:if="${#authorization.expression('isAnonymous()')}">
-                        <a th:href="@{/login}">Đăng Nhập</a>
+                        <a th:href="@{/login}">Login</a>
                     </li>
 
                     <!-- Đã đăng nhập -->
                     <li th:if="${#authorization.expression('isAuthenticated()')}" class="user">
-                        <a href="#">Xin chào, <span th:text="${#authentication.principal.username}"></span></a>
+                        <a href="#">Hi, <span th:text="${#authentication.principal.username}"></span></a>
 
                         <a href="#" class="dropdown-toggle">
                             <div class="user-avt">
@@ -42,10 +42,10 @@
                             </div>
                         </a>
                         <div class="dropdown-menu show">
-                            <a href="#" class="dropdown-item">Tài khoản của tôi</a>
-                            <a th:href="@{/client/order}" class="dropdown-item">Đơn mua</a>
-                            <a th:href="@{/client/wishlist}" class="dropdown-item">Yêu thích</a>
-                            <a th:href="@{/logout}" class="dropdown-item">Đăng xuất</a>
+                            <a href="#" class="dropdown-item">My Account</a>
+                            <a th:href="@{/client/order}" class="dropdown-item">Order</a>
+                            <a th:href="@{/client/wishlist}" class="dropdown-item">Wishlist</a>
+                            <a th:href="@{/logout}" class="dropdown-item">Logout</a>
                         </div>
                     </li>
 
