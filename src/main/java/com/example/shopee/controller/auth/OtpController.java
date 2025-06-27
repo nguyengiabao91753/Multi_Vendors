@@ -88,7 +88,7 @@ public class OtpController {
             userNew.setUpdatedBy("ADMIN");
             userNew.setCartEntity(cartEntity);
             userService.saveUser(userEntity);
-            return "redirect:/";
+            return "redirect:/login";
         }
         model.addAttribute("mess","OTP is not correct! Please check your email.");
         return "otpConfirm";
@@ -134,7 +134,7 @@ public class OtpController {
             userService.saveUser(userEntity);
 
             redirectAttributes.addFlashAttribute("mess", "Mật khẩu được đổi về 123456a@A");
-            return "redirect:/";
+            return "redirect:/login";
         }
         model.addAttribute("mess", "OTP nhập sai! Hãy nhập lại!");
         return "otpConfirmPass";
