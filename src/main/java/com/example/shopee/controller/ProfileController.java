@@ -6,14 +6,18 @@ import com.example.shopee.service.CloudinaryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Controller
@@ -33,36 +37,31 @@ public class ProfileController {
     @GetMapping("/profile")
     public String profile(Model model) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        UserEntity user = userRepository.findByEmail(email).orElse(new UserEntity());
-        model.addAttribute("user", user);
+        Optional<UserEntity> userOpt = userRepository.findByEmail(email);
+        userOpt.ifPresent(user -> model.addAttribute("user", user));
         return "profile";
     }
 
+
     @PostMapping("/profile")
-    public String updateProfile(@Valid @ModelAttribute("user") UserEntity updatedUser,
-                                BindingResult bindingResult,
-                                @RequestParam("avatarFile") MultipartFile avatarFile,
-                                Model model) {
+    public String updateProfile(@RequestParam("fullName") String fullName,
+                                @RequestParam("phone") String phone,
+                                @RequestParam("address") String address,
+                                @RequestParam("avatarFile") MultipartFile avatarFile, RedirectAttributes redirectAttributes) {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<UserEntity> userOptional = userRepository.findByEmail(email);
 
         if (userOptional.isEmpty()) {
-            model.addAttribute("errorMessage", "Không tìm thấy người dùng.");
-            return "profile";
+            redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy người dùng!");
+            return "redirect:/user/profile";
         }
 
         UserEntity existingUser = userOptional.get();
 
-        existingUser.setFullName(updatedUser.getFullName());
-        existingUser.setPhone(updatedUser.getPhone());
-        existingUser.setAddress(updatedUser.getAddress());
-        existingUser.setDob(updatedUser.getDob());
-
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("user", existingUser);
-            return "profile";
-        }
+        existingUser.setFullName(fullName);
+        existingUser.setPhone(phone);
+        existingUser.setAddress(address);
 
         if (avatarFile != null && !avatarFile.isEmpty()) {
             String urlImg = cloudinaryService.uploadFile(avatarFile);
@@ -70,8 +69,53 @@ public class ProfileController {
         }
 
         userRepository.save(existingUser);
-        model.addAttribute("successMessage", "Thông tin cá nhân đã được cập nhật thành công.");
-        model.addAttribute("user", existingUser);
-        return "redirect:/";
+
+        redirectAttributes.addFlashAttribute("successMessage", "Thông tin cá nhân đã được cập nhật thành công!");
+        return "redirect:/user/profile";
     }
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam("currentPassword") String currentPassword,
+                                 @RequestParam("newPassword") String newPassword,
+                                 @RequestParam("confirmPassword") String confirmPassword,
+                                 RedirectAttributes redirectAttributes) {
+
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<UserEntity> userOptional = userRepository.findByEmail(email);
+
+        if (userOptional.isEmpty()) {
+            redirectAttributes.addFlashAttribute("passwordError", "Không tìm thấy người dùng!");
+            return "redirect:/user/profile";
+
+        }
+
+        UserEntity user = userOptional.get();
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            redirectAttributes.addFlashAttribute("passwordError", "Mật khẩu hiện tại không đúng!");
+            return "redirect:/user/profile";
+
+        }
+
+        if (newPassword.equals(currentPassword)) {
+            redirectAttributes.addFlashAttribute("passwordError", "Mật khẩu mới không được trùng với mật khẩu hiện tại!");
+            return "redirect:/user/profile";
+
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            redirectAttributes.addFlashAttribute("passwordError", "Mật khẩu mới và xác nhận không khớp!");
+            return "redirect:/user/profile";
+
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        redirectAttributes.addFlashAttribute("passwordSuccess", "Đổi mật khẩu thành công!");
+        return "redirect:/user/profile";
+    }
+
+
 }
