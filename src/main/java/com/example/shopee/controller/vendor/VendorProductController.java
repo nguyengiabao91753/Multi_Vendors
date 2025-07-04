@@ -104,6 +104,7 @@ public class VendorProductController {
         UserEntity user = userRepository.findByEmail(email).get();
         entity.setUser(user);
         entity.setStatus(0);
+        entity.setMin(dto.getMin());
 
         List<CategoryEntity> categories = new ArrayList<>();
         if (dto.getCategoryIds() != null) {
@@ -153,6 +154,7 @@ public class VendorProductController {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity user = userRepository.findByEmail(email).get();
         entity.setUser(user);
+        entity.setMin(dto.getMin());
         entity.setPrice(dto.getPrice() != null ? dto.getPrice() : BigDecimal.ZERO);
         entity.setSalePrice(dto.getSalePrice() != null ? dto.getSalePrice() : BigDecimal.ZERO);
 
@@ -198,6 +200,7 @@ public class VendorProductController {
         dto.setAmount(entity.getAmount());
         dto.setPrice(entity.getPrice());
         dto.setSalePrice(entity.getSalePrice());
+        dto.setMin(entity.getMin());
         dto.setStatus(entity.getStatus());
         dto.setEmail(entity.getUser().getEmail());
         dto.setProductImage(entity.getProductImage());
@@ -207,6 +210,12 @@ public class VendorProductController {
                     .map(CategoryEntity::getId)
                     .collect(Collectors.toList());
             dto.setCategoryIds(categoryIds);
+        }
+
+        if (entity.getAmount() != null && entity.getMin() != null) {
+            dto.setNearOutOfStock(entity.getAmount() <= entity.getMin());
+        } else {
+            dto.setNearOutOfStock(false);
         }
 
         dto.setCategoryNames(entity.getCategories().stream()
@@ -226,6 +235,7 @@ public class VendorProductController {
         entity.setProductName(dto.getProductName());
         entity.setDescription(dto.getDescription());
         entity.setAmount(dto.getAmount());
+        entity.setMin(dto.getMin());
         entity.setPrice(dto.getPrice() != null ? dto.getPrice() : BigDecimal.ZERO);
         entity.setSalePrice(dto.getSalePrice() != null ? dto.getSalePrice() : BigDecimal.ZERO);
         entity.setStatus(dto.getStatus());

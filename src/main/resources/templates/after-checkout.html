@@ -126,12 +126,13 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="item : ${order.orderDetailEntities}">
-                <td th:text="${item.productEntity.productName}">Tên sản phẩm</td>
-                <td th:text="${item.priceOfOne}" class="vnd-price">0</td>
-                <td th:text="${item.quantity}">0</td>
-                <td th:text="${item.totalPrice}" class="vnd-price">0</td>
+            <tr>
+                <td th:text="${order.productEntity.productName}">Tên sản phẩm</td>
+                <td th:text="${order.totalCost.divide(order.quantity)}" class="vnd-price">0</td>
+                <td th:text="${order.quantity}">1</td>
+                <td th:text="${order.totalCost}" class="vnd-price">0</td>
             </tr>
+
             </tbody>
         </table>
     </div>

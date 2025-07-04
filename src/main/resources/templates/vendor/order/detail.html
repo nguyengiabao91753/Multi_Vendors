@@ -330,8 +330,8 @@
                     <p><strong>Trạng thái:</strong>
                         <span th:text="${order.status == -1 ? 'Đang chờ xác nhận' :
                                         order.status == 0 ? 'Đã huỷ' :
-                                        order.status == 1 ? 'Đã thanh toán' :
-                                        order.status == 2 ? 'Đang giao hàng' : 'Đã giao hàng'}">
+                                        order.status == 1 ? 'Đã giao hàng' :
+                                        order.status == 2 ? 'Đang giao hàng' : 'Đang trả hàng'}">
                         </span>
                     </p>
                     <p><strong>Ngày tạo:</strong> <span th:text="${order.createdAt}">01/01/2025</span></p>
@@ -358,12 +358,13 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="orderDetail : ${orderDetails}">
-                            <td th:text="${orderDetail.productEntity.productName}">Tên sản phẩm</td>
-                            <td th:text="${orderDetail.priceOfOne}" class="vnd-price">100.000 đ</td>
-                            <td th:text="${orderDetail.quantity}">2</td>
-                            <td th:text="${orderDetail.totalPrice}" class="vnd-price">100.000 đ</td>
+                        <tr>
+                            <td th:text="${order.productEntity.productName}">Tên sản phẩm</td>
+                            <td th:text="${order.totalCost.divide(order.quantity)}" class="vnd-price">0</td>
+                            <td th:text="${order.quantity}">1</td>
+                            <td th:text="${order.totalCost}" class="vnd-price">0</td>
                         </tr>
+
                         </tbody>
                     </table>
                 </div>

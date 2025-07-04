@@ -55,6 +55,23 @@
 
 <th:block th:replace="layout/user-layout :: layout">
     <th:block th:fragment="pageContent">
+        <style>
+            .buy-now-button {
+                background-color: #ff4500;       /* Màu nền cam sáng */
+                color: white;                    /* Màu chữ trắng */
+                padding: 10px 20px;              /* Khoảng cách trong nút */
+                border: none;                   /* Bỏ viền mặc định */
+                border-radius: 5px;             /* Bo góc tròn */
+                font-size: 16px;                /* Cỡ chữ */
+                font-weight: bold;              /* Chữ in đậm */
+                cursor: pointer;                /* Con trỏ chuột khi hover */
+                transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu */
+            }
+
+            .buy-now-button:hover {
+                background-color: #e03e00;      /* Màu đậm hơn khi hover */
+            }
+        </style>
         <div id="cart-page">
             <div class="cart-page-header">
                 <div class="container">
@@ -126,20 +143,12 @@
                                         <!-- Delete -->
                                         <div class="cart-item__cell-action">
                                             <a th:href="@{'/client/cart/remove/' + ${item.id}}">Xóa</a>
+                                            <a th:href="@{'/client/checkout/' + ${item.id}}" class="buy-now-button">Mua ngay</a>
                                         </div>
 
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="cart-page-footer">
-                        <div class="cart-page-footer__details">
-                            <div class="quantity">Tổng thanh toán:</div>
-                            <div class="price"><span class="vnd-price" th:text="${totalPrice}"></span></div>
-                        </div>
-                        <div class="cart-page-footer__checkout">
-                            <a th:href="@{/client/checkout}">Thanh toán</a>
                         </div>
                     </div>
                 </div>

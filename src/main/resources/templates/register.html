@@ -27,6 +27,7 @@
             border-radius: 5px;
             border: 1px solid #ccc;
         }
+
         .custom-alert {
             background-color: #f8d7da; /* Light pinkish background */
             color: #721c24; /* Dark red text for contrast */
@@ -38,6 +39,26 @@
             text-align: center;
             border: none;
             box-shadow: none;
+        }
+    </style>
+
+    <style>
+        .password-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .password-wrapper input {
+            padding-right: 30px; /* chừa chỗ cho icon */
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            user-select: none;
         }
     </style>
 </head>
@@ -80,7 +101,8 @@
                         <input type="text" name="phone" placeholder="Số điện thoại" required/>
                     </div>
                     <div class="form-group">
-                        <input type="password" name="password" placeholder="Mật khẩu" required/>
+                        <input type="password" id="password" name="password" placeholder="Mật khẩu"/>
+                        <span class="toggle-password" onclick="togglePassword()">👁️</span>
                     </div>
 
                     <button type="submit" name="register" class="form-submit">Đăng ký</button>
@@ -343,5 +365,18 @@
 </div>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script>
+    function togglePassword() {
+        const input = document.getElementById('password');
+        const icon = document.querySelector('.toggle-password');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.textContent = '🙈';
+        } else {
+            input.type = 'password';
+            icon.textContent = '👁️';
+        }
+    }
+</script>
 </body>
 </html>

@@ -44,8 +44,8 @@
                             <td th:text="${order.method}">Thanh toán khi nhận hàng</td>
                             <td th:text="${order.status == -1 ? 'Đang chờ xác nhận' :
               order.status == 0 ? 'Đã huỷ' :
-              order.status == 1 ? 'Đã thanh toán' :
-              order.status == 2 ? 'Đang giao hàng' : 'Đã giao hàng'}">Đang xử lý
+              order.status == 1 ? 'Đã giao hàng' :
+              order.status == 2 ? 'Đang giao hàng' : 'Đang trả hàng'}">Đang xử lý
                             </td>
 
                             <td>

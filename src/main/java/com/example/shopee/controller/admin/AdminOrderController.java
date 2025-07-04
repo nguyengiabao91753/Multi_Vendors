@@ -63,7 +63,6 @@ public class AdminOrderController {
         }
 
         model.addAttribute("order", order);
-        model.addAttribute("orderDetails", order.getOrderDetailEntities());
 
         return "admin/order/detail";
     }

@@ -25,6 +25,8 @@ public class ProductEntity extends AbstractEntity{
     @Column(name = "amount", nullable = true)
     private Integer amount;
 
+    private Integer min;
+
     @Basic
     @Column(name = "price", nullable = true)
     private BigDecimal price;
@@ -64,10 +66,14 @@ public class ProductEntity extends AbstractEntity{
     @ToString.Exclude
     private Set<ProductVoucherEntity> productVoucherEntities;
 
-    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Set<OrderDetailEntity> orderDetailEntities;
+
+    public Integer getMin() {
+        return min;
+    }
+
+    public void setMin(Integer min) {
+        this.min = min;
+    }
 
     public String getProductName() {
         return productName;
@@ -147,13 +153,5 @@ public class ProductEntity extends AbstractEntity{
 
     public void setProductVoucherEntities(Set<ProductVoucherEntity> productVoucherEntities) {
         this.productVoucherEntities = productVoucherEntities;
-    }
-
-    public Set<OrderDetailEntity> getOrderDetailEntities() {
-        return orderDetailEntities;
-    }
-
-    public void setOrderDetailEntities(Set<OrderDetailEntity> orderDetailEntities) {
-        this.orderDetailEntities = orderDetailEntities;
     }
 }

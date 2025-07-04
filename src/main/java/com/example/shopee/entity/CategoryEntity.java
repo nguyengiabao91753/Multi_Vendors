@@ -17,12 +17,21 @@ public class CategoryEntity extends AbstractEntity {
     @Basic
     @Column(name = "CategoryName", nullable = true, length = 255, columnDefinition = "nvarchar(255)")
     private String categoryName;
+    private String avatar;
 
     @ManyToMany(mappedBy = "categories")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonBackReference
     private List<ProductEntity> products;
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 
     public String getCategoryName() {
         return categoryName;

@@ -63,7 +63,7 @@
                             <th>Giá khuyến mãi</th>
                             <th>Số lượng</th>
                             <th>Danh mục</th>
-                            <th>Trạng thái</th> <!-- Cột Trạng thái -->
+                            <th>Trạng thái</th>
                             <th>Hành động</th>
                         </tr>
                         </thead>
@@ -82,7 +82,11 @@
                             <td th:text="${#numbers.formatDecimal(product.salePrice, 0, 'COMMA', 2, 'POINT')} + ' đ'">
                                 90.000 đ
                             </td>
-                            <td th:text="${product.amount}">10</td>
+                            <td>
+                                <span th:text="${product.amount}">10</span>
+                                <span th:if="${product.nearOutOfStock}" style="color: red; font-weight: bold;">(SẮP HẾT)</span>
+                            </td>
+
                             <td th:text="${#strings.arrayJoin(product.categoryNames, ', ')}">Ô tô, Điện thoại</td>
                             <td>
                                 <span th:text="${product.status == 1 ? 'Hoạt động' : 'Không hoạt động'}"></span>

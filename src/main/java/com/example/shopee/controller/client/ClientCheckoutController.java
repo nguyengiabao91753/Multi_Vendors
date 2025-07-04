@@ -35,7 +35,11 @@ public class ClientCheckoutController {
     private OrderEntity orderEntity = new OrderEntity();
     String address, fullName, email, phone;
 
+    @Autowired
+    private EmailSenderService emailSenderService;
+
     private Long voucherId;
+    private Long itemId;
     private String voucherName;
     private BigDecimal totalCost;
 
@@ -84,8 +88,8 @@ public class ClientCheckoutController {
     }
 
 
-    @GetMapping("")
-    public String checkout(Model model) {
+    @GetMapping("/{itemId}")
+    public String checkout(@PathVariable("itemId") Long itemId, Model model) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<UserEntity> optionalUser = userRepository.findByEmail(email);
 
@@ -94,20 +98,29 @@ public class ClientCheckoutController {
         }
 
         UserEntity user = optionalUser.get();
-        Optional<CartEntity> cartOpt = cartRepository.findByUserEntity(user);
 
+        Optional<CartEntity> cartOpt = cartRepository.findByUserEntity(user);
         if (cartOpt.isEmpty()) {
-            model.addAttribute("cartDetails", Collections.emptyList());
-            model.addAttribute("totalPrice", BigDecimal.ZERO);
-            return "checkout";
+            return "redirect:/cart";
         }
 
         CartEntity cart = cartOpt.get();
-        Set<CartDetailEntity> cartDetails = cart.getCartDetailEntities();
 
-        BigDecimal totalPrice = cartDetails.stream()
-                .map(cd -> cd.getPriceOfOne().multiply(BigDecimal.valueOf(cd.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        Optional<CartDetailEntity> optionalCartDetail = cart.getCartDetailEntities().stream()
+                .filter(cd -> cd.getId().equals(itemId))
+                .findFirst();
+
+        if (optionalCartDetail.isEmpty()) {
+            return "redirect:/cart";
+        }
+        this.itemId = itemId;
+
+        CartDetailEntity cartDetail = optionalCartDetail.get();
+
+        Set<CartDetailEntity> cartDetails = Set.of(cartDetail);
+
+        BigDecimal totalPrice = cartDetail.getPriceOfOne()
+                .multiply(BigDecimal.valueOf(cartDetail.getQuantity()));
 
         List<VoucherEntity> vouchers = getApplicableVouchers(cartDetails);
 
@@ -117,6 +130,9 @@ public class ClientCheckoutController {
 
         return "checkout";
     }
+
+    @Autowired
+    private CartDetailRepository cartDetailRepository;
 
     @PostMapping("")
     public String checkoutPage(Model model, @RequestParam("paymentMethod") String paymentMethod, @RequestParam(name = "voucherId", required = false) Long voucherId,
@@ -135,7 +151,6 @@ public class ClientCheckoutController {
             return "redirect:/client/cart";
         }
 
-        OrderEntity order = new OrderEntity();
         BigDecimal totalCost = cartEntity.getTotalCost();
 
         if (totalCost.compareTo(BigDecimal.ZERO) <= 0) {
@@ -143,16 +158,66 @@ public class ClientCheckoutController {
             return "redirect:/client/cart";
         }
 
+        if ("COD".equals(paymentMethod)) {
+            this.method = "COD";
+            orderSuccess = true;
 
-        BigDecimal discount = BigDecimal.ZERO;
+            Optional<CartDetailEntity> cartDetailOpt = cartDetailRepository.findById(this.itemId);
+            CartDetailEntity cartDetail = cartDetailOpt.get();
 
-        if (voucherId != null) {
+            ProductEntity product = cartDetail.getProductEntity();
+
+            BigDecimal itemTotal = cartDetail.getPriceOfOne()
+                    .multiply(BigDecimal.valueOf(cartDetail.getQuantity()));
+
+            OrderEntity singleOrder = new OrderEntity();
+            singleOrder.setUserEntity(userEntity);
+            singleOrder.setCreatedAt(LocalDateTime.now());
+            singleOrder.setUpdatedAt(LocalDateTime.now());
+            singleOrder.setStatus(-1);
+            singleOrder.setPaymentStatus(0);
+            singleOrder.setMethod("COD");
+            singleOrder.setEmail(email);
+            singleOrder.setPhone(phone);
+            singleOrder.setAddress(address);
+            singleOrder.setFullName(fullName);
+            singleOrder.setTotalCost(itemTotal);
+            singleOrder.setProductEntity(product);
+            singleOrder.setPriceOfOne(product.getSalePrice());
+            singleOrder.setQuantity(cartDetail.getQuantity());
+
+            if (voucherId != null) {
+                Optional<VoucherEntity> voucherOpt = voucherRepository.findById(voucherId);
+                if (voucherOpt.isPresent()) {
+                    VoucherEntity voucher = voucherOpt.get();
+                    singleOrder.setVoucherEntity(voucher);
+                }
+            }
+
+            orderRepository.save(singleOrder);
+
+            product.setAmount(product.getAmount() - cartDetail.getQuantity());
+            productRepository.save(product);
+
+            cartEntity.getCartDetailEntities().remove(cartDetail);
+            cartDetailRepository.delete(cartDetail);
+            cartRepository.save(cartEntity);
+
+
+            model.addAttribute("orderSuccess", true);
+            return "redirect:/client/checkout/after-checkout";
+        }
+
+        if ("VNPay".equals(paymentMethod)) {
+            this.method = "VNPay";
+            this.address = address;
+            this.fullName = fullName;
+            this.email = email;
+            this.phone = phone;
+            BigDecimal discount = BigDecimal.ZERO;
             Optional<VoucherEntity> voucherOpt = voucherRepository.findById(voucherId);
             if (voucherOpt.isPresent()) {
                 VoucherEntity voucher = voucherOpt.get();
-                this.voucherId = voucherId;
-                this.voucherName = voucher.getName();
-
                 if (voucher.getAmount() != null) {
                     discount = discount.add(BigDecimal.valueOf(voucher.getAmount()));
                 }
@@ -168,67 +233,6 @@ public class ClientCheckoutController {
                 } else {
                     totalCost = totalCost.subtract(discount);
                 }
-
-                order.setVoucherEntity(voucher);
-                voucher.setAmount(voucher.getAmount() - 1);
-                voucherRepository.save(voucher);
-            }
-        }
-
-        order.setTotalCost(totalCost);
-
-        order.setUserEntity(userEntity);
-        order.setCreatedAt(LocalDateTime.now());
-        order.setUpdatedAt(LocalDateTime.now());
-        order.setStatus(-1);
-        order.setEmail(email);
-        order.setPhone(phone);
-        order.setAddress(address);
-        order.setFullName(fullName);
-
-        if ("COD".equals(paymentMethod)) {
-            order.setMethod("COD");
-            orderSuccess = true;
-            Set<OrderDetailEntity> orderDetailEntities = new HashSet<>();
-
-            for (CartDetailEntity cartDetailEntity : cartEntity.getCartDetailEntities()) {
-                OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
-                orderDetailEntity.setProductEntity(cartDetailEntity.getProductEntity());
-                orderDetailEntity.setPriceOfOne(cartDetailEntity.getPriceOfOne());
-                orderDetailEntity.setQuantity(cartDetailEntity.getQuantity());
-                orderDetailEntity.setTotalPrice(
-                        cartDetailEntity.getPriceOfOne().multiply(BigDecimal.valueOf(cartDetailEntity.getQuantity()))
-                );
-                orderDetailEntity.setOrderEntity(order);
-                orderDetailEntities.add(orderDetailEntity);
-                ProductEntity product = cartDetailEntity.getProductEntity();
-                product.setAmount(product.getAmount() - cartDetailEntity.getQuantity());
-                productRepository.save(product);
-            }
-            this.method = "COD";
-
-            order.setOrderDetailEntities(orderDetailEntities);
-            OrderEntity save = orderRepository.save(order);
-            this.orderEntity = save;
-            this.totalCost = totalCost;
-            UserEntity user = cartEntity.getUserEntity();
-            if (user != null) {
-                user.setCartEntity(null);
-            }
-            cartRepository.delete(cartEntity);
-
-            model.addAttribute("orderSuccess", true);
-            return "redirect:/client/checkout/after-checkout";
-        }
-        if ("VNPay".equals(paymentMethod)) {
-            this.method = "VNPay";
-            this.address = address;
-            this.fullName = fullName;
-            this.email = email;
-            this.phone = phone;
-            Optional<VoucherEntity> voucherOpt = voucherRepository.findById(voucherId);
-            if (voucherOpt.isPresent()) {
-                this.voucherId = voucherId;
             }
 
             String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
@@ -239,9 +243,6 @@ public class ClientCheckoutController {
             String vnp_CurrCode = "VND";
             String vnp_OrderInfo = "Thanh toan don hang " + vnp_TxnRef;
             String vnp_BankCode = "NCB";
-            order.setMethod("VNPay");
-            HttpSession session = request.getSession();
-            session.setAttribute("order", order);
 
             Map<String, String> vnp_Params = new HashMap<>();
             vnp_Params.put("vnp_Version", vnp_Version);
@@ -307,35 +308,27 @@ public class ClientCheckoutController {
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow();
         CartEntity cartEntity = userEntity.getCartEntity();
 
-        OrderEntity order = new OrderEntity();
-        order.setUserEntity(userEntity);
-        order.setAddress(this.address);
-        order.setEmail(this.email);
-        order.setFullName(this.fullName);
-        order.setPhone(this.phone);
-        order.setMethod("VNPay");
-        order.setCreatedAt(LocalDateTime.now());
-        order.setUpdatedAt(LocalDateTime.now());
+        boolean orderSuccess = false;
 
         if (Objects.equals(vnp_ResponseCode, "00")) {
             orderSuccess = true;
-            order.setStatus(1);
-            BigDecimal discount = BigDecimal.ZERO;
+
             BigDecimal totalCost = cartEntity.getTotalCost();
+            BigDecimal discount = BigDecimal.ZERO;
+
+            VoucherEntity appliedVoucher = null;
 
             if (this.voucherId != null) {
                 Optional<VoucherEntity> voucherOpt = voucherRepository.findById(voucherId);
                 if (voucherOpt.isPresent()) {
-                    VoucherEntity voucher = voucherOpt.get();
-                    this.voucherId = voucherId;
-                    this.voucherName = voucher.getName();
+                    appliedVoucher = voucherOpt.get();
 
-                    if (voucher.getAmount() != null) {
-                        discount = discount.add(BigDecimal.valueOf(voucher.getAmount()));
+                    if (appliedVoucher.getAmount() != null) {
+                        discount = discount.add(BigDecimal.valueOf(appliedVoucher.getAmount()));
                     }
-                    if (voucher.getPercentDecrease() != null) {
+                    if (appliedVoucher.getPercentDecrease() != null) {
                         BigDecimal percentDiscount = totalCost
-                                .multiply(BigDecimal.valueOf(voucher.getPercentDecrease()))
+                                .multiply(BigDecimal.valueOf(appliedVoucher.getPercentDecrease()))
                                 .divide(BigDecimal.valueOf(100));
                         discount = discount.add(percentDiscount);
                     }
@@ -346,59 +339,68 @@ public class ClientCheckoutController {
                         totalCost = totalCost.subtract(discount);
                     }
 
-                    order.setVoucherEntity(voucher);
-                    voucher.setAmount(voucher.getAmount() - 1);
-                    voucherRepository.save(voucher);
+                    appliedVoucher.setAmount(appliedVoucher.getAmount() - 1);
+                    voucherRepository.save(appliedVoucher);
                 }
             }
-            order.setTotalCost(totalCost);
-            this.totalCost = totalCost;
+            Optional<CartDetailEntity> cartDetailOpt = cartDetailRepository.findById(this.itemId);
+            CartDetailEntity cartDetail = cartDetailOpt.get();
 
+            ProductEntity product = cartDetail.getProductEntity();
 
-            Set<OrderDetailEntity> orderDetailEntities = new HashSet<>();
+            BigDecimal itemTotal = cartDetail.getPriceOfOne()
+                    .multiply(BigDecimal.valueOf(cartDetail.getQuantity()));
 
-            for (CartDetailEntity cartDetailEntity : cartEntity.getCartDetailEntities()) {
-                OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
-                orderDetailEntity.setProductEntity(cartDetailEntity.getProductEntity());
-                orderDetailEntity.setPriceOfOne(cartDetailEntity.getPriceOfOne());
-                orderDetailEntity.setQuantity(cartDetailEntity.getQuantity());
-                orderDetailEntity.setTotalPrice(
-                        cartDetailEntity.getPriceOfOne().multiply(BigDecimal.valueOf(cartDetailEntity.getQuantity()))
-                );
-                orderDetailEntity.setOrderEntity(order);
+            OrderEntity order = new OrderEntity();
+            order.setUserEntity(userEntity);
+            order.setAddress(this.address);
+            order.setEmail(this.email);
+            order.setFullName(this.fullName);
+            order.setPhone(this.phone);
+            order.setMethod("VNPay");
+            order.setCreatedAt(LocalDateTime.now());
+            order.setUpdatedAt(LocalDateTime.now());
+            order.setStatus(-1);
+            order.setPaymentStatus(1);
+            order.setPriceOfOne(product.getSalePrice());
+            order.setTotalCost(itemTotal);
+            order.setProductEntity(product);
+            order.setQuantity(cartDetail.getQuantity());
 
-                orderDetailEntities.add(orderDetailEntity);
-
-                ProductEntity product = cartDetailEntity.getProductEntity();
-                product.setAmount(product.getAmount() - cartDetailEntity.getQuantity());
-                productRepository.save(product);
+            if (appliedVoucher != null) {
+                order.setVoucherEntity(appliedVoucher);
             }
-            order.setOrderDetailEntities(orderDetailEntities);
+
             orderRepository.save(order);
 
-            UserEntity user = cartEntity.getUserEntity();
-            if (user != null) {
-                user.setCartEntity(null);
-            }
-            cartRepository.delete(cartEntity);
+            product.setAmount(product.getAmount() - cartDetail.getQuantity());
+            productRepository.save(product);
+
+            cartEntity.getCartDetailEntities().remove(cartDetail);
+            cartDetailRepository.delete(cartDetail);
+            cartRepository.save(cartEntity);
+
         } else {
             orderSuccess = false;
-            order.setStatus(0);
-            orderRepository.save(order);
+
+            OrderEntity failedOrder = new OrderEntity();
+            failedOrder.setUserEntity(userEntity);
+            failedOrder.setAddress(this.address);
+            failedOrder.setEmail(this.email);
+            failedOrder.setFullName(this.fullName);
+            failedOrder.setPhone(this.phone);
+            failedOrder.setMethod("VNPay");
+            failedOrder.setCreatedAt(LocalDateTime.now());
+            failedOrder.setUpdatedAt(LocalDateTime.now());
+            failedOrder.setStatus(0);
+            failedOrder.setPaymentStatus(0);
+            orderRepository.save(failedOrder);
         }
-        this.orderEntity = order;
 
         this.orderSuccess = orderSuccess;
-        this.transactionNo = transactionNo;
-        this.orderInfo = orderInfo;
-        this.transactionStatus = transactionStatus;
-
-
         return "redirect:/client/checkout/after-checkout";
     }
 
-    @Autowired
-    private EmailSenderService emailSenderService;
 
     @GetMapping("/after-checkout")
     public String afterCheckout(Model model) {
@@ -410,10 +412,18 @@ public class ClientCheckoutController {
         model.addAttribute("totalCost", this.totalCost);
         model.addAttribute("voucherName", this.voucherName);
         model.addAttribute("method", this.method);
-        String subject = "Thanh toán thành công";
-        String mess = "Xin chào @" + " \n" + email + "Bạn đã thanh toán thành công đơn hàng có mã đơn hàng là: " + transactionNo + ", tổng giá trị là " + totalCost + " !" + "\n Cảm ơn đã tin tưởng chúng tôi để mua hàng!";
-        this.emailSenderService.sendEmail(email, subject, mess);
+        if (email != null && !email.trim().isEmpty()) {
+            String subject = "Thanh toán thành công";
+            String mess = "Xin chào " + email + "\n"
+                    + "Bạn đã thanh toán thành công đơn hàng có mã đơn hàng là: " + transactionNo
+                    + ", tổng giá trị là " + totalCost + "!\n"
+                    + "Cảm ơn bạn đã tin tưởng và mua hàng của chúng tôi!";
 
-        return "invoice";
+            this.emailSenderService.sendEmail(email, subject, mess);
+        } else {
+            System.err.println("⚠ Email bị null hoặc rỗng. Không thể gửi thông báo.");
+        }
+
+        return "thankYou";
     }
 }

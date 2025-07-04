@@ -11,6 +11,7 @@ public class ProductDto {
     private String productName;
     private String description;
     private Integer amount;
+    private Integer min;
     private BigDecimal price;
     private BigDecimal salePrice;
     private String email; // dùng để map với CategoryEntity
@@ -19,6 +20,23 @@ public class ProductDto {
     private List<String> categoryNames;
     private List<String> imageUrls;
     private List<ProductImageEntity> productImage; // mới
+    private boolean nearOutOfStock;
+
+    public boolean isNearOutOfStock() {
+        return nearOutOfStock;
+    }
+
+    public void setNearOutOfStock(boolean nearOutOfStock) {
+        this.nearOutOfStock = nearOutOfStock;
+    }
+
+    public Integer getMin() {
+        return min;
+    }
+
+    public void setMin(Integer min) {
+        this.min = min;
+    }
 
     public Long getId() {
         return id;

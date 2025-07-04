@@ -26,15 +26,7 @@ public class OrderEntity extends AbstractEntity{
     private String phone;
     private String fullName;
     private String method;
-    private String paymentStatus;
-
-    public String getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    public void setPaymentStatus(String paymentStatus) {
-        this.paymentStatus = paymentStatus;
-    }
+    private Integer paymentStatus;
 
     @ManyToOne
     @JoinColumn(name = "voucher_id")
@@ -49,15 +41,36 @@ public class OrderEntity extends AbstractEntity{
     @Column(name = "full_cost", nullable = true)
     private BigDecimal fullCost;
 
+    @Basic
+    @Column(name = "quantity", nullable = true)
+    private Integer quantity;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    @EqualsAndHashCode.Exclude
+    private ProductEntity productEntity;
+
+    @Basic
+    @Column(name = "price_of_one", nullable = true)
+    private BigDecimal priceOfOne;
+
     @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<OrderDetailEntity> orderDetailEntities;
+    private Set<ReturnEntity> returnEntities;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     @EqualsAndHashCode.Exclude
     private UserEntity userEntity;
+
+    public Integer getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(Integer paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
 
     public String getAddress() {
         return address;
@@ -139,13 +152,6 @@ public class OrderEntity extends AbstractEntity{
         this.fullCost = fullCost;
     }
 
-    public Set<OrderDetailEntity> getOrderDetailEntities() {
-        return orderDetailEntities;
-    }
-
-    public void setOrderDetailEntities(Set<OrderDetailEntity> orderDetailEntities) {
-        this.orderDetailEntities = orderDetailEntities;
-    }
 
     public UserEntity getUserEntity() {
         return userEntity;

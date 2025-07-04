@@ -326,6 +326,48 @@
             <!-- Hiển thị danh sách đơn hàng -->
             <div class="card">
                 <div class="card-body">
+                    <ul class="nav nav-tabs mb-3">
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               th:classappend="${status} == null ? 'active'"
+                               th:href="@{/vendor/order}">Tất cả</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               th:classappend="${status} == -1 ? 'active'"
+                               th:href="@{/vendor/order(status=-1)}">
+                                Đang chờ xác nhận (<span th:text="${countPending}">0</span>)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               th:classappend="${status} == 0 ? 'active'"
+                               th:href="@{/vendor/order(status=0)}">
+                                Đã hủy (<span th:text="${countCancelled}">0</span>)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               th:classappend="${status} == 1 ? 'active'"
+                               th:href="@{/vendor/order(status=1)}">
+                                Đã giao (<span th:text="${countDelivered}">0</span>)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               th:classappend="${status} == 2 ? 'active'"
+                               th:href="@{/vendor/order(status=2)}">
+                                Đang giao hàng (<span th:text="${countShipping}">0</span>)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               th:classappend="${status} == 3 ? 'active'"
+                               th:href="@{/vendor/order(status=3)}">
+                                Đang trả hàng (<span th:text="${countReturn}">0</span>)
+                            </a>
+                        </li>
+                    </ul>
                     <table class="table table-striped table-bordered">
                         <thead>
                         <tr>
@@ -334,7 +376,8 @@
                             <th scope="col">Phương thức thanh toán</th>
                             <th scope="col">Ngày</th>
                             <th scope="col">Tổng chi phí</th>
-                            <th scope="col">Trạng thái</th>
+                            <th scope="col">Trạng thái thanh toán</th>
+                            <th scope="col">Trạng thái đơn hàng</th>
                             <th scope="col">Hành động</th>
                         </tr>
                         </thead>
@@ -343,26 +386,52 @@
                             <td th:text="${order.id}">#1234</td>
                             <td th:text="${order.fullName}">#1234</td>
                             <td th:text="${order.method}">#1234</td>
-                            <td th:text="${order.createdAt}">#1234</td>
+                            <td th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}">#1234</td>
                             <td th:text="${order.totalCost}" class="vnd-price">100.000 đ</td>
-
                             <td>
-                                <form th:action="@{/vendor/order/update-status/{orderId}(orderId=${order.id})}"
-                                      method="post" id="updateStatusForm">
-                                    <select name="status" class="form-select"
-                                            th:data-id="${order.id}"
-                                            onchange="updateOrderStatus(this)">
-                                        <option th:each="statusOption : ${statusOptions}"
-                                                th:value="${statusOption}"
-                                                th:text="${statusOption == -1 ? 'Đang chờ xác nhận' :
-                       statusOption == 0 ? 'Đã huỷ' :
-                       statusOption == 1 ? 'Đã thanh toán' :
-                       statusOption == 2 ? 'Đang giao hàng' : 'Đã giao hàng'}"
-                                                th:selected="${statusOption == order.status}">
-                                        </option>
-                                    </select>
+                                <span th:if="${order.paymentStatus == 1}" class="badge bg-success">Đã thanh toán</span>
+                                <span th:if="${order.paymentStatus != 1}" class="badge bg-warning text-dark">Chưa thanh toán</span>
+                            </td>
+                            <td>
+                                <div th:switch="${order.status}">
+                                    <!-- Đang chờ xác nhận -->
+                                    <div th:case="-1">
+                                        <form th:action="@{/vendor/order/update-status/{orderId}(orderId=${order.id})}" method="post" style="display:inline">
+                                            <input type="hidden" name="status" value="0"/>
+                                            <button type="submit" class="btn btn-danger btn-sm">Huỷ đơn</button>
+                                        </form>
+                                        <form th:action="@{/vendor/order/update-status/{orderId}(orderId=${order.id})}" method="post" style="display:inline">
+                                            <input type="hidden" name="status" value="2"/>
+                                            <button type="submit" class="btn btn-warning btn-sm">Đang giao</button>
+                                        </form>
+                                    </div>
 
-                                </form>
+                                    <!-- Đang giao hàng -->
+                                    <div th:case="2">
+                                        <form th:action="@{/vendor/order/update-status/{orderId}(orderId=${order.id})}" method="post" style="display:inline">
+                                            <input type="hidden" name="status" value="0"/>
+                                            <button type="submit" class="btn btn-danger btn-sm">Huỷ đơn</button>
+                                        </form>
+                                        <form th:action="@{/vendor/order/update-status/{orderId}(orderId=${order.id})}" method="post" style="display:inline">
+                                            <input type="hidden" name="status" value="1"/>
+                                            <button type="submit" class="btn btn-success btn-sm">Đã giao</button>
+                                        </form>
+                                    </div>
+
+                                    <div th:case="1">
+                                        <span class="badge bg-success">Đã giao hàng</span>
+                                    </div>
+                                    <div th:case="0">
+                                        <span class="badge bg-secondary">Đã huỷ</span>
+                                    </div>
+                                    <div th:case="3">
+                                        <span class="badge bg-secondary">Đang trả hàng</span>
+                                    </div>
+
+                                    <div th:case="*">
+                                        <span class="badge bg-dark">Không xác định</span>
+                                    </div>
+                                </div>
                             </td>
 
                             <td>

@@ -25,9 +25,7 @@ public class VendorOrderController {
 
     @GetMapping("")
     public String orderPage(Model model,
-                            @RequestParam(value = "status", required = false) Integer status,
-                            @RequestParam(value = "page", defaultValue = "0") int page,
-                            @RequestParam(value = "size", defaultValue = "5") int size) {
+                            @RequestParam(value = "status", required = false) Integer status) {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity user = userRepository.findByEmail(email).orElse(null);
@@ -36,21 +34,28 @@ public class VendorOrderController {
             return "redirect:/login";
         }
 
-        List<OrderEntity> orderEntities = orderRepository.findAllByOrderDetailEntities_ProductEntity_User(user);
+        List<OrderEntity> allOrders = orderRepository.findAllByProductEntity_User(user);
 
+        model.addAttribute("countPending", allOrders.stream().filter(o -> o.getStatus() == -1).count());
+        model.addAttribute("countCancelled", allOrders.stream().filter(o -> o.getStatus() == 0).count());
+        model.addAttribute("countDelivered", allOrders.stream().filter(o -> o.getStatus() == 1).count());
+        model.addAttribute("countShipping", allOrders.stream().filter(o -> o.getStatus() == 2).count());
+        model.addAttribute("countReturn", allOrders.stream().filter(o -> o.getStatus() == 3).count());
+
+        List<OrderEntity> filteredOrders = allOrders;
         if (status != null) {
-            orderEntities = orderEntities.stream()
+            filteredOrders = allOrders.stream()
                     .filter(o -> o.getStatus() != null && o.getStatus() == status)
                     .collect(Collectors.toList());
         }
 
-        model.addAttribute("orders", orderEntities);
+        model.addAttribute("orders", filteredOrders);
         model.addAttribute("status", status);
-
-        model.addAttribute("statusOptions", new Integer[]{-1, 0, 1, 2, 3});
+        model.addAttribute("statusOptions", new Integer[]{-1, 0, 1, 2});
 
         return "vendor/order/list";
     }
+
 
     @GetMapping("/detail/{orderId}")
     public String orderDetail(@PathVariable("orderId") Long orderId, Model model) {
@@ -63,7 +68,6 @@ public class VendorOrderController {
             return "redirect:/vendor/order";
         }
         model.addAttribute("order", order);
-        model.addAttribute("orderDetails", order.getOrderDetailEntities());
 
         return "vendor/order/detail";
     }
@@ -72,11 +76,18 @@ public class VendorOrderController {
     public String updateOrderStatus(@PathVariable("orderId") Long orderId,
                                     @RequestParam("status") Integer status) {
         OrderEntity order = orderRepository.findById(orderId).orElse(null);
+
         if (order != null) {
             order.setStatus(status);
+
+            if (status == 1) {
+                order.setPaymentStatus(1);
+            }
+
             orderRepository.save(order);
         }
 
         return "redirect:/vendor/order";
     }
+
 }

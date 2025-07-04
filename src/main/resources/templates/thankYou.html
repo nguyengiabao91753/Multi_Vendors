@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cảm ơn bạn</title>
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(to right, #ffecd2, #fcb69f);
+            font-family: 'Nunito', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .thankyou-container {
+            background-color: white;
+            padding: 50px;
+            border-radius: 16px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+            max-width: 600px;
+            text-align: center;
+            animation: fadeInUp 1s ease;
+        }
+
+        .thankyou-icon {
+            font-size: 80px;
+            color: #28a745;
+            margin-bottom: 20px;
+            animation: bounceIn 1s;
+        }
+
+        .thankyou-title {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .thankyou-message {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .btn-return {
+            background-color: #ff5722;
+            color: white;
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-return:hover {
+            background-color: #e64a19;
+            text-decoration: none;
+            color: white;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: translate3d(0, 40px, 0);
+                opacity: 0;
+            }
+
+            to {
+                transform: translate3d(0, 0, 0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="thankyou-container animate__animated animate__fadeInUp">
+    <div class="thankyou-icon">🎉</div>
+    <div class="thankyou-title">Cảm ơn bạn đã phản hồi!</div>
+    <div class="thankyou-message">
+        MultiVendors đã ghi nhận yêu cầu của bạn.<br/>
+        Vui lòng chờ trong thời gian sớm nhất để chúng tôi xử lý.
+    </div>
+    <a th:href="@{/client/order}" class="btn-return">Quay về lịch sử đơn hàng</a>
+</div>
+
+</body>
+</html>

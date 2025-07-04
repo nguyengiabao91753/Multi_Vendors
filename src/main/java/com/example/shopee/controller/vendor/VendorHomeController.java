@@ -7,7 +7,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.time.Year;
@@ -25,8 +29,9 @@ public class VendorHomeController {
     private FeedbackRepository feedbackRepository;
     @Autowired
     private VoucherRepository voucherRepository;
+
     @Autowired
-    private OrderDetailRepository orderDetailRepository;
+    private OrderRepository orderRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -49,7 +54,7 @@ public class VendorHomeController {
         int currentYear = Year.now().getValue();
         Map<Integer, BigDecimal> revenueByMonth = new HashMap<>();
         for (int month = 1; month <= 12; month++) {
-            BigDecimal revenue = orderDetailRepository.getMonthlyRevenueForVendor(month, vendorId, currentYear);
+            BigDecimal revenue = orderRepository.getMonthlyRevenueForVendor(month, vendorId, currentYear);
             revenueByMonth.put(month, revenue != null ? revenue : BigDecimal.ZERO);
         }
 

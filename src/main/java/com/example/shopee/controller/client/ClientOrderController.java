@@ -1,9 +1,11 @@
 package com.example.shopee.controller.client;
 
-
+import java.time.Duration;
 import com.example.shopee.config.VNPayConfig;
 import com.example.shopee.entity.*;
+import com.example.shopee.enums.ReturnStatus;
 import com.example.shopee.repository.*;
+import com.example.shopee.service.CloudinaryService;
 import com.example.shopee.service.EmailSenderService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -12,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -30,10 +33,13 @@ public class ClientOrderController {
     private UserRepository userRepository;
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private CloudinaryService cloudinaryService;
+    private Long id = 0L;
 
 
     @GetMapping("")
-    public String orderHistory(Model model) {
+    public String orderHistory(@RequestParam(name = "type", required = false) Integer type, Model model) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<UserEntity> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) {
@@ -41,10 +47,25 @@ public class ClientOrderController {
         }
 
         UserEntity user = optionalUser.get();
-        Set<OrderEntity> orders = user.getOrderEntities();
+
+        Set<OrderEntity> orders;
+
+        if (type == null || type == -99) {
+            orders = user.getOrderEntities();
+            type = -99;
+        } else {
+            Integer finalType = type;
+            orders = user.getOrderEntities().stream()
+                    .filter(order -> order.getStatus() != null && order.getStatus().equals(finalType))
+                    .collect(Collectors.toSet());
+        }
+
         model.addAttribute("orders", orders);
+        model.addAttribute("type", type);
+
         return "history";
     }
+
 
 
     @GetMapping("/detail/{id}")
@@ -58,5 +79,84 @@ public class ClientOrderController {
         model.addAttribute("order", order);
         return "history-detail";
     }
+
+    @GetMapping("/return/{id}")
+    public String returnOrder(@PathVariable Long id, Model model) {
+        Optional<OrderEntity> orderOptional = orderRepository.findById(id);
+        this.id = id;
+        if (orderOptional.isEmpty()) {
+            return "redirect:/client/order";
+        }
+
+        OrderEntity order = orderOptional.get();
+        model.addAttribute("order", order);
+
+        LocalDateTime createdAt = order.getCreatedAt();
+        LocalDateTime now = LocalDateTime.now();
+
+        long daysBetween = Duration.between(createdAt, now).toDays();
+        model.addAttribute("daysBetween", daysBetween);
+        return "return";
+    }
+
+    @Autowired
+    private ReturnRepository returnRepository;
+
+    @PostMapping("/return/save")
+    public String saveReturnRequest(
+            @RequestParam("reason") String reason,
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            HttpSession session
+    ) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<UserEntity> userOpt = userRepository.findByEmail(email);
+        Optional<OrderEntity> orderOpt = orderRepository.findById(this.id);
+
+        if (userOpt.isEmpty() || orderOpt.isEmpty()) {
+            return "redirect:/client/order";
+        }
+
+        ReturnEntity returnEntity = new ReturnEntity();
+        returnEntity.setReason(reason);
+        returnEntity.setReturnStatus(ReturnStatus.PENDING);
+        returnEntity.setOrderEntity(orderOpt.get());
+        returnEntity.setUserEntity(userOpt.get());
+        returnEntity.setCreatedAt(LocalDateTime.now());
+
+        if (!image.isEmpty() && image != null) {
+            String img = cloudinaryService.uploadFile(image);
+            returnEntity.setImgReturn(img);
+        }
+
+        returnRepository.save(returnEntity);
+
+        OrderEntity orderEntity = orderRepository.findById(id).get();
+        orderEntity.setStatus(3);
+        orderRepository.save(orderEntity);
+
+        session.setAttribute("mess", "Đã gửi yêu cầu trả hàng!");
+        return "thankYou";
+    }
+
+    @GetMapping("/return/detail/{id}")
+    public String returnDetail(@PathVariable("id") Long id, Model model) {
+        OrderEntity orderEntity = orderRepository.findById(id).orElse(null);
+        if (orderEntity == null) {
+            return "redirect:/client/order";
+        }
+
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = userRepository.findByEmail(email).orElse(null);
+        model.addAttribute("user", user);
+
+        ReturnEntity returnEntity = returnRepository.findTopByOrderEntityIdOrderByIdDesc(id).orElse(null);
+        if (returnEntity == null) {
+            return "redirect:/client/order";
+        }
+
+        model.addAttribute("return", returnEntity);
+        return "return-detail";
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package com.example.shopee.controller;
 
+import com.example.shopee.entity.CategoryEntity;
 import com.example.shopee.entity.FeedbackEntity;
 import com.example.shopee.entity.ProductEntity;
 import com.example.shopee.entity.UserEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Collection;
 import java.util.List;
@@ -31,27 +33,47 @@ public class HomeController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+
     @GetMapping({"", "/home", "/index"})
-    public String handleHomeAndIndex(Model model) {
+    public String handleHomeAndIndex(Model model, RedirectAttributes redirectAttributes) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+
 
         if (authorities.stream().anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()))) {
             model.addAttribute("email", username);
             return "redirect:/admin/dashboard";
         } else {
+            Pageable top6 = PageRequest.of(0, 6);
+
+            List<ProductEntity> bestSellingProducts = productRepository.findBestSellingProducts(top6);
+            List<ProductEntity> mostLikedProducts = wishlistRepository.findMostLikedProducts(top6);
+
+            model.addAttribute("bestSellingProducts", bestSellingProducts);
+            model.addAttribute("mostLikedProducts", mostLikedProducts);
+
+
             if (!username.isEmpty() && !"anonymousUser".equals(username)) {
-                model.addAttribute("email", username);
+                redirectAttributes.addFlashAttribute("email", username);
+                redirectAttributes.addFlashAttribute("categories", categoryRepository.findAll());
+                redirectAttributes.addFlashAttribute("bestSellingProducts", bestSellingProducts);
+                redirectAttributes.addFlashAttribute("mostLikedProducts", mostLikedProducts);
                 return "redirect:/client/home";
             } else {
+                model.addAttribute("categories", categoryRepository.findAll());
                 return "index";
             }
         }
     }
 
 
-    @Autowired
-    private ProductRepository productRepository;
+
 
     @GetMapping("/list")
     private String list(Model model,
@@ -101,10 +123,10 @@ public class HomeController {
     private WishlistRepository wishlistRepository;
 
     @Autowired
-    private OrderDetailRepository orderDetailRepository;
+    private FeedbackRepository feedbackRepository;
 
     @Autowired
-    private FeedbackRepository feedbackRepository;
+    private OrderRepository orderRepository;
 
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable("id") Long id, Model model) {
@@ -128,7 +150,7 @@ public class HomeController {
             inWishlist = wishlistRepository.findByUserEntityAndProductEntity(user, product).isPresent();
             model.addAttribute("user", user);
 
-            canFeedback = orderDetailRepository.hasUserBoughtProduct(product.getId(), user.getId());
+            canFeedback = orderRepository.hasUserBoughtProduct(product.getId(), user.getId());
             hasFeedback = feedbackRepository.existsByUserEntityAndProductEntity(user, product);
         }
 
@@ -192,5 +214,32 @@ public class HomeController {
             return "redirect:/";
         }
     }
+
+
+
+    @GetMapping("/list/cat/{categoryId}")
+    public String listByCategory(@PathVariable("categoryId") Long categoryId,
+                                 Model model,
+                                 @RequestParam(name = "page", defaultValue = "0") int page,
+                                 @RequestParam(name = "size", defaultValue = "6") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        int status = 1;
+
+        CategoryEntity category = categoryRepository.findById(categoryId)
+                .orElse(null);
+
+        Page<ProductEntity> productPage = productRepository.findByCategoriesAndStatus(category, status, pageable);
+
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("categoryName", category.getCategoryName());
+
+        model.addAttribute("categories", categoryRepository.findAll());
+
+        return "list";
+    }
+
 
 }

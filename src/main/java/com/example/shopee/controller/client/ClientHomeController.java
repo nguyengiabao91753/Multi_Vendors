@@ -4,7 +4,7 @@ import com.example.shopee.entity.FeedbackEntity;
 import com.example.shopee.entity.ProductEntity;
 import com.example.shopee.entity.UserEntity;
 import com.example.shopee.repository.FeedbackRepository;
-import com.example.shopee.repository.OrderDetailRepository;
+import com.example.shopee.repository.OrderRepository;
 import com.example.shopee.repository.ProductRepository;
 import com.example.shopee.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -27,14 +26,15 @@ public class ClientHomeController {
     @Autowired
     private ProductRepository productRepository;
 
-    @Autowired
-    private OrderDetailRepository orderDetailRepository;
 
     @Autowired
     private FeedbackRepository feedbackRepository;
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     @GetMapping("/home")
     public String home(Model model) {
@@ -57,7 +57,7 @@ public class ClientHomeController {
 
         ProductEntity product = productRepository.findById(productId).orElseThrow();
 
-        boolean bought = orderDetailRepository.hasUserBoughtProduct(productId, user.getId());
+        boolean bought = orderRepository.hasUserBoughtProduct(productId, user.getId());
         boolean alreadyFeedback = feedbackRepository.existsByUserEntityAndProductEntity(user, product);
 
         if (bought && !alreadyFeedback) {

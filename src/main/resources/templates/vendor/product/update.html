@@ -46,13 +46,18 @@
                                     <input type="number" class="form-control" th:field="*{amount}"
                                            placeholder="Nhập số lượng" required>
                                 </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Số lượng min(hạn mức tồn kho)</label>
+                                    <input type="number" class="form-control" th:field="*{min}"
+                                           placeholder="Nhập số lượng min" required>
+                                </div>
                             </div>
 
                             <!-- Cột bên phải -->
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Danh mục</label>
-                                    <select name="categoryIds" multiple class="form-control">
+                                    <select name="categoryIds" multiple class="form-control select2" style="width: 100%;">
                                         <option th:each="cat : ${categories}"
                                                 th:value="${cat.id}"
                                                 th:text="${cat.categoryName}"
@@ -62,8 +67,17 @@
                                 </div>
 
                                 <div class="mb-3">
+                                    <label class="form-label">Trạng thái</label>
+                                    <select class="form-select" th:field="*{status}">
+                                        <option value="1" th:selected="${product.status == 1}">Hoạt động</option>
+                                        <option value="0" th:selected="${product.status == 0}">Không hoạt động</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
                                     <label for="description" class="form-label">Mô tả</label>
-                                    <textarea class="form-control" th:field="*{description}" rows="4"
+                                    <textarea class="form-control" name="description" id="description"
+                                              th:field="*{description}" rows="4"
                                               placeholder="Nhập mô tả sản phẩm"></textarea>
                                 </div>
 
@@ -71,37 +85,33 @@
                                     <label class="form-label">Hình ảnh</label>
                                     <!-- Hình ảnh đã tải lên -->
                                     <div class="slideshow-container" style="width: 100%; margin-bottom: 20px;">
-                                        <!-- Kết hợp hình ảnh và nội dung cho mỗi phần tử trong slideshow -->
-                                        <th:block th:each="y: ${product.productImage}">
-                                            <div class="mySlides">
-                                                <a th:href="@{/vendor/product/delete-image/{id}(id=${y.id})}"
-                                                   class="delete_img">
-                                                    <i style="color: #fff; line-height: 30px;"
-                                                       class="sl sl-icon-close"></i>
-                                                </a>
-                                                <img th:src="${y.url_Image}" style="width: 100%">
-                                            </div>
-                                        </th:block>
-                                        <!-- Nút điều khiển mũi tên-->
+                                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                            <th:block th:each="y : ${product.productImage}">
+                                                <div style="position: relative;">
+                                                    <a th:href="@{/admin/product/delete-image/{id}(id=${y.id})}" class="delete_img"
+                                                       style="position: absolute; top: 0; right: 0; background: rgba(0,0,0,0.5); width: 30px; height: 30px; text-align: center;">
+                                                        <i style="color: #fff; line-height: 30px;" class="sl sl-icon-close"></i>
+                                                    </a>
+                                                    <img th:src="${y.url_Image}" style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ddd;">
+                                                </div>
+                                            </th:block>
+                                        </div>
+
                                         <a class="prev" onclick="plusSlides(-1)">❮</a>
                                         <a class="next" onclick="plusSlides(1)">❯</a>
                                     </div>
-                                    <!-- Nút tròn điều khiển slideshow-->
                                     <div style="text-align: center">
                                         <th:block th:each="y: ${product.productImage}">
-                                            <span class="dotw"
-                                                  th:onclick="'currentSlide('+ ${yStat.index+1} +')'"></span>
+                                            <span class="dotw" th:onclick="'currentSlide('+ ${yStat.index+1} +')'"></span>
                                         </th:block>
                                     </div>
 
-                                    <!-- Dropzone để tải lên ảnh mới -->
                                     <div class="submit-section">
                                         <div class="upload__box" style="padding-top: 40px;">
                                             <div class="upload__btn-box">
                                                 <label class="upload__btn" style="border-radius: 50px;">
                                                     <p style="margin-bottom: 0px;">Thêm ảnh</p>
-                                                    <input name="listImage" accept="image/*" type="file"
-                                                           data-max_length="20" class="upload__inputfile" multiple>
+                                                    <input name="listImage" accept="image/*" type="file" data-max_length="20" class="upload__inputfile" multiple>
                                                 </label>
                                             </div>
                                             <div class="upload__img-wrap"></div>
@@ -111,10 +121,10 @@
                             </div>
                         </div>
 
-                        <!-- Nút cập nhật và quay lại -->
                         <div class="d-flex justify-content-end mt-4">
-                            <a th:href="@{/vendor/product}" class="btn btn-secondary me-2">Quay lại danh sách</a>
-                            <button type="submit" class="btn btn-primary">Cập Nhật</button>
+                            <a th:href="@{/vendor/product}" class="btn btn-outline-secondary me-2">Quay lại danh
+                                sách</a>
+                            <button type="submit" class="btn btn-success">Lưu</button>
                         </div>
                     </form>
 

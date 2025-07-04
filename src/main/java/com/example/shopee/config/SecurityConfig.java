@@ -72,12 +72,12 @@ public class SecurityConfig {
                 .formLogin(f -> f.loginPage("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/index", true)
-                        .failureUrl("/loginError")
+                        .defaultSuccessUrl("/", true)
+                        .failureHandler(new CustomAuthenticationFailureHandler())
                 )
                 .authorizeHttpRequests(at -> at
                         .requestMatchers("/", "/home", "/login/**", "/view/**", "/login-google", "/register", "/save", "re-send", "/image/**", "/js/**", "/lib/**", "/style/**", "/slider/**", "/css/**", "/list/**", "/detail/**",
-                                "/api/storage/**", "recover", "send-otp-recover", "otp-check", "confirm-otp", "send-otp-recover", "confirm-otp-recover",
+                                "/api/storage/**", "recover", "send-otp-recover", "otp-check", "confirm-otp", "send-otp-recover", "confirm-otp-recover", "/change-pass/**",
                                 "/client/payment/pay", "/productListClient/**", "save-new-password", "detail", "change-password", "save-change-password", "/users/**", "/forgot/**", "/forgotPass/**", "/otp-check-pass/**" , "/confirm-otp-pass/**",
                                 "/assets/**", "/assets_admin/**", "/client_assets/**", "/index/**", "/product/**", "/guest/**").permitAll()
                         .requestMatchers("/test", "/admin/**", "/userList/**").hasAnyRole("ADMIN")

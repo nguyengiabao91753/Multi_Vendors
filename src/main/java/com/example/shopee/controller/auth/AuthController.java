@@ -24,10 +24,7 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping("/login")
-    public String showLogin() {
-        return "login";
-    }
+
 
     @GetMapping("/logout")
     public String logoutPage() {

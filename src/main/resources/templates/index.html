@@ -112,7 +112,14 @@
                                 <a th:href="@{/list}">Xem Thêm <span>></span></a>
                             </div>
                             <div class="popular-product__list">
-                                <p class="none-item">Hiện Không Có Sản Phẩm Nổi Bật</p>
+                                <div th:if="${#lists.isEmpty(bestSellingProducts)}">
+<!--                                    <p class="none-item">Hiện Không Có Sản Phẩm Bán Chạy</p>-->
+                                </div>
+                                <div th:each="product : ${bestSellingProducts}" class="product-card">
+                                    <img th:src="${product.productImage[0].url}" alt="Ảnh sản phẩm" />
+                                    <p th:text="${product.productName}">Tên SP</p>
+                                    <span th:text="${#numbers.formatDecimal(product.salePrice, 0, 'COMMA', 2, 'POINT')} + ' đ'">0 đ</span>
+                                </div>
                             </div>
                         </div>
 
@@ -122,7 +129,14 @@
                                 <a th:href="@{/list}">Xem Thêm <span>></span></a>
                             </div>
                             <div class="popular-brand__list">
-                                <p class="none-item">Hiện Không Có Sản Phẩm Nổi Bật</p>
+                                <div th:if="${#lists.isEmpty(mostLikedProducts)}">
+<!--                                    <p class="none-item">Hiện Không Có Sản Phẩm Nổi Bật</p>-->
+                                </div>
+                                <div th:each="product : ${mostLikedProducts}" class="product-card">
+                                    <img th:src="${product.productImage[0].url}" alt="Ảnh sản phẩm" />
+                                    <p th:text="${product.productName}">Tên SP</p>
+                                    <span th:text="${#numbers.formatDecimal(product.salePrice, 0, 'COMMA', 2, 'POINT')} + ' đ'">0 đ</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -208,26 +222,6 @@
             </div>
         </section>
 
-        <main id="main">
-            <div class="container">
-                <div class="main-title">
-                    <h3>Gợi ý hôm nay</h3>
-                    <div class="main-title-banner">
-                        <img th:src="@{/image/banner/8.png}" alt="banner"/>
-                    </div>
-                </div>
-
-                <div class="main-list">
-                    <div class="main-list-wrapper">
-                        <p class="none-item">Hiện chưa có sản phẩm nào để hiển thị.</p>
-                    </div>
-
-                    <div class="btn btn-more">
-                        <a th:href="@{/list}">Xem Thêm</a>
-                    </div>
-                </div>
-            </div>
-        </main>
 
 
         <div id="shopee-skinny-banner">

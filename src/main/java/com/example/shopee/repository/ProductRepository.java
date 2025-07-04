@@ -1,5 +1,6 @@
 package com.example.shopee.repository;
 
+import com.example.shopee.entity.CategoryEntity;
 import com.example.shopee.entity.ProductEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,5 +31,12 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
     @Query("SELECT COUNT(p) FROM ProductEntity p WHERE p.user.id = :userId")
     int countByUserId(@Param("userId") Long userId);
+
+    Page<ProductEntity> findByCategoriesAndStatus(CategoryEntity category, Integer status, Pageable pageable);
+
+    @Query("SELECT od.productEntity FROM OrderEntity od " +
+            "GROUP BY od.productEntity " +
+            "ORDER BY SUM(od.quantity) DESC")
+    List<ProductEntity> findBestSellingProducts(Pageable pageable);
 
 }

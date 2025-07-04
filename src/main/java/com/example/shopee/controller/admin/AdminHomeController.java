@@ -22,8 +22,6 @@ public class AdminHomeController {
     private FeedbackRepository feedbackRepository;
     @Autowired
     private OrderRepository orderRepository;
-    @Autowired
-    private OrderDetailRepository orderDetailRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -38,7 +36,7 @@ public class AdminHomeController {
         int currentYear = Year.now().getValue();
         Map<Integer, BigDecimal> revenueByMonth = new HashMap<>();
         for (int month = 1; month <= 12; month++) {
-            BigDecimal revenue = orderDetailRepository.getMonthlyRevenue(month, currentYear);
+            BigDecimal revenue = orderRepository.getMonthlyRevenue(month, currentYear);
             revenueByMonth.put(month, revenue != null ? revenue : BigDecimal.ZERO);
         }
 

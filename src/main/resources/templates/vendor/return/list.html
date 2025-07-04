@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Chi tiết Đơn hàng</title>
-
+    <title>Quản Lý Đơn hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         /* Tổng quan */
         body {
@@ -318,61 +318,87 @@
 </head>
 <body>
 
-<th:block th:replace="layout/admin-layout :: layout">
+<th:block th:replace="layout/vendor-layout :: layout">
     <th:block th:fragment="pageContent">
         <div class="container mt-4">
-            <h3 class="mb-4">Chi tiết đơn hàng</h3>
+            <h3 class="mb-4">Danh sách đơn trả hàng</h3>
 
+            <!-- Hiển thị danh sách đơn hàng -->
             <div class="card">
                 <div class="card-body">
-                    <h5>Đơn hàng #<span th:text="${order.id}">1234</span></h5>
-                    <p><strong>Tổng chi phí:</strong> <span th:text="${order.totalCost}" class="vnd-price">100.000 đ</span></p>
-                    <p><strong>Trạng thái:</strong>
-                        <span th:text="${order.status == -1 ? 'Đang chờ xác nhận' :
-                                        order.status == 0 ? 'Đã huỷ' :
-                                        order.status == 1 ? 'Đã giao hàng' :
-                                        order.status == 2 ? 'Đang giao hàng' : 'Đang trả hàng'}">
-                        </span>
-                    </p>
-                    <p><strong>Ngày tạo:</strong> <span th:text="${order.createdAt}">01/01/2025</span></p>
-                    <p><strong>Người mua:</strong> <span th:text="${order.fullName}">John Doe</span></p>
-
-                    <li><strong>Voucher sử dụng:</strong>
-                        <span th:if="${order.voucherEntity != null}" th:text="${order.voucherEntity.name}"></span>
-                        <span th:if="${order.voucherEntity == null}">Không áp dụng</span>
-                    </li>
-                    <li><strong>Tổng thanh toán:</strong> <span th:text="${order.totalCost}" class="vnd-price">0</span></li>
-                </div>
-            </div>
-
-            <h5 class="mt-4">Các sản phẩm trong đơn hàng</h5>
-            <div class="card">
-                <div class="card-body">
-                    <table class="table">
+                    <table class="table table-striped table-bordered">
                         <thead>
                         <tr>
-                            <th>Sản phẩm</th>
-                            <th>Giá</th>
-                            <th>Số lượng</th>
-                            <th>Tổng</th>
+                            <th scope="col">Mã</th>
+                            <th scope="col">Người mua</th>
+                            <th scope="col">Phương thức thanh toán</th>
+                            <th scope="col">Ngày mua</th>
+                            <th scope="col">Ngày trả hàng</th>
+                            <th scope="col">Tổng chi phí</th>
+                            <th scope="col">Trạng thái</th>
+                            <th scope="col">Hành động</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td th:text="${order.productEntity.productName}">Tên sản phẩm</td>
-                            <td th:text="${order.totalCost.divide(order.quantity)}" class="vnd-price">0</td>
-                            <td th:text="${order.quantity}">1</td>
-                            <td th:text="${order.totalCost}" class="vnd-price">0</td>
+                        <tr th:each="return : ${returns}">
+                            <td th:text="${return.id}">#1234</td>
+                            <td th:text="${return.orderEntity.fullName}">#1234</td>
+                            <td th:text="${return.orderEntity.method}">#1234</td>
+                            <td th:text="${#temporals.format(return.orderEntity.createdAt, 'yyyy-MM-dd HH:mm')}">#1234</td>
+                            <td th:text="${#temporals.format(return.createdAt, 'yyyy-MM-dd HH:mm')}">#1234</td>
+                            <td th:text="${return.orderEntity.totalCost}" class="vnd-price">100.000 đ</td>
+                            <td th:text="${return.returnStatus.displayName}" class="vnd-price">PENDING</td>
+
+                            <td>
+                                <a th:href="@{/vendor/return/detail/{id}(id=${return.id})}"
+                                   class="btn btn-info btn-sm">Xem chi tiết</a>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="mt-4">
-                <a th:href="@{/admin/order}" class="btn btn-secondary">Quay lại danh sách đơn hàng</a>
-            </div>
+            <!-- Phân trang -->
+            <nav th:if="${totalPages > 1}">
+                <ul class="pagination justify-content-center mt-3">
+                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/vendor/return(page=${currentPage - 1})}">
+                            Trước
+                        </a>
+                    </li>
+
+                    <li class="page-item"
+                        th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                        th:classappend="${i == currentPage} ? 'active'">
+                        <a class="page-link"
+                           th:href="@{/vendor/return(page=${i})}"
+                           th:text="${i + 1}"></a>
+                    </li>
+
+                    <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/vendor/return(page=${currentPage + 1})}">
+                            Sau
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                document.querySelectorAll(".vnd-price").forEach(el => {
+                    const value = parseFloat(el.innerText);
+                    if (!isNaN(value)) {
+                        el.innerText = new Intl.NumberFormat('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND'
+                        }).format(value);
+                    }
+                });
+            });
+        </script>
     </th:block>
 </th:block>
 

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch sử đơn hàng</title>
+</head>
+<body>
+<th:block th:replace="layout/user-layout :: layout">
+    <th:block th:fragment="pageContent">
+        <style>
+            body {
+                font-size: 14px;
+            }
+        </style>
+
+        <div id="user-page">
+            <div class="container">
+                <div class="user-page-wrapper">
+
+                    <div class="container mt-4">
+                        <h2 class="mb-4">Chi tiết Trả hàng</h2>
+
+                        <div th:if="${session.mess}" class="alert alert-success alert-dismissible fade show"
+                             role="alert">
+                            <span th:text="${session.mess}">Thông báo</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                        </div>
+
+                        <div class="row">
+                            <!-- Thông tin đơn hàng -->
+                            <div class="col-lg-6 mb-4">
+                                <div class="card">
+                                    <div class="card-header">Thông tin đơn hàng</div>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item"><strong>Mã giao dịch:</strong> <span
+                                                th:text="${return.orderEntity.id}"></span></li>
+                                        <li class="list-group-item"><strong>Phương thức:</strong> <span
+                                                th:text="${return.orderEntity.method}"></span></li>
+                                        <li class="list-group-item"><strong>Voucher:</strong>
+                                            <span th:if="${return.orderEntity.voucherEntity != null}"
+                                                  th:text="${return.orderEntity.voucherEntity.name}"></span>
+                                            <span th:if="${return.orderEntity.voucherEntity == null}">Không áp dụng</span>
+                                        </li>
+                                        <li class="list-group-item"><strong>Tổng thanh toán:</strong>
+                                            <span th:text="${return.orderEntity.totalCost}"
+                                                  class="vnd-price"></span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="card mt-3">
+                                    <div class="card-header">Chi tiết sản phẩm</div>
+                                    <div class="card-body p-0">
+                                        <table class="table table-sm table-bordered mb-0">
+                                            <thead>
+                                            <tr>
+                                                <th>Sản phẩm</th>
+                                                <th>Đơn giá</th>
+                                                <th>Số lượng</th>
+                                                <th>Thành tiền</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td th:text="${return.orderEntity.productEntity.productName}">Tên
+                                                    sản phẩm
+                                                </td>
+                                                <td th:text="${return.orderEntity.priceOfOne}" class="vnd-price">0
+                                                </td>
+                                                <td th:text="${return.orderEntity.quantity}">1</td>
+                                                <td th:text="${return.orderEntity.totalCost}" class="vnd-price">0
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Lý do và ảnh -->
+                            <div class="col-lg-6 mb-4">
+                                <div class="card mb-3">
+                                    <div class="card-header">Lý do trả hàng</div>
+                                    <div class="card-body">
+                            <textarea class="form-control" name="reason" id="reason" rows="4" readonly
+                                      th:text="${return.reason}">Lý do</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-header">Ảnh người mua nhận hàng</div>
+                                    <div class="card-body text-center">
+                                        <img th:if="${return.imgReturn != null}" th:src="${return.imgReturn}"
+                                             alt="Ảnh minh hoạ"
+                                             style="max-width: 100%; max-height: 300px; border: 1px solid #ccc; padding: 5px;"/>
+                                        <p th:if="${return.imgReturn == null}">Không có ảnh minh hoạ</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái xử lý -->
+                        <div class="row">
+                            <div class="col-lg-6 mb-4">
+                                <div class="card">
+                                    <div class="card-header">Trạng thái xử lý</div>
+                                    <div class="card-body">
+                                        <!-- Trạng thái: REJECTED -->
+                                        <span th:if="${return.returnStatus.name() == 'REJECTED'}"
+                                              class="text-danger" th:text="${return.returnStatus.displayName}">
+    Trạng thái
+</span>
+
+                                        <!-- Trạng thái: COMPLETED -->
+                                        <span th:if="${return.returnStatus.name() == 'COMPLETED'}"
+                                              class="text-success" th:text="${return.returnStatus.displayName}">
+    Trạng thái
+</span>
+
+                                        <!-- Trạng thái khác -->
+                                        <span th:if="${return.returnStatus.name() != 'REJECTED' and return.returnStatus.name() != 'COMPLETED'}"
+                                              class="text-primary" th:text="${return.returnStatus.displayName}">
+    Trạng thái
+</span>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- Phản hồi -->
+                            <div class="col-lg-6 mb-4">
+                                <div class="card">
+                                    <div class="card-header">Phản hồi về việc trả hàng</div>
+                                    <div class="card-body">
+
+                                        <!-- Trạng thái đã hoàn tất hoặc từ chối -->
+                                        <div th:if="${return.returnStatus.name() == 'COMPLETED' or return.returnStatus.name() == 'REJECTED'}">
+                                            <div class="mb-3">
+                                                <label class="form-label">Ghi chú</label>
+                                                <textarea class="form-control" readonly rows="4"
+                                                          th:text="${return.note}">Không có ghi chú</textarea>
+                                            </div>
+
+                                            <div class="mb-3 text-center">
+                                                <label class="form-label">Hình ảnh lúc nhận lại hàng</label>
+                                                <div>
+                                                    <img th:if="${return.imgBack != null}"
+                                                         th:src="${return.imgBack}" alt="Ảnh người bán nhận"
+                                                         style="max-width: 100%; max-height: 300px; border: 1px solid #ccc; padding: 5px;"/>
+                                                    <p th:if="${return.imgBack == null}">Không có ảnh phản hồi</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- Script xem trước ảnh -->
+                                        <script>
+                                            const imageInput = document.getElementById('imageInput');
+                                            const preview = document.getElementById('preview');
+                                            imageInput?.addEventListener('change', function () {
+                                                preview.innerHTML = '';
+                                                const file = this.files[0];
+                                                if (file) {
+                                                    const img = document.createElement('img');
+                                                    img.style.maxWidth = '100%';
+                                                    img.style.maxHeight = '300px';
+                                                    img.src = URL.createObjectURL(file);
+                                                    preview.appendChild(img);
+                                                }
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Back button -->
+                        <div class="text-end mt-3">
+                            <a th:href="@{/client/order}" class="btn btn-secondary">Quay lại</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </th:block>
+</th:block>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".vnd-price").forEach(el => {
+            const value = parseFloat(el.innerText);
+            if (!isNaN(value)) {
+                el.innerText = new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                }).format(value);
+            }
+        });
+    });
+</script>
+</body>
+</html>

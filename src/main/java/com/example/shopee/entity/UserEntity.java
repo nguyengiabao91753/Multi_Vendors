@@ -72,6 +72,11 @@ public class UserEntity extends AbstractEntity {
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
+	private Set<ReturnEntity> returnEntities;
+
+	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@EqualsAndHashCode.Exclude
+	@ToString.Exclude
 	private Set<OrderEntity> orderEntities;
 
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)

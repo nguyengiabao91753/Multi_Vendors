@@ -43,6 +43,7 @@ public class OtpController {
     public String indexOtp() {
         return "otpConfirm";
     }
+
     @RequestMapping(value = "confirm-otp", method = RequestMethod.POST)
     public String checkOtp(HttpSession session, @RequestParam("otp") String otp, Model model) {
         String otpRegister = (String) session.getAttribute("otp-register");
@@ -90,7 +91,7 @@ public class OtpController {
             userService.saveUser(userEntity);
             return "redirect:/login";
         }
-        model.addAttribute("mess","OTP is not correct! Please check your email.");
+        model.addAttribute("mess", "OTP is not correct! Please check your email.");
         return "otpConfirm";
     }
 
@@ -128,22 +129,32 @@ public class OtpController {
                                RedirectAttributes redirectAttributes) {
         String otpRegister = (String) session.getAttribute("otp-pass");
         if (otp.equals(otpRegister)) {
-            String email = (String) session.getAttribute("email");
-            UserEntity userEntity = userRepository.findByEmail(email).get();
-            userEntity.setPassword(passwordEncoder.encode("123456a@A"));
-            userService.saveUser(userEntity);
-
-            redirectAttributes.addFlashAttribute("mess", "Mật khẩu được đổi về 123456a@A");
-            return "redirect:/login";
+            redirectAttributes.addFlashAttribute("mess", "OTP chính xác. Hãy đặt lại mật khẩu");
+            return "redirect:/change-pass";
         }
         model.addAttribute("mess", "OTP nhập sai! Hãy nhập lại!");
         return "otpConfirmPass";
+    }
+
+    @RequestMapping(value = "change-pass", method = RequestMethod.GET)
+    public String indexResetPass() {
+        return "changePass";
+    }
+
+    @RequestMapping(value = "change-pass", method = RequestMethod.POST)
+    public String reset(HttpSession session,
+                        @RequestParam("pass") String pass,
+                        RedirectAttributes redirectAttributes) {
+        String email = (String) session.getAttribute("email");
+        UserEntity userEntity = userRepository.findByEmail(email).get();
+        userEntity.setPassword(passwordEncoder.encode(pass));
+        userService.saveUser(userEntity);
+        redirectAttributes.addFlashAttribute("mess", "Mật khẩu được đặt lại thành công!");
+        return "redirect:/change-pass";
     }
 
     public String otpCode() {
         int code = (int) Math.floor(((Math.random() * 899999) + 100000));
         return String.valueOf(code);
     }
-
-
 }

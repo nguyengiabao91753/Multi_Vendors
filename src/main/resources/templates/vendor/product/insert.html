@@ -44,13 +44,19 @@
                                     <input type="number" class="form-control" th:field="*{amount}"
                                            placeholder="Nhập số lượng" required>
                                 </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Số lượng min(hạn mức tồn kho)</label>
+                                    <input type="number" class="form-control" th:field="*{min}"
+                                           placeholder="Nhập số lượng min" required>
+                                </div>
                             </div>
 
                             <!-- Cột bên phải -->
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Danh mục</label>
-                                    <select name="categoryIds" multiple class="form-control">
+                                    <select name="categoryIds" multiple class="form-control select2" style="width: 100%;">
                                         <option th:each="cat : ${categories}"
                                                 th:value="${cat.id}"
                                                 th:text="${cat.categoryName}"
@@ -59,9 +65,11 @@
                                     </select>
                                 </div>
 
+
                                 <div class="mb-3">
                                     <label for="description" class="form-label">Mô tả</label>
-                                    <textarea class="form-control" name="description" id="description" th:field="*{description}" rows="4"
+                                    <textarea class="form-control" name="description" id="description"
+                                              th:field="*{description}" rows="4"
                                               placeholder="Nhập mô tả sản phẩm"></textarea>
                                 </div>
 
