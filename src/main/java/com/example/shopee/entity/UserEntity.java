@@ -61,7 +61,8 @@ public class UserEntity extends AbstractEntity {
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<FeedbackEntity> feedbackEntities;
+	@JsonManagedReference
+	private Set<FeedbackEntity> feedbackEntities;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@EqualsAndHashCode.Exclude
@@ -72,21 +73,25 @@ public class UserEntity extends AbstractEntity {
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
+	@JsonManagedReference
 	private Set<ReturnEntity> returnEntities;
 
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
+	@JsonManagedReference
 	private Set<OrderEntity> orderEntities;
 
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
+	@JsonManagedReference
 	private Set<VoucherEntity> vouchers;
 
 	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
+	@JsonManagedReference
 	private Set<ReceiptEntity> receiptEntities;
 
     @ManyToMany(fetch = FetchType.EAGER)

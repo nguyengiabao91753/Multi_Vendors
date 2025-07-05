@@ -5,7 +5,7 @@
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Shopee Việt Nam | Mua và Bán Trên Ứng Dụng Di Động hoặc Website</title>
+    <title>MultiVendors</title>
     <link
             rel="preconnect"
             href="https://fonts.gstatic.com"
@@ -174,13 +174,14 @@
             <div class="checkout-header">
                 <div class="container">
                     <div class="checkout-header-inner">
-
+                        <!-- You can add header content here if needed -->
                     </div>
                 </div>
             </div>
             <form th:action="@{/client/checkout}" method="post">
                 <div class="checkout-container">
                     <div class="container">
+                        <!-- Shipping Address Section -->
                         <div class="checkout-address">
                             <div class="checkout-address-line"></div>
                             <div class="checkout-address-section">
@@ -190,20 +191,20 @@
                                         <path d="M6 3.2c1.506 0 2.727 1.195 2.727 2.667 0 1.473-1.22 2.666-2.727 2.666S3.273 7.34 3.273 5.867C3.273 4.395 4.493 3.2 6 3.2zM0 6c0-3.315 2.686-6 6-6s6 2.685 6 6c0 2.498-1.964 5.742-6 9.933C1.613 11.743 0 8.498 0 6z"
                                               fill-rule="evenodd"></path>
                                     </svg>
-                                    Địa chỉ nhận hàng
+                                    Shipping Address
                                 </div>
                                 <div class="checkout-address-section__content">
                                     <div class="checkout__input">
-                                        <label for="fullName">Họ tên</label>
+                                        <label for="fullName">Full Name</label>
                                         <input id="fullName" name="fullName" type="text" required/>
                                     </div>
                                     <div class="checkout__input">
-                                        <label for="address">Địa chỉ</label>
+                                        <label for="address">Address</label>
                                         <input id="address" type="text" name="address"
-                                               placeholder="Địa chỉ giao hàng" required/>
+                                               placeholder="Delivery address" required/>
                                     </div>
                                     <div class="checkout__input">
-                                        <label for="phone">Số điện thoại</label>
+                                        <label for="phone">Phone Number</label>
                                         <input id="phone" name="phone" type="text" required/>
                                     </div>
                                     <div class="checkout__input">
@@ -213,12 +214,14 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Order Summary Section -->
                         <div class="checkout-content">
                             <div class="checkout-content-header">
-                                <p>Sản phẩm</p>
-                                <p>Đơn giá</p>
-                                <p>Số lượng</p>
-                                <p>Thành tiền</p>
+                                <p>Product</p>
+                                <p>Unit Price</p>
+                                <p>Quantity</p>
+                                <p>Total</p>
                             </div>
                             <div class="product-list">
                                 <div class="product-item" th:each="product : ${cartDetails}">
@@ -239,52 +242,58 @@
                                         </div>
                                     </div>
                                     <div class="product-item__price">
-                                        <p>Tổng giá:</p>
+                                        <p>Total Price:</p>
                                         <span th:text="${product.totalPrice}" class="vnd-price">0</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Footer Section -->
                         <div class="checkout-footer">
+                            <!-- Voucher Section -->
                             <div class="voucher-section">
-                                <p>Chọn voucher giảm giá:</p>
+                                <p>Select discount voucher:</p>
                                 <select id="voucherSelect" name="voucherId">
-                                    <option value="">-- Không áp dụng --</option>
+                                    <option value="">-- No voucher --</option>
                                     <option th:each="voucher : ${vouchers}"
                                             th:value="${voucher.id}"
                                             th:data-amount="${voucher.amount}"
                                             th:data-percent="${voucher.percentDecrease}"
-                                            th:text="${voucher.name + ' - ' + voucher.code + ' - Giảm ' + voucher.percentDecrease + ' %'}">
+                                            th:text="${voucher.name + ' - ' + voucher.code + ' - Discount ' + voucher.percentDecrease + ' %'}">
                                     </option>
                                 </select>
                             </div>
 
+                            <!-- Payment Method Section -->
                             <div class="payment-methods">
-                                <p>Phương thức thanh toán</p>
+                                <p>Payment Method</p>
 
                                 <label>
                                     <input type="radio"
                                            name="paymentMethod"
                                            value="COD"/>
-                                    Thanh toán khi nhận hàng (COD)
+                                    Cash on Delivery (COD)
                                 </label>
 
                                 <label>
                                     <input type="radio"
                                            name="paymentMethod"
                                            value="VNPay"/>
-                                    Thanh toán VNPay
+                                    VNPay Payment
                                 </label>
                             </div>
+
+                            <!-- Order Button and Total -->
                             <div class="checkout-footer-section">
-                                <div class="price"><p>Tổng thanh toán:</p>
+                                <div class="price">
+                                    <p>Total Payment:</p>
                                     <input type="hidden" id="originalTotal" th:value="${totalPrice}">
                                     <span id="finalPrice" th:text="${totalPrice}" class="vnd-price">₫0</span>
                                 </div>
                                 <div class="order">
-                                    <p>Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo <a href="#">Điều khoản
-                                        Shopee</a></p>
-                                    <button type="submit" class="order-button">Đặt hàng</button>
+                                    <p>By clicking "Place Order", you agree to Shopee's <a href="#">Terms & Conditions</a></p>
+                                    <button type="submit" class="order-button">Place Order</button>
                                 </div>
                             </div>
                         </div>
@@ -294,6 +303,7 @@
         </div>
     </th:block>
 </th:block>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

@@ -61,7 +61,7 @@ public class AdminCategoryController {
         }
 
         categoryRepository.save(categoryEntity);
-        return "redirect:/admin/category/updateCategory/" + categoryEntity.getId();
+        return "redirect:/admin/category?update=true";
     }
 
     @GetMapping("/deleteCategory/{id}")

@@ -84,7 +84,6 @@ public class VendorReceiptController {
 
         model.addAttribute("receipt", new ReceiptDto());
         model.addAttribute("products", products);
-        System.out.println(products);
 
         return "vendor/receipt/insert";
     }
@@ -130,7 +129,7 @@ public class VendorReceiptController {
         savedReceipt.setTotalCost(totalCost);
         receiptRepository.save(savedReceipt);
 
-        return "redirect:/vendor/receipt";
+        return "redirect:/vendor/receipt?save=true";
     }
 
     @GetMapping("/detail/{id}")
@@ -149,7 +148,7 @@ public class VendorReceiptController {
     @GetMapping("/delete/{id}")
     public String deleteReceipt(@PathVariable("id") Long id) {
         receiptRepository.deleteById(id);
-        return "redirect:/vendor/receipt";
+        return "redirect:/vendor/receipt?delete=true";
     }
 
     private ReceiptDto convertToDto(ReceiptEntity entity) {

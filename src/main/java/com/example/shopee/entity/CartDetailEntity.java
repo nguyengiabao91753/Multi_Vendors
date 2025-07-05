@@ -1,5 +1,6 @@
 package com.example.shopee.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,11 +27,13 @@ public class CartDetailEntity extends AbstractEntity{
     @ManyToOne
     @JoinColumn(name = "cart_id")
     @EqualsAndHashCode.Exclude
+    @JsonBackReference
     private CartEntity cartEntity;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
     @EqualsAndHashCode.Exclude
+    @JsonBackReference
     private ProductEntity productEntity;
 
     @Override

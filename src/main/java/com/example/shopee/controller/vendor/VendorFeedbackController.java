@@ -63,6 +63,6 @@ public class VendorFeedbackController {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id) {
         feedbackRepository.deleteById(id);
-        return "redirect:/vendor/feedback";
+        return "redirect:/vendor/feedback?delete=true";
     }
 }

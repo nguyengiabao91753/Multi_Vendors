@@ -5,7 +5,7 @@
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Shopee Việt Nam | Mua và Bán Trên Ứng Dụng Di Động hoặc Website</title>
+    <title>MultiVendors</title>
     <link
             rel="preconnect"
             href="https://fonts.gstatic.com"
@@ -130,29 +130,29 @@
                          alt="Logo">
                     <div class="shop-details">
                         <div class="shop-name"><span th:text="${user.fullName}"></span></div>
-                        <div class="shop-online">Online 17 Phút Trước</div>
+                        <div class="shop-online">Online 17 Minutes Ago</div>
                         <div class="shop-actions">
-                            <button class="chat-btn">Chat Ngay</button>
-                            <a th:href="@{/view/vendor(id=${user.id})}" class="view-btn">Xem Shop</a>
+                            <button class="chat-btn">Chat Now</button>
+                            <a th:href="@{/view/vendor(id=${user.id})}" class="view-btn">View Shop</a>
                         </div>
                     </div>
                 </div>
                 <div class="shop-stats">
                     <div class="stat-group">
-                        <div>Đánh Giá</div>
+                        <div>Reviews</div>
                         <div class="stat-value">957</div>
                     </div>
                     <div class="stat-group">
-                        <div>Tỉ Lệ Phản Hồi</div>
+                        <div>Response Rate</div>
                         <div class="stat-value">29%</div>
                     </div>
                     <div class="stat-group">
-                        <div>Tham Gia</div>
-                        <div class="stat-value highlight">5 năm trước</div>
+                        <div>Joined</div>
+                        <div class="stat-value highlight">5 years ago</div>
                     </div>
                     <div class="stat-group">
-                        <div>Thời Gian Phản Hồi</div>
-                        <div class="stat-value highlight">trong vài giờ</div>
+                        <div>Response Time</div>
+                        <div class="stat-value highlight">within a few hours</div>
                     </div>
                 </div>
             </div>
@@ -176,26 +176,26 @@
                                 </g>
                             </g>
                         </svg>
-                        Danh sách sản phẩm
+                        Product List
                     </h2>
                     <div class="page-search-sort-bar">
-                        <label>Sắp xếp theo</label>
+                        <label>Sort by</label>
                         <div class="page-search-sort-by-options">
                             <a th:href="@{/list(keyword=${searchKeyword}, page=0, size=${size}, sort=createdAt, order=desc)}"
                                class="page-search-sort-by-options__option"
                                th:classappend="${sort == 'createdAt' and order == 'desc' ? ' page-search-sort-by-options__option--selected' : ''}">
-                                Mới Nhất
+                                Newest
                             </a>
                             <div class="select-with-status">
                                 <div class="select-with-status__holder">
-                                    <span>Giá</span>
+                                    <span>Price</span>
                                     <span><i class="fas fa-chevron-down"></i></span>
                                     <div class="select-with-status__dropdown">
                                         <a th:href="@{/list(keyword=${searchKeyword}, page=0, size=${size}, sort=salePrice, order=asc)}">
-                                            Giá: Thấp đến Cao
+                                            Price: Low to High
                                         </a>
                                         <a th:href="@{/list(keyword=${searchKeyword}, page=0, size=${size}, sort=salePrice, order=desc)}">
-                                            Giá: Cao đến Thấp
+                                            Price: High to Low
                                         </a>
                                     </div>
                                 </div>
@@ -226,31 +226,31 @@
                                         </div>
                                         <div class="search-item-detail-price">
                                             <p class="price" th:if="${product.salePrice != null}">
-                                                <span>₫</span><span
+                                                <span>$</span><span
                                                     th:text="${#numbers.formatDecimal(product.salePrice, 0, 'COMMA', 0, 'POINT')}"></span>
                                             </p>
                                             <p class="price" th:if="${product.salePrice == null}">
-                                                <span>₫</span><span
+                                                <span>$</span><span
                                                     th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span>
                                             </p>
-                                            <p class="sole" th:if="${product.amount != null}">Đã bán <span
+                                            <p class="sold" th:if="${product.amount != null}">Sold <span
                                                     th:text="${product.amount}"></span></p>
                                         </div>
                                     </div>
                                     <div class="search-item__sale-notice">
                                         <p th:if="${product.salePrice != null}">
                                             <span><th:block
-                                                    th:text="${#numbers.formatInteger(((product.price - product.salePrice) / product.price) * 100, 0)}"></th:block>%</span>Giảm
+                                                    th:text="${#numbers.formatInteger(((product.price - product.salePrice) / product.price) * 100, 0)}"></th:block>%</span> Off
                                         </p>
                                     </div>
                                 </div>
                                 <div class="search-item-link--hover">
-                                    Xem thông tin sản phẩm
+                                    View product details
                                 </div>
                             </a>
                         </li>
                         <li class="page-search-items__item" th:if="${#lists.isEmpty(products)}">
-                            Không tìm thấy sản phẩm phù hợp.
+                            No matching products found.
                         </li>
                     </ul>
                     <div class="page-search-page-controller" th:if="${totalPages > 1}">
@@ -278,6 +278,7 @@
         </div>
     </th:block>
 </th:block>
+
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>

@@ -1,5 +1,7 @@
 package com.example.shopee.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,6 +37,7 @@ public class VoucherEntity extends AbstractEntity {
     @OneToMany(mappedBy = "voucherEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonManagedReference
     private Set<OrderEntity> orders;
 
     @Basic
@@ -44,6 +47,7 @@ public class VoucherEntity extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     @EqualsAndHashCode.Exclude
+    @JsonBackReference
     private UserEntity userEntity;
 
     public String getName() {

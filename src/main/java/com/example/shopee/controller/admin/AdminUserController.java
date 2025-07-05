@@ -79,7 +79,7 @@ public class AdminUserController {
         RoleEntity selectedRole = roleRepository.findByName(RoleEnum.valueOf(role));
         user.setRoleEntities(Collections.singleton(selectedRole));
         userRepository.save(user);
-        return "redirect:/admin/user";
+        return "redirect:/admin/user?save=true";
     }
 
     @PostMapping("/update-status/{id}")
@@ -91,6 +91,6 @@ public class AdminUserController {
             user.setStatus(status);
             userRepository.save(user);
         }
-        return "redirect:/admin/user";
+        return "redirect:/admin/user?update=true";
     }
 }

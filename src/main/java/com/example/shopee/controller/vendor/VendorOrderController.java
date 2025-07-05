@@ -87,7 +87,7 @@ public class VendorOrderController {
             orderRepository.save(order);
         }
 
-        return "redirect:/vendor/order";
+        return "redirect:/vendor/order?update=true";
     }
 
 }

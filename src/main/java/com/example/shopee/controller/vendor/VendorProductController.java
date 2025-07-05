@@ -126,7 +126,7 @@ public class VendorProductController {
             }
         }
 
-        return "redirect:/vendor/product";
+        return "redirect:/vendor/product?save=true";
     }
 
     @GetMapping("/update/{id}")
@@ -182,14 +182,14 @@ public class VendorProductController {
 
         productRepository.save(entity);
 
-        return "redirect:/vendor/product/update/" + dto.getId();
+        return "redirect:/vendor/product?update=true";
     }
 
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id) {
         productRepository.deleteById(id);
-        return "redirect:/vendor/product";
+        return "redirect:/vendor/product?delete=true";
     }
 
     private ProductDto convertToDto(ProductEntity entity) {
@@ -253,7 +253,7 @@ public class VendorProductController {
     public String DeleteImage(@PathVariable Long id, HttpServletRequest request) {
         String referer = request.getHeader("Referer");
         productImageRepository.deleteById(id);
-        return "redirect:" + referer;
+        return "redirect:" + referer + "?delete=true";
     }
 
 }

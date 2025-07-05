@@ -2,48 +2,86 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Quản lý nhập kho</title>
+    <title>Receipt</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
+<div aria-live="polite" aria-atomic="true" class="position-relative">
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+        <div th:if="${param.save}" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Save successfully!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
 
-<th:block th:replace="layout/vendor-layout :: layout">
+        <div th:if="${param.update}" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Update successfully!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div th:if="${param.delete}" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Delete successfully!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div th:if="${error}" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" th:text="${error}">
+                    Error!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+</div>
+<<th:block th:replace="layout/vendor-layout :: layout">
     <th:block th:fragment="pageContent">
 
         <div class="container mt-4">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">Danh sách phiếu nhập kho</h4>
-                    <a class="btn btn-primary btn-sm" th:href="@{/vendor/receipt/insert}">+ Thêm phiếu</a>
+                    <h4 class="mb-0">Receipt List</h4>
+                    <a class="btn btn-primary btn-sm" th:href="@{/vendor/receipt/insert}">+ Add Receipt</a>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered table-hover">
                         <thead class="table-light">
                         <tr>
                             <th>#</th>
-                            <th>Mã phiếu</th>
-                            <th>Ngày nhập</th>
-                            <th>Tổng giá trị</th>
-                            <th>Hành động</th>
+                            <th>Receipt Code</th>
+                            <th>Receipt Date</th>
+                            <th>Total Value</th>
+                            <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="receipt, iterStat : ${receipts}">
                             <td th:text="${iterStat.index + 1}">1</td>
                             <td th:text="${receipt.id}">P001</td>
-                            <td th:text="${receipt.createdAt}">P001</td>
-                            <td th:text="${#numbers.formatDecimal(receipt.totalCost, 0, 'COMMA', 2, 'POINT')} + ' đ'">
-                                1.000.000 đ
+                            <td th:text="${receipt.createdAt}">2023-01-01</td>
+                            <td th:text="${#numbers.formatDecimal(receipt.totalCost, 0, 'COMMA', 2, 'POINT')} + ' VND'">
+                                1,000,000 VND
                             </td>
                             <td>
                                 <a th:href="@{'/vendor/receipt/detail/' + ${receipt.id}}"
-                                   class="btn btn-info btn-sm">Xem chi tiết</a>
+                                   class="btn btn-info btn-sm">View Details</a>
                                 <a th:href="@{'/vendor/receipt/delete/' + ${receipt.id}}"
-                                   class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a>
+                                   class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete?')">Delete</a>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(receipts)}">
-                            <td colspan="6" class="text-center">Không có phiếu nhập kho nào.</td>
+                            <td colspan="6" class="text-center">No receipts found.</td>
                         </tr>
                         </tbody>
                     </table>
@@ -52,7 +90,7 @@
                             <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
                                 <a class="page-link"
                                    th:href="@{/vendor/receipt(page=${currentPage - 1}, status=${status})}">
-                                    Trước
+                                    Previous
                                 </a>
                             </li>
 
@@ -67,7 +105,7 @@
                             <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
                                 <a class="page-link"
                                    th:href="@{/vendor/receipt(page=${currentPage + 1}, status=${status})}">
-                                    Sau
+                                    Next
                                 </a>
                             </li>
                         </ul>
@@ -80,5 +118,15 @@
     </th:block>
 </th:block>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+        toastElList.forEach(function (toastEl) {
+            var toast = new bootstrap.Toast(toastEl)
+            toast.show()
+        })
+    });
+</script>
 </body>
 </html>

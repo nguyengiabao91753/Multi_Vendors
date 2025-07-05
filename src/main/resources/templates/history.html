@@ -2,7 +2,7 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Lịch sử đơn hàng</title>
+    <title>History</title>
 </head>
 <body>
 <th:block th:replace="layout/user-layout :: layout">
@@ -15,19 +15,19 @@
                         <div class="purchase-wrapper">
                             <!-- Tabs -->
                             <div class="purchase-nav-control">
-                                <a th:href="@{/client/order(type=-99)}" th:classappend="${type == -99} ? ' active' : ''">Tất cả</a>
-                                <a th:href="@{/client/order(type=-1)}" th:classappend="${type == -1} ? ' active' : ''">Chờ xác nhận</a>
-                                <a th:href="@{/client/order(type=0)}" th:classappend="${type == 0} ? ' active' : ''">Đã huỷ</a>
-                                <a th:href="@{/client/order(type=2)}" th:classappend="${type == 2} ? ' active' : ''">Đang giao</a>
-                                <a th:href="@{/client/order(type=1)}" th:classappend="${type == 1} ? ' active' : ''">Đã giao</a>
-                                <a th:href="@{/client/order(type=3)}" th:classappend="${type == 3} ? ' active' : ''">Đang trả hàng</a>
+                                <a th:href="@{/client/order(type=-99)}" th:classappend="${type == -99} ? ' active' : ''">All</a>
+                                <a th:href="@{/client/order(type=-1)}" th:classappend="${type == -1} ? ' active' : ''">Pending</a>
+                                <a th:href="@{/client/order(type=0)}" th:classappend="${type == 0} ? ' active' : ''">Cancelled</a>
+                                <a th:href="@{/client/order(type=2)}" th:classappend="${type == 2} ? ' active' : ''">Shipping</a>
+                                <a th:href="@{/client/order(type=1)}" th:classappend="${type == 1} ? ' active' : ''">Delivered</a>
+                                <a th:href="@{/client/order(type=3)}" th:classappend="${type == 3} ? ' active' : ''">Returning</a>
                             </div>
 
                             <!-- Content -->
                             <div class="purchase-section">
                                 <div th:if="${orders == null or #lists.isEmpty(orders)}" class="purchase-empty">
                                     <div class="purchase-empty__image"></div>
-                                    <div class="purchase-empty__title">Chưa có đơn hàng</div>
+                                    <div class="purchase-empty__title">No Orders Yet</div>
                                 </div>
 
                                 <div class="purchase-list" th:if="${orders != null and !#lists.isEmpty(orders)}">
@@ -41,38 +41,35 @@
                                                     </div>
                                                     <div class="details-inner">
                                                         <div class="name" th:text="${order.productEntity.productName}">
-                                                            Tên sản phẩm
+                                                            Product Name
                                                         </div>
                                                         <div class="category">
-                                                            Phân loại hàng:
+                                                            Product Category:
                                                             <span th:each="cat, iterStat : ${order.productEntity.categories}">
-    <span th:text="${cat.categoryName}">Category Name</span><span th:if="${!iterStat.last}">, </span>
-  </span>
+                                                                <span th:text="${cat.categoryName}">Category Name</span><span th:if="${!iterStat.last}">, </span>
+                                                            </span>
                                                         </div>
 
                                                         <div class="quantity" th:text="'x' + ${order.quantity}">x1</div>
                                                     </div>
                                                 </div>
                                                 <div class="price">
-                                                    <span th:text="${order.priceOfOne}"
-                                                          class="vnd-price">₫0</span>
+                                                    <span th:text="${order.priceOfOne}" class="vnd-price">₫0</span>
                                                 </div>
                                             </a>
                                         </div>
 
                                         <div class="purchase-item__total-price">
-                                            <p>Tổng số tiền:
+                                            <p>Total Price:
                                                 <span th:text="${order.totalCost}" class="vnd-price">₫0</span>
                                             </p>
                                         </div>
 
                                         <div class="purchase-item__control">
                                             <div class="button">
-                                                <a th:href="@{'/detail/' + ${order.productEntity.id}}">Đánh giá sản
-                                                    phẩm</a> |
-                                                <a th:if="${order.status == 3}" th:href="@{'/client/order/return/detail/' + ${order.id}}">Đơn trả</a> |
-
-                                                <a th:if="${order.status != 3}" th:href="@{'/client/order/detail/' + ${order.id}}">Chi tiết</a>
+                                                <a th:href="@{'/detail/' + ${order.productEntity.id}}">Review Product</a> |
+                                                <a th:if="${order.status == 3}" th:href="@{'/client/order/return/detail/' + ${order.id}}">Return Order</a> |
+                                                <a th:if="${order.status != 3}" th:href="@{'/client/order/detail/' + ${order.id}}">Details</a>
                                             </div>
                                         </div>
                                     </div>
@@ -85,6 +82,7 @@
         </div>
     </th:block>
 </th:block>
+
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".vnd-price").forEach(el => {

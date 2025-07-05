@@ -1,10 +1,10 @@
 package com.example.shopee.enums;
 
 public enum ReturnStatus {
-    PENDING("Chờ xử lý"),
-    APPROVED("Đã chấp nhận"),
-    REJECTED("Đã từ chối"),
-    COMPLETED("Đã hoàn tất");
+    PENDING("Pending"),
+    APPROVED("Approved"),
+    REJECTED("Cancelled"),
+    COMPLETED("Completed");
 
     private final String displayName;
 

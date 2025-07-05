@@ -5,7 +5,7 @@
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Shopee Việt Nam | Mua và Bán Trên Ứng Dụng Di Động hoặc Website</title>
+    <title>MultiVendors</title>
     <link
             rel="preconnect"
             href="https://fonts.gstatic.com"
@@ -34,14 +34,14 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="messageModalLabel">Thông báo</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                <h5 class="modal-title" id="messageModalLabel">Notification</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
                 <span th:text="${mess}"></span>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -77,15 +77,15 @@
                     </div>
 
                     <div class="banners-nav">
-                        <a href="#"><img th:src="@{/image/nav/1.gif}" alt="image"/>Khung Giờ Săn Sale</a>
-                        <a href="#"><img th:src="@{/image/nav/2.png}" alt="image"/>Gì Cũng Rẻ - Từ 1K</a>
-                        <a href="#"><img th:src="@{/image/nav/3.png}" alt="image"/>Hàng Quốc Tế</a>
-                        <a href="#"><img th:src="@{/image/nav/4.png}" alt="image"/>Nạp Thẻ, Dịch Vụ & Phim</a>
-                        <a href="#"><img th:src="@{/image/nav/5.png}" alt="image"/>Shopee Mart - Siêu Thị 0Đ</a>
-                        <a href="#"><img th:src="@{/image/nav/6.png}" alt="image"/>Freeship Xtra</a>
-                        <a href="#"><img th:src="@{/image/nav/7.png}" alt="image"/>Tech Zone - Siêu Thị Điện Tử</a>
-                        <a href="#"><img th:src="@{/image/nav/8.png}" alt="image"/>Hoàn Xu Xtra</a>
-                        <a href="#"><img th:src="@{/image/nav/9.png}" alt="image"/>Hàng Hiệu -50%</a>
+                        <a href="#"><img th:src="@{/image/nav/1.gif}" alt="image"/>Flash Sale Hours</a>
+                        <a href="#"><img th:src="@{/image/nav/2.png}" alt="image"/>Everything Cheap - From 1K</a>
+                        <a href="#"><img th:src="@{/image/nav/3.png}" alt="image"/>International Goods</a>
+                        <a href="#"><img th:src="@{/image/nav/4.png}" alt="image"/>Top-up, Services & Movies</a>
+                        <a href="#"><img th:src="@{/image/nav/5.png}" alt="image"/>Shopee Mart - Zero Shipping Market</a>
+                        <a href="#"><img th:src="@{/image/nav/6.png}" alt="image"/>Extra Free Shipping</a>
+                        <a href="#"><img th:src="@{/image/nav/7.png}" alt="image"/>Tech Zone - Electronics Market</a>
+                        <a href="#"><img th:src="@{/image/nav/8.png}" alt="image"/>Extra Cashback</a>
+                        <a href="#"><img th:src="@{/image/nav/9.png}" alt="image"/>Brand Products - 50% Off</a>
                         <a href="#"><img th:src="@{/image/nav/10.png}" alt="image"/>Shopee Premium</a>
                     </div>
                 </div>
@@ -108,16 +108,16 @@
                     <div class="popular-section-wrapper">
                         <div class="popular-product">
                             <div class="popular-product__title">
-                                <h3>Sản phẩm bán chạy</h3>
-                                <a th:href="@{/list}">Xem Thêm <span>></span></a>
+                                <h3>Best Selling Products</h3>
+                                <a th:href="@{/list}">See More <span>></span></a>
                             </div>
                             <div class="popular-product__list">
                                 <div th:if="${#lists.isEmpty(bestSellingProducts)}">
-<!--                                    <p class="none-item">Hiện Không Có Sản Phẩm Bán Chạy</p>-->
+                                    <!--                                    <p class="none-item">No Best Selling Products Currently</p>-->
                                 </div>
                                 <div th:each="product : ${bestSellingProducts}" class="product-card">
-                                    <img th:src="${product.productImage[0].url}" alt="Ảnh sản phẩm" />
-                                    <p th:text="${product.productName}">Tên SP</p>
+                                    <img th:src="${product.productImage[0].url}" alt="Product Image" />
+                                    <p th:text="${product.productName}">Product Name</p>
                                     <span th:text="${#numbers.formatDecimal(product.salePrice, 0, 'COMMA', 2, 'POINT')} + ' đ'">0 đ</span>
                                 </div>
                             </div>
@@ -125,16 +125,16 @@
 
                         <div class="popular-brand">
                             <div class="popular-brand__title">
-                                <h3>Sản phẩm nổi bật</h3>
-                                <a th:href="@{/list}">Xem Thêm <span>></span></a>
+                                <h3>Featured Products</h3>
+                                <a th:href="@{/list}">See More <span>></span></a>
                             </div>
                             <div class="popular-brand__list">
                                 <div th:if="${#lists.isEmpty(mostLikedProducts)}">
-<!--                                    <p class="none-item">Hiện Không Có Sản Phẩm Nổi Bật</p>-->
+                                    <!--                                    <p class="none-item">No Featured Products Currently</p>-->
                                 </div>
                                 <div th:each="product : ${mostLikedProducts}" class="product-card">
-                                    <img th:src="${product.productImage[0].url}" alt="Ảnh sản phẩm" />
-                                    <p th:text="${product.productName}">Tên SP</p>
+                                    <img th:src="${product.productImage[0].url}" alt="Product Image" />
+                                    <p th:text="${product.productName}">Product Name</p>
                                     <span th:text="${#numbers.formatDecimal(product.salePrice, 0, 'COMMA', 2, 'POINT')} + ' đ'">0 đ</span>
                                 </div>
                             </div>
@@ -152,7 +152,7 @@
             <div class="container">
                 <div class="category-inner">
                     <div class="category-title">
-                        <h3>Danh mục</h3>
+                        <h3>Categories</h3>
                     </div>
                     <div class="category-list">
                         <div class="category-list-wrapper">
@@ -161,35 +161,35 @@
                                     <a th:href="@{/pageproductbycat(categoryID=1)}">
                                         <img src="https://cdn-icons-png.flaticon.com/512/869/869636.png"
                                              alt="category"/>
-                                        <p>Điện thoại</p>
+                                        <p>Phones</p>
                                     </a>
                                 </li>
                                 <li class="category-item">
                                     <a th:href="@{/pageproductbycat(categoryID=2)}">
                                         <img src="https://cdn-icons-png.flaticon.com/512/3075/3075977.png"
                                              alt="category"/>
-                                        <p>Thời trang</p>
+                                        <p>Fashion</p>
                                     </a>
                                 </li>
                                 <li class="category-item">
                                     <a th:href="@{/pageproductbycat(categoryID=3)}">
                                         <img src="https://cdn-icons-png.flaticon.com/512/1046/1046857.png"
                                              alt="category"/>
-                                        <p>Đồ điện tử</p>
+                                        <p>Electronics</p>
                                     </a>
                                 </li>
                                 <li class="category-item">
                                     <a th:href="@{/pageproductbycat(categoryID=4)}">
                                         <img src="https://cdn-icons-png.flaticon.com/512/2331/2331970.png"
                                              alt="category"/>
-                                        <p>Gia dụng</p>
+                                        <p>Home Appliances</p>
                                     </a>
                                 </li>
                                 <li class="category-item">
                                     <a th:href="@{/pageproductbycat(categoryID=5)}">
                                         <img src="https://cdn-icons-png.flaticon.com/512/1903/1903162.png"
                                              alt="category"/>
-                                        <p>Sức khỏe</p>
+                                        <p>Health</p>
                                     </a>
                                 </li>
                             </ul>
@@ -222,8 +222,6 @@
             </div>
         </section>
 
-
-
         <div id="shopee-skinny-banner">
             <a href="#">
                 <img th:src="@{/image/banner/9.png}" alt="image"/>
@@ -231,6 +229,7 @@
         </div>
     </th:block>
 </th:block>
+
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>

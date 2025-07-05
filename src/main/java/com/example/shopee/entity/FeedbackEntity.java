@@ -1,5 +1,6 @@
 package com.example.shopee.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,11 +23,13 @@ public class FeedbackEntity extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     @EqualsAndHashCode.Exclude
+    @JsonBackReference
     private UserEntity userEntity;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
     @EqualsAndHashCode.Exclude
+    @JsonBackReference
     private ProductEntity productEntity;
 
     public Integer getRatedStar() {

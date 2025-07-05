@@ -317,126 +317,164 @@
     </style>
 </head>
 <body>
+<div aria-live="polite" aria-atomic="true" class="position-relative">
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+        <div th:if="${param.save}" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Save successfully!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
 
+        <div th:if="${param.update}" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Update successfully!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div th:if="${param.delete}" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Delete successfully!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div th:if="${error}" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" th:text="${error}">
+                    Error!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+</div>
 <th:block th:replace="layout/vendor-layout :: layout">
     <th:block th:fragment="pageContent">
         <div class="container mt-4">
-            <h3 class="mb-4">Danh sách đơn hàng của bạn</h3>
+            <h3 class="mb-4">Your Order List</h3>
 
-            <!-- Hiển thị danh sách đơn hàng -->
+            <!-- Display order list -->
             <div class="card">
                 <div class="card-body">
                     <ul class="nav nav-tabs mb-3">
                         <li class="nav-item">
                             <a class="nav-link"
                                th:classappend="${status} == null ? 'active'"
-                               th:href="@{/vendor/order}">Tất cả</a>
+                               th:href="@{/vendor/order}">All</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link"
                                th:classappend="${status} == -1 ? 'active'"
                                th:href="@{/vendor/order(status=-1)}">
-                                Đang chờ xác nhận (<span th:text="${countPending}">0</span>)
+                                Pending Confirmation (<span th:text="${countPending}">0</span>)
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link"
                                th:classappend="${status} == 0 ? 'active'"
                                th:href="@{/vendor/order(status=0)}">
-                                Đã hủy (<span th:text="${countCancelled}">0</span>)
+                                Cancelled (<span th:text="${countCancelled}">0</span>)
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link"
                                th:classappend="${status} == 1 ? 'active'"
                                th:href="@{/vendor/order(status=1)}">
-                                Đã giao (<span th:text="${countDelivered}">0</span>)
+                                Delivered (<span th:text="${countDelivered}">0</span>)
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link"
                                th:classappend="${status} == 2 ? 'active'"
                                th:href="@{/vendor/order(status=2)}">
-                                Đang giao hàng (<span th:text="${countShipping}">0</span>)
+                                Shipping (<span th:text="${countShipping}">0</span>)
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link"
                                th:classappend="${status} == 3 ? 'active'"
                                th:href="@{/vendor/order(status=3)}">
-                                Đang trả hàng (<span th:text="${countReturn}">0</span>)
+                                Returning (<span th:text="${countReturn}">0</span>)
                             </a>
                         </li>
                     </ul>
                     <table class="table table-striped table-bordered">
                         <thead>
                         <tr>
-                            <th scope="col">Đơn hàng</th>
-                            <th scope="col">Người mua</th>
-                            <th scope="col">Phương thức thanh toán</th>
-                            <th scope="col">Ngày</th>
-                            <th scope="col">Tổng chi phí</th>
-                            <th scope="col">Trạng thái thanh toán</th>
-                            <th scope="col">Trạng thái đơn hàng</th>
-                            <th scope="col">Hành động</th>
+                            <th scope="col">Order</th>
+                            <th scope="col">Buyer</th>
+                            <th scope="col">Payment Method</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Total Cost</th>
+                            <th scope="col">Payment Status</th>
+                            <th scope="col">Order Status</th>
+                            <th scope="col">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="order : ${orders}">
                             <td th:text="${order.id}">#1234</td>
-                            <td th:text="${order.fullName}">#1234</td>
-                            <td th:text="${order.method}">#1234</td>
-                            <td th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}">#1234</td>
-                            <td th:text="${order.totalCost}" class="vnd-price">100.000 đ</td>
+                            <td th:text="${order.fullName}">John Doe</td>
+                            <td th:text="${order.method}">Credit Card</td>
+                            <td th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}">2023-01-01 12:00</td>
+                            <td th:text="${order.totalCost}" class="vnd-price">100,000 VND</td>
                             <td>
-                                <span th:if="${order.paymentStatus == 1}" class="badge bg-success">Đã thanh toán</span>
-                                <span th:if="${order.paymentStatus != 1}" class="badge bg-warning text-dark">Chưa thanh toán</span>
+                                <span th:if="${order.paymentStatus == 1}" class="badge bg-success">Paid</span>
+                                <span th:if="${order.paymentStatus != 1}" class="badge bg-warning text-dark">Unpaid</span>
                             </td>
                             <td>
                                 <div th:switch="${order.status}">
-                                    <!-- Đang chờ xác nhận -->
+                                    <!-- Pending Confirmation -->
                                     <div th:case="-1">
                                         <form th:action="@{/vendor/order/update-status/{orderId}(orderId=${order.id})}" method="post" style="display:inline">
                                             <input type="hidden" name="status" value="0"/>
-                                            <button type="submit" class="btn btn-danger btn-sm">Huỷ đơn</button>
+                                            <button type="submit" class="btn btn-danger btn-sm">Cancel Order</button>
                                         </form>
                                         <form th:action="@{/vendor/order/update-status/{orderId}(orderId=${order.id})}" method="post" style="display:inline">
                                             <input type="hidden" name="status" value="2"/>
-                                            <button type="submit" class="btn btn-warning btn-sm">Đang giao</button>
+                                            <button type="submit" class="btn btn-warning btn-sm">Shipping</button>
                                         </form>
                                     </div>
 
-                                    <!-- Đang giao hàng -->
+                                    <!-- Shipping -->
                                     <div th:case="2">
                                         <form th:action="@{/vendor/order/update-status/{orderId}(orderId=${order.id})}" method="post" style="display:inline">
                                             <input type="hidden" name="status" value="0"/>
-                                            <button type="submit" class="btn btn-danger btn-sm">Huỷ đơn</button>
+                                            <button type="submit" class="btn btn-danger btn-sm">Cancel Order</button>
                                         </form>
                                         <form th:action="@{/vendor/order/update-status/{orderId}(orderId=${order.id})}" method="post" style="display:inline">
                                             <input type="hidden" name="status" value="1"/>
-                                            <button type="submit" class="btn btn-success btn-sm">Đã giao</button>
+                                            <button type="submit" class="btn btn-success btn-sm">Delivered</button>
                                         </form>
                                     </div>
 
                                     <div th:case="1">
-                                        <span class="badge bg-success">Đã giao hàng</span>
+                                        <span class="badge bg-success">Delivered</span>
                                     </div>
                                     <div th:case="0">
-                                        <span class="badge bg-secondary">Đã huỷ</span>
+                                        <span class="badge bg-secondary">Cancelled</span>
                                     </div>
                                     <div th:case="3">
-                                        <span class="badge bg-secondary">Đang trả hàng</span>
+                                        <span class="badge bg-secondary">Returning</span>
                                     </div>
 
                                     <div th:case="*">
-                                        <span class="badge bg-dark">Không xác định</span>
+                                        <span class="badge bg-dark">Unknown</span>
                                     </div>
                                 </div>
                             </td>
 
                             <td>
                                 <a th:href="@{/vendor/order/detail/{orderId}(orderId=${order.id})}"
-                                   class="btn btn-info btn-sm">Xem chi tiết</a>
+                                   class="btn btn-info btn-sm">View Details</a>
                             </td>
                         </tr>
                         </tbody>
@@ -444,13 +482,13 @@
                 </div>
             </div>
 
-            <!-- Phân trang -->
+            <!-- Pagination -->
             <nav th:if="${totalPages > 1}">
                 <ul class="pagination justify-content-center mt-3">
                     <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
                         <a class="page-link"
                            th:href="@{/vendor/order(page=${currentPage - 1})}">
-                            Trước
+                            Previous
                         </a>
                     </li>
 
@@ -465,12 +503,13 @@
                     <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
                         <a class="page-link"
                            th:href="@{/vendor/order(page=${currentPage + 1})}">
-                            Sau
+                            Next
                         </a>
                     </li>
                 </ul>
             </nav>
         </div>
+
         <script>
             document.addEventListener("DOMContentLoaded", () => {
                 document.querySelectorAll(".vnd-price").forEach(el => {
@@ -501,18 +540,27 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        alert("Cập nhật trạng thái thành công");
+                        alert("Status updated successfully");
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert("Cập nhật trạng thái thành công");
-
+                        alert("Status update failed");
                     });
             }
         </script>
     </th:block>
 </th:block>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+        toastElList.forEach(function (toastEl) {
+            var toast = new bootstrap.Toast(toastEl)
+            toast.show()
+        })
+    });
+</script>
 
 </body>
 </html>

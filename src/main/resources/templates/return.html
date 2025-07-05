@@ -2,7 +2,7 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Trả hàng</title>
+    <title>Return</title>
 
 </head>
 <body>
@@ -149,52 +149,54 @@
                 <div class="user-page-wrapper">
                     <form th:action="@{/client/order/return/save}" method="post" enctype="multipart/form-data">
                         <div class="container mt-4">
-                            <h3 class="mb-4">Trả hàng</h3>
+                            <h3 class="mb-4">Return Order</h3>
                             <div class="row">
+                                <!-- Order Information -->
                                 <div class="col-md-6">
                                     <div class="card mb-3">
-                                        <div class="card-header">Thông tin đơn hàng</div>
+                                        <div class="card-header">Order Information</div>
                                         <ul class="list-group list-group-flush">
-                                            <li class="list-group-item "><strong>Mã giao dịch:</strong> <span
-                                                    th:text="${order.id}"></span></li>
+                                            <li class="list-group-item">
+                                                <strong>Transaction ID:</strong>
+                                                <span th:text="${order.id}"></span>
+                                            </li>
 
-                                            <li class="list-group-item "><strong >Phương thức:</strong> <span
-                                                    th:text="${order.method}"></span>
+                                            <li class="list-group-item">
+                                                <strong>Payment Method:</strong>
+                                                <span th:text="${order.method}"></span>
                                             </li>
-                                            <li class="list-group-item"><strong>Voucher:</strong>
-                                                <span th:if="${order.voucherEntity != null}"
-                                                      th:text="${order.voucherEntity.name}" ></span>
-                                                <span th:if="${order.voucherEntity == null}" >Không áp dụng</span>
+
+                                            <li class="list-group-item">
+                                                <strong>Voucher:</strong>
+                                                <span th:if="${order.voucherEntity != null}" th:text="${order.voucherEntity.name}"></span>
+                                                <span th:if="${order.voucherEntity == null}">Not applied</span>
                                             </li>
-                                            <li class="list-group-item "><strong>Tổng thanh toán:</strong> <span
-                                                    th:text="${order.totalCost}"
-                                                    class="vnd-price"></span>
+
+                                            <li class="list-group-item">
+                                                <strong>Total Payment:</strong>
+                                                <span th:text="${order.totalCost}" class="vnd-price"></span>
                                             </li>
                                         </ul>
                                     </div>
 
+                                    <!-- Product Details -->
                                     <div class="card">
-                                        <div class="card-header">Chi tiết sản phẩm</div>
+                                        <div class="card-header">Product Details</div>
                                         <div class="card-body p-0">
                                             <table class="table table-sm table-bordered mb-0">
                                                 <thead>
                                                 <tr>
-                                                    <th>Sản phẩm</th>
-                                                    <th>Đơn giá</th>
-                                                    <th>Số lượng</th>
-                                                    <th>Thành tiền</th>
+                                                    <th>Product</th>
+                                                    <th>Unit Price</th>
+                                                    <th>Quantity</th>
+                                                    <th>Subtotal</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr>
-                                                    <td th:text="${order.productEntity.productName}">Tên sản
-                                                        phẩm
-                                                    </td>
-                                                    <td th:text="${order.priceOfOne}"
-                                                        class="font-c vnd-price">
-                                                        0
-                                                    </td>
-                                                    <td th:text="${order.quantity}" >1</td>
+                                                    <td th:text="${order.productEntity.productName}">Product Name</td>
+                                                    <td th:text="${order.priceOfOne}" class="font-c vnd-price">0</td>
+                                                    <td th:text="${order.quantity}">1</td>
                                                     <td th:text="${order.totalCost}" class="font-c vnd-price">0</td>
                                                 </tr>
                                                 </tbody>
@@ -203,25 +205,24 @@
                                     </div>
                                 </div>
 
+                                <!-- Return Reason and Image -->
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="reason" class="form-label">Lý do trả hàng</label>
-                                        <textarea class="form-control" name="reason" id="reason" rows="4"
-                                                  required></textarea>
+                                        <label for="reason" class="form-label">Reason for Return</label>
+                                        <textarea class="form-control" name="reason" id="reason" rows="4" required></textarea>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="imageInput" class="form-label">Hình ảnh minh hoạ</label>
+                                        <label for="imageInput" class="form-label">Illustration Image</label>
                                         <input type="file" id="imageInput" name="image" accept="image/*" />
-                                        <div id="preview" style="margin-top:10px;">
-                                        </div>
+                                        <div id="preview" style="margin-top:10px;"></div>
                                     </div>
 
                                     <script>
                                         const imageInput = document.getElementById('imageInput');
                                         const preview = document.getElementById('preview');
 
-                                        imageInput.addEventListener('change', function() {
+                                        imageInput.addEventListener('change', function () {
                                             preview.innerHTML = '';
                                             const file = this.files[0];
                                             if (file) {
@@ -233,20 +234,20 @@
                                             }
                                         });
                                     </script>
-
-
                                 </div>
                             </div>
 
+                            <!-- Buttons -->
                             <div class="text-end mt-3">
-                                <a th:href="@{/client/order}" class="btn btn-secondary me-2">Quay lại</a>
-                                <button type="submit" class="btn btn-success">Gửi yêu cầu</button>
+                                <a th:href="@{/client/order}" class="btn btn-secondary me-2">Back</a>
+                                <button type="submit" class="btn btn-success">Submit</button>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+
     </th:block>
 </th:block>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

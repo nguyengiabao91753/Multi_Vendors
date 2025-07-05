@@ -321,22 +321,21 @@
 <th:block th:replace="layout/vendor-layout :: layout">
     <th:block th:fragment="pageContent">
         <div class="container mt-4">
-            <h3 class="mb-4">Danh sách đơn trả hàng</h3>
+            <h3 class="mb-4">Return List</h3>
 
-            <!-- Hiển thị danh sách đơn hàng -->
             <div class="card">
                 <div class="card-body">
                     <table class="table table-striped table-bordered">
                         <thead>
                         <tr>
-                            <th scope="col">Mã</th>
-                            <th scope="col">Người mua</th>
-                            <th scope="col">Phương thức thanh toán</th>
-                            <th scope="col">Ngày mua</th>
-                            <th scope="col">Ngày trả hàng</th>
-                            <th scope="col">Tổng chi phí</th>
-                            <th scope="col">Trạng thái</th>
-                            <th scope="col">Hành động</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">User</th>
+                            <th scope="col">Method</th>
+                            <th scope="col">Purchase Date</th>
+                            <th scope="col">Return Date</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Status</th>
+                            <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -365,7 +364,7 @@
                     <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
                         <a class="page-link"
                            th:href="@{/vendor/return(page=${currentPage - 1})}">
-                            Trước
+                            Previous
                         </a>
                     </li>
 
@@ -380,7 +379,7 @@
                     <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
                         <a class="page-link"
                            th:href="@{/vendor/return(page=${currentPage + 1})}">
-                            Sau
+                            Next
                         </a>
                     </li>
                 </ul>

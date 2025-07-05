@@ -1,6 +1,7 @@
 package com.example.shopee.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,8 +26,9 @@ public class CartEntity extends AbstractEntity{
     private UserEntity userEntity;
 
     @OneToMany(mappedBy = "cartEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
+	@EqualsAndHashCode.Exclude
+	@ToString.Exclude
+	@JsonManagedReference
     private Set<CartDetailEntity> cartDetailEntities;
 
 	public BigDecimal getTotalCost() {

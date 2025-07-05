@@ -2,6 +2,7 @@ package com.example.shopee.entity;
 
 import com.example.shopee.enums.ReturnStatus;
 import com.example.shopee.enums.RoleEnum;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,11 +29,13 @@ public class ReturnEntity extends AbstractEntity{
     @ManyToOne
     @JoinColumn(name = "order_id")
     @EqualsAndHashCode.Exclude
+    @JsonBackReference
     private OrderEntity orderEntity;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     @EqualsAndHashCode.Exclude
+    @JsonBackReference
     private UserEntity userEntity;
 
     public String getReason() {

@@ -103,47 +103,44 @@
             <div class="container">
                 <div class="user-page-wrapper">
                     <div class="order-info">
-                        <h3>Thông tin đơn hàng</h3>
+                        <h3>Order Information</h3>
                         <ul>
-                            <li><strong>Mã giao dịch:</strong> <span th:text="${order.id}">Mã giao dịch</span></li>
-                            <li><strong>Phương thức thanh toán:</strong> <span th:text="${order.method}">COD</span></li>
-                            <li><strong>Voucher sử dụng:</strong>
+                            <li><strong>Transaction ID:</strong> <span th:text="${order.id}">Transaction ID</span></li>
+                            <li><strong>Payment Method:</strong> <span th:text="${order.method}">COD</span></li>
+                            <li><strong>Applied Voucher:</strong>
                                 <span th:if="${order.voucherEntity != null}"
                                       th:text="${order.voucherEntity.name}"></span>
-                                <span th:if="${order.voucherEntity == null}">Không áp dụng</span>
+                                <span th:if="${order.voucherEntity == null}">Not Applied</span>
                             </li>
-                            <li><strong>Tổng thanh toán:</strong> <span th:text="${order.totalCost}"
-                                                                        class="vnd-price">0</span></li>
+                            <li><strong>Total Payment:</strong> <span th:text="${order.totalCost}" class="vnd-price">0</span></li>
                         </ul>
                     </div>
 
                     <div class="order-details">
-                        <h3>Chi tiết sản phẩm</h3>
+                        <h3>Product Details</h3>
                         <table>
                             <thead>
                             <tr>
-                                <th>Tên sản phẩm</th>
-                                <th>Đơn giá</th>
-                                <th>Số lượng</th>
-                                <th>Thành tiền</th>
-                                <th>Thao tác</th>
+                                <th>Product Name</th>
+                                <th>Unit Price</th>
+                                <th>Quantity</th>
+                                <th>Total Price</th>
+                                <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
-                                <td th:text="${order.productEntity.productName}">Tên sản phẩm</td>
+                                <td th:text="${order.productEntity.productName}">Product Name</td>
                                 <td th:text="${order.priceOfOne}" class="vnd-price">0</td>
                                 <td th:text="${order.quantity}">0</td>
                                 <td th:text="${order.totalCost}" class="vnd-price">0</td>
                                 <td>
-                                    <a th:href="@{'/detail/' + ${order.productEntity.id}}"
-                                       class="btn btn-primary btn-sm">
-                                        Đánh giá
+                                    <a th:href="@{'/detail/' + ${order.productEntity.id}}" class="btn btn-primary btn-sm">
+                                        Review
                                     </a>
                                     <th:block th:if="${daysBetween <= 7}">
-                                        <a th:href="@{'/client/order/return/' + ${order.id}}"
-                                           class="btn btn-danger btn-sm">
-                                            Trả hàng
+                                        <a th:href="@{'/client/order/return/' + ${order.id}}" class="btn btn-danger btn-sm">
+                                            Return
                                         </a>
                                     </th:block>
                                 </td>
@@ -154,6 +151,7 @@
                 </div>
             </div>
         </div>
+
     </th:block>
 </th:block>
 <script>

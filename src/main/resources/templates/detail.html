@@ -61,8 +61,8 @@
                             <span th:text="${product.productName}"></span>
                         </div>
                         <div class="product-rate">
-                            <p>Chưa Có Đánh Giá</p>
-                            <p th:if="${product.amount != null}">Đã Bán <span th:text="${product.amount}"></span></p>
+                            <p>No Reviews</p>
+                            <p th:if="${product.amount != null}">Sold <span th:text="${product.amount}"></span></p>
                         </div>
                         <div class="product-price">
                             <p th:if="${product.salePrice != null}">
@@ -88,7 +88,7 @@
                         <form th:action="@{/client/cart/add}" method="post">
                             <input type="hidden" name="productId" th:value="${product.id}"/>
                             <div class="product-quantity">
-                                <label>Số Lượng</label>
+                                <label>Quantity</label>
                                 <div class="product-quantity-form">
                                     <div class="product-quantity-control">
                                         <button type="button"
@@ -103,15 +103,15 @@
                                         </button>
                                     </div>
                                     <p th:if="${product.amount != null}"
-                                       th:text="${product.amount} + ' sản phẩm có sẵn'"></p>
-                                    <p th:unless="${product.amount != null}">Số lượng không xác định</p>
+                                       th:text="${product.amount} + ' products available'"></p>
+                                    <p th:unless="${product.amount != null}">Quantity not specified</p>
                                 </div>
                             </div>
 
                             <div class="product-add" th:if="${user != null and product.user.id != user.id}">
-                                <button type="submit" name="addcart"><i class="fas fa-cart-plus"></i> Thêm Vào Giỏ Hàng
+                                <button type="submit" name="addcart"><i class="fas fa-cart-plus"></i> Add to Cart
                                 </button>
-                                <button type="submit" name="buynow">Mua Ngay</button>
+                                <button type="submit" name="buynow">Buy Now</button>
                             </div>
                         </form>
                     </div>
@@ -122,39 +122,39 @@
                              alt="Logo">
                         <div class="shop-details">
                             <div class="shop-name"><span th:text="${product.user.fullName}"></span></div>
-                            <div class="shop-online">Online 17 Phút Trước</div>
+                            <div class="shop-online">Online 17 minutes ago</div>
                             <div class="shop-actions">
-                                <button class="chat-btn">Chat Ngay</button>
-                                <a th:href="@{/view/vendor(id=${product.user.id})}" class="view-btn">Xem Shop</a>
+                                <button class="chat-btn">Chat Now</button>
+                                <a th:href="@{/view/vendor(id=${product.user.id})}" class="view-btn">View Shop</a>
                             </div>
                         </div>
                     </div>
                     <div class="shop-stats">
                         <div class="stat-group">
-                            <div>Đánh Giá</div>
+                            <div>Reviews</div>
                             <div class="stat-value">957</div>
                         </div>
                         <div class="stat-group">
-                            <div>Tỉ Lệ Phản Hồi</div>
+                            <div>Response Rate</div>
                             <div class="stat-value">29%</div>
                         </div>
                         <div class="stat-group">
-                            <div>Tham Gia</div>
-                            <div class="stat-value highlight">5 năm trước</div>
+                            <div>Joined</div>
+                            <div class="stat-value highlight">5 years ago</div>
                         </div>
                         <div class="stat-group">
-                            <div>Thời Gian Phản Hồi</div>
-                            <div class="stat-value highlight">trong vài giờ</div>
+                            <div>Response Time</div>
+                            <div class="stat-value highlight">within a few hours</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="page-product__details">
                     <div class="page-product__details-section">
-                        <div class="details-title">Chi Tiết Sản Phẩm</div>
+                        <div class="details-title">Product Details</div>
                         <div class="details-inner">
                             <div class="details-item">
-                                <label>Danh Mục</label>
+                                <label>Category</label>
                                 <div class="details-item--link">
                                     <a th:href="@{/}">Shopee</a>
                                     <svg enable-background="new 0 0 11 11" viewBox="0 0 11 11" x="0" y="0"
@@ -173,26 +173,26 @@
                                 </div>
                             </div>
                             <div class="details-item">
-                                <label>Thương hiệu</label>
+                                <label>Brand</label>
                                 <p th:if="${product.user != null and product.user.fullName != null}"
                                    th:text="${product.user.fullName}"></p>
                                 <p th:unless="${product.user != null and product.user.fullName != null}">No Brand</p>
                             </div>
                             <div class="details-item">
-                                <label>Xuất xứ</label>
+                                <label>Origin</label>
                                 <p th:if="${product.user != null and product.user.address != null}"
                                    th:text="${product.user.address}"></p>
-                                <p th:unless="${product.user != null and product.user.address != null}">Không rõ</p>
+                                <p th:unless="${product.user != null and product.user.address != null}">Unknown</p>
                             </div>
                             <div class="details-item">
-                                <label>Kho hàng</label>
+                                <label>Stock</label>
                                 <p th:if="${product.amount != null}" th:text="${product.amount}"></p>
-                                <p th:unless="${product.amount != null}">Không xác định</p>
+                                <p th:unless="${product.amount != null}">Not specified</p>
                             </div>
                         </div>
                     </div>
                     <div class="page-product__details-section">
-                        <div class="details-title">Mô tả sản phẩm</div>
+                        <div class="details-title">Product Description</div>
                         <div class="details-inner">
                             <div class="details-area" th:utext="${product.description}">
                             </div>
@@ -200,71 +200,66 @@
                     </div>
                 </div>
                 <div class="page-product__comment">
-                    <div class="comment-title">Đánh giá sản phẩm</div>
+                    <div class="comment-title">Product Reviews</div>
                     <div class="comment-inner">
                         <div th:if="${feedbackList.size() > 0}">
                             <div th:each="feedback : ${feedbackList}"
                                  style="margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
-                                <strong th:text="${feedback.userEntity.fullName}">Tên người dùng</strong>
+                                <strong th:text="${feedback.userEntity.fullName}">User Name</strong>
                                 <div>
                                     <span th:each="i : ${#numbers.sequence(1, feedback.ratedStar)}">⭐</span>
                                     <span th:each="i : ${#numbers.sequence(feedback.ratedStar + 1, 5)}">☆</span>
                                 </div>
-                                <p th:text="${feedback.comment}">Nội dung đánh giá</p>
-                                <small th:text="${#temporals.format(feedback.createdAt, 'dd/MM/yyyy HH:mm')}">Thời
-                                    gian</small>
+                                <p th:text="${feedback.comment}">Review content</p>
+                                <small th:text="${#temporals.format(feedback.createdAt, 'dd/MM/yyyy HH:mm')}">Date</small>
                             </div>
                         </div>
-
 
                         <div th:if="${canFeedback and !hasFeedback}">
                             <form th:action="@{/client/feedback/submit}" method="post">
                                 <input type="hidden" name="productId" th:value="${product.id}"/>
                                 <div class="mb-3">
-                                    <label for="ratedStar">Số sao</label>
+                                    <label for="ratedStar">Stars</label>
                                     <select id="ratedStar" name="ratedStar" class="form-control" required>
                                         <option th:each="i : ${#numbers.sequence(1,5)}" th:value="${i}"
-                                                th:text="${i} + ' sao'"></option>
+                                                th:text="${i} + ' stars'"></option>
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="comment">Nội dung đánh giá</label>
+                                    <label for="comment">Review Content</label>
                                     <textarea id="comment" name="comment" class="form-control" rows="3"
                                               required></textarea>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+                                <button type="submit" class="btn btn-primary">Submit Review</button>
                             </form>
                         </div>
 
                         <div th:if="${hasFeedback}">
-                            <p class="text-success">Bạn đã đánh giá sản phẩm này.</p>
+                            <p class="text-success">You have already reviewed this product.</p>
                         </div>
 
                         <div th:if="${!canFeedback and user != null}">
-                            <p class="text-warning">Chỉ những người đã mua sản phẩm mới có thể đánh giá.</p>
+                            <p class="text-warning">Only customers who have purchased this product can leave a
+                                review.</p>
                         </div>
 
                         <div th:if="${user == null}">
-                            <p>Vui lòng <a th:href="@{/login}">đăng nhập</a> để đánh giá.</p>
+                            <p>Please <a th:href="@{/login}">log in</a> to leave a review.</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="page-product__similar">
-                    <div class="similar-title">Sản phẩm tương tự</div>
-
+                    <div class="similar-title">Similar Products</div>
                 </div>
             </div>
         </div>
-        <div th:unless="${product != null}">
-            <div class="container">
-                <h1>Không tìm thấy sản phẩm</h1>
-                <p>Sản phẩm bạn đang tìm kiếm có thể không tồn tại hoặc đã bị xóa.</p>
-                <a th:href="@{/}">Quay lại trang chủ</a>
-            </div>
+        <div th:if="${product == null}">
+            <p>Product not found.</p>
         </div>
     </th:block>
 </th:block>
+
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>

@@ -80,7 +80,7 @@ public class AdminVoucherController {
         UserEntity user = userRepository.findByEmail(email).orElseThrow();
         voucher.setUserEntity(user);
         voucherRepository.save(voucher);
-        return "redirect:/admin/voucher";
+        return "redirect:/admin/voucher?save=true";
     }
 
 
@@ -115,12 +115,12 @@ public class AdminVoucherController {
         UserEntity user = userRepository.findByEmail(email).orElse(null);
         voucher.setUserEntity(user);
         voucherRepository.save(voucher);
-        return "redirect:/admin/voucher";
+        return "redirect:/admin/voucher?update=true";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteVoucher(@PathVariable("id") Long id) {
         voucherRepository.deleteById(id);
-        return "redirect:/admin/voucher";
+        return "redirect:/admin/voucher?delete=true";
     }
 }

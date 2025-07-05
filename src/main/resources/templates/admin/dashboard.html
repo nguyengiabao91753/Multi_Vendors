@@ -9,14 +9,15 @@
 </head>
 <body>
 
+<!-- Use admin layout template -->
 <th:block th:replace="layout/admin-layout :: layout">
     <th:block th:fragment="pageContent">
         <div class="container mt-4">
-            <h2 class="mb-4">Thống Kê Hệ Thống</h2>
+            <h2 class="mb-4">System Statistics</h2>
             <div class="row mb-4">
                 <div class="col-md-3">
                     <div class="card text-white bg-primary mb-3">
-                        <div class="card-header">Sản phẩm hiện có</div>
+                        <div class="card-header">Total Products</div>
                         <div class="card-body">
                             <h5 class="card-title" th:text="${productCount}">0</h5>
                         </div>
@@ -24,7 +25,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="card text-white bg-success mb-3">
-                        <div class="card-header">Số đánh giá</div>
+                        <div class="card-header">Total Feedback</div>
                         <div class="card-body">
                             <h5 class="card-title" th:text="${feedbackCount}">0</h5>
                         </div>
@@ -32,7 +33,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="card text-white bg-warning mb-3">
-                        <div class="card-header">Số lượng đơn hàng</div>
+                        <div class="card-header">Total Orders</div>
                         <div class="card-body">
                             <h5 class="card-title" th:text="${orderCount}">0</h5>
                         </div>
@@ -40,7 +41,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="card text-white bg-danger mb-3">
-                        <div class="card-header">Số lượng người dùng</div>
+                        <div class="card-header">Total Users</div>
                         <div class="card-body">
                             <h5 class="card-title" th:text="${userCount}">0</h5>
                         </div>
@@ -48,10 +49,11 @@
                 </div>
             </div>
 
-            <h4>Biểu đồ doanh thu theo tháng</h4>
+            <h4>Monthly Revenue Chart</h4>
             <canvas id="revenueChart" height="120"></canvas>
         </div>
 
+        <!-- Chart.js for revenue chart -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script th:inline="javascript">
             let revenueData = [[${revenueByMonth.values()}]];
@@ -59,10 +61,10 @@
             const revenueChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
-                        'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June',
+                        'July', 'August', 'September', 'October', 'November', 'December'],
                     datasets: [{
-                        label: 'Doanh thu (VNĐ)',
+                        label: 'Revenue (VND)',
                         data: revenueData,
                         backgroundColor: 'rgba(75, 192, 192, 0.6)',
                         borderColor: 'rgba(75, 192, 192, 1)',

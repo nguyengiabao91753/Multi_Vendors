@@ -2,21 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <title>Store Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/ag-grid-community@29.3.3/dist/ag-grid-community.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@29.3.3/dist/styles/ag-theme-alpine.css">
 </head>
 <body>
 
+<!-- Replace with vendor layout -->
 <th:block th:replace="layout/vendor-layout :: layout">
     <th:block th:fragment="pageContent">
         <div class="container mt-4">
-            <h2 class="mb-4">Thống Kê Cửa Hàng</h2>
+            <h2 class="mb-4">Store Statistics</h2>
             <div class="row mb-4">
                 <div class="col-md-4">
                     <div class="card text-white bg-primary mb-3">
-                        <div class="card-header">Sản phẩm hiện có</div>
+                        <div class="card-header">Available Products</div>
                         <div class="card-body">
                             <h5 class="card-title" th:text="${productCount}">0</h5>
                         </div>
@@ -24,7 +25,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="card text-white bg-success mb-3">
-                        <div class="card-header">Số đánh giá</div>
+                        <div class="card-header">Total Feedback</div>
                         <div class="card-body">
                             <h5 class="card-title" th:text="${feedbackCount}">0</h5>
                         </div>
@@ -32,7 +33,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="card text-white bg-warning mb-3">
-                        <div class="card-header">Số lượng voucher</div>
+                        <div class="card-header">Total Vouchers</div>
                         <div class="card-body">
                             <h5 class="card-title" th:text="${voucherCount}">0</h5>
                         </div>
@@ -40,10 +41,11 @@
                 </div>
             </div>
 
-            <h4>Biểu đồ doanh thu theo tháng</h4>
+            <h4>Monthly Revenue Chart</h4>
             <canvas id="revenueChart" height="120"></canvas>
         </div>
 
+        <!-- Chart.js library -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script th:inline="javascript">
             let revenueData = [[${revenueByMonth.values()}]];
@@ -51,10 +53,10 @@
             const revenueChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
-                        'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June',
+                        'July', 'August', 'September', 'October', 'November', 'December'],
                     datasets: [{
-                        label: 'Doanh thu (VNĐ)',
+                        label: 'Revenue (VND)',
                         data: revenueData,
                         backgroundColor: 'rgba(75, 192, 192, 0.6)',
                         borderColor: 'rgba(75, 192, 192, 1)',

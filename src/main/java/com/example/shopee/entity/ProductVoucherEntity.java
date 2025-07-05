@@ -1,5 +1,6 @@
 package com.example.shopee.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -15,11 +16,13 @@ public class ProductVoucherEntity extends AbstractEntity{
     @ManyToOne
     @JoinColumn(name = "product_id")
     @EqualsAndHashCode.Exclude
+    @JsonBackReference
     private ProductEntity productEntity;
 
     @ManyToOne
     @JoinColumn(name = "voucher_id")
     @EqualsAndHashCode.Exclude
+    @JsonBackReference
     private VoucherEntity voucherEntity;
 
     public ProductEntity getProductEntity() {
