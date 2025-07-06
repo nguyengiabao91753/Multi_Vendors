@@ -14,6 +14,7 @@ public interface UserService extends UserDetailsService {
     Optional<UserEntity> findByEmail(String email);
 
     boolean validateCredentials(String username, String password);
+    boolean validateCredentialsAdmin(String username, String password);
 
     UserEntity saveUser(UserEntity user);
 }

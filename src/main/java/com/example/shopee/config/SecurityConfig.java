@@ -76,11 +76,10 @@ public class SecurityConfig {
                         .failureHandler(new CustomAuthenticationFailureHandler())
                 )
                 .authorizeHttpRequests(at -> at
-                        .requestMatchers("/", "/home", "/login/**", "/view/**", "/login-google", "/register", "/save", "re-send", "/image/**", "/js/**", "/lib/**", "/style/**", "/slider/**", "/css/**", "/list/**", "/detail/**",
+                        .requestMatchers("/", "/home", "/admin/login", "/login/**", "/view/**", "/login-google", "/register", "/save", "re-send", "/image/**", "/js/**", "/lib/**", "/style/**", "/slider/**", "/css/**", "/list/**", "/detail/**",
                                 "/api/storage/**", "recover", "send-otp-recover", "otp-check", "confirm-otp", "send-otp-recover", "confirm-otp-recover", "/change-pass/**",
-                                "/client/payment/pay", "/productListClient/**", "save-new-password", "detail", "change-password", "save-change-password", "/users/**", "/forgot/**", "/forgotPass/**", "/otp-check-pass/**" , "/confirm-otp-pass/**",
-                                "/assets/**", "/assets_admin/**", "/client_assets/**", "/index/**", "/product/**", "/guest/**").permitAll()
-                        .requestMatchers("/test", "/admin/**", "/userList/**").hasAnyRole("ADMIN")
+                                "/client/payment/pay", "/productListClient/**", "save-new-password", "detail", "change-password", "save-change-password", "/users/**", "/forgot/**", "/forgotPass/**", "/otp-check-pass/**", "/confirm-otp-pass/**",
+                                "/assets/**", "/assets_admin/**", "/client_assets/**", "/index/**", "/product/**", "/guest/**", "/admin/**").permitAll()
                         .requestMatchers("/user/profile/**").hasAnyRole("ADMIN", "VENDOR", "CLIENT")
                         .requestMatchers("/vendor/**").hasAnyRole("VENDOR")
                         .requestMatchers("/client/**").hasAnyRole("CLIENT")

@@ -5,6 +5,7 @@ import com.example.shopee.entity.UserEntity;
 import com.example.shopee.enums.RoleEnum;
 import com.example.shopee.repository.RoleRepository;
 import com.example.shopee.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,7 +31,13 @@ public class AdminUserController {
                                @RequestParam(value = "email", required = false) String emailParam,
                                @RequestParam(value = "role", required = false) String roleParam,
                                @RequestParam(value = "page", defaultValue = "0") int page,
-                               @RequestParam(value = "size", defaultValue = "5") int size) {
+                               @RequestParam(value = "size", defaultValue = "5") int size, HttpSession session) {
+
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
+        }
 
         List<UserEntity> allUsers = userRepository.findAll();
 
@@ -67,7 +74,13 @@ public class AdminUserController {
 
 
     @GetMapping("/add")
-    public String addUserForm(Model model) {
+    public String addUserForm(Model model, HttpSession session) {
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
+        }
+
         model.addAttribute("user", new UserEntity());
         model.addAttribute("roles", roleRepository.findAll());
         return "admin/user/insert";
@@ -75,7 +88,13 @@ public class AdminUserController {
 
     @PostMapping("/save")
     public String saveUser(@ModelAttribute("user") UserEntity user,
-                           @RequestParam("role") String role) {
+                           @RequestParam("role") String role, HttpSession session) {
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
+        }
+
         RoleEntity selectedRole = roleRepository.findByName(RoleEnum.valueOf(role));
         user.setRoleEntities(Collections.singleton(selectedRole));
         userRepository.save(user);
@@ -84,7 +103,13 @@ public class AdminUserController {
 
     @PostMapping("/update-status/{id}")
     public String updateUserStatus(@PathVariable Long id,
-                                   @RequestParam("status") Integer status) {
+                                   @RequestParam("status") Integer status, HttpSession session) {
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
+        }
+        
         Optional<UserEntity> optional = userRepository.findById(id);
         if (optional.isPresent()) {
             UserEntity user = optional.get();

@@ -233,7 +233,7 @@
                                                 <span>$</span><span
                                                     th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span>
                                             </p>
-                                            <p class="sold" th:if="${product.amount != null}">Sold <span
+                                            <p class="sold" th:if="${product.amount != null}">Stock <span
                                                     th:text="${product.amount}"></span></p>
                                         </div>
                                     </div>

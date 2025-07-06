@@ -8,39 +8,47 @@
 <body>
 <div aria-live="polite" aria-atomic="true" class="position-relative">
     <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;">
-        <div th:if="${param.save}" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div th:if="${param.save}" class="toast align-items-center text-white bg-success border-0" role="alert"
+             aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body">
                     Save successfully!
                 </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
             </div>
         </div>
 
-        <div th:if="${param.update}" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div th:if="${param.update}" class="toast align-items-center text-white bg-success border-0" role="alert"
+             aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body">
                     Update successfully!
                 </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
             </div>
         </div>
 
-        <div th:if="${param.delete}" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div th:if="${param.delete}" class="toast align-items-center text-white bg-success border-0" role="alert"
+             aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body">
                     Delete successfully!
                 </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
             </div>
         </div>
 
-        <div th:if="${error}" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div th:if="${error}" class="toast align-items-center text-white bg-danger border-0" role="alert"
+             aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body" th:text="${error}">
                     Error!
                 </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
             </div>
         </div>
     </div>
@@ -96,11 +104,12 @@
                             <td th:text="${feedback.userEntity.fullName}">John Doe</td>
                             <td th:text="${feedback.ratedStar} + ' ★'">5 ★</td>
                             <td th:text="${feedback.comment}">Good product</td>
-                            <td th:text="${#temporals.format(feedback.createdAt, 'yyyy-MM-dd HH:mm')}">2025-06-23 14:30</td>
+                            <td th:text="${#temporals.format(feedback.createdAt, 'yyyy-MM-dd HH:mm')}">2025-06-23
+                                14:30
+                            </td>
                             <td>
-                                <a th:href="@{'/vendor/feedback/delete/' + ${feedback.id}}"
-                                   class="btn btn-danger btn-sm"
-                                   onclick="return confirm('Are you sure you want to delete this feedback?')">Delete</a>
+                                <a th:href="@{'/detail/' + ${feedback.productEntity.id}}"
+                                   class="btn btn-danger btn-sm">Detail</a>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(feedbacks)}">

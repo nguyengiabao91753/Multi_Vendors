@@ -52,6 +52,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean validateCredentialsAdmin(String username, String password) {
+        Optional<UserEntity> userOpt = userRepository.findByEmail(username);
+
+        if (userOpt.isEmpty()) {
+            return false;
+        }
+
+        UserEntity user = userOpt.get();
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            return false;
+        }
+
+        boolean isAdmin = user.getRoleEntities().stream()
+                .anyMatch(role -> role.getName().name().equals("ADMIN"));
+
+        return isAdmin;
+    }
+
+
+    @Override
     public UserEntity saveUser(UserEntity user) {
         return userRepository.save(user);
     }

@@ -5,6 +5,7 @@ import com.example.shopee.entity.UserEntity;
 import com.example.shopee.entity.VoucherEntity;
 import com.example.shopee.repository.UserRepository;
 import com.example.shopee.repository.VoucherRepository;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,14 +32,14 @@ public class AdminVoucherController {
     public String listVouchers(Model model,
                                @RequestParam(value = "keyword", required = false) String keyword,
                                @RequestParam(value = "page", defaultValue = "0") int page,
-                               @RequestParam(value = "size", defaultValue = "5") int size) {
+                               @RequestParam(value = "size", defaultValue = "5") int size, HttpSession session) {
 
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        UserEntity user = userRepository.findByEmail(email).orElse(null);
-        if (user == null) {
-            return "redirect:/login";
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
         }
-
+        UserEntity user = userRepository.findByEmail(email).orElse(null);
         List<VoucherEntity> vouchers = voucherRepository.findAllByUserEntity_Id(user.getId());
 
         if (keyword != null && !keyword.isEmpty()) {
@@ -62,13 +63,25 @@ public class AdminVoucherController {
     }
 
     @GetMapping("/insert")
-    public String addVoucherForm(Model model) {
+    public String addVoucherForm(Model model, HttpSession session) {
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
+        }
+
         model.addAttribute("voucher", new VoucherEntity());
         return "admin/voucher/insert";
     }
 
     @PostMapping("/save")
-    public String saveVoucher(@ModelAttribute("voucher") VoucherEntity voucher, Model model) {
+    public String saveVoucher(@ModelAttribute("voucher") VoucherEntity voucher, Model model, HttpSession session) {
+
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
+        }
 
         Optional<VoucherEntity> byName = voucherRepository.findByName(voucher.getName());
         if (byName.isPresent()) {
@@ -76,7 +89,7 @@ public class AdminVoucherController {
             return "admin/voucher/insert";
         }
 
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
         UserEntity user = userRepository.findByEmail(email).orElseThrow();
         voucher.setUserEntity(user);
         voucherRepository.save(voucher);
@@ -85,7 +98,13 @@ public class AdminVoucherController {
 
 
     @GetMapping("/update/{id}")
-    public String updateVoucherPage(@PathVariable("id") Long id, Model model) {
+    public String updateVoucherPage(@PathVariable("id") Long id, Model model, HttpSession session) {
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
+        }
+
         Optional<VoucherEntity> voucherOpt = voucherRepository.findById(id);
         if (voucherOpt.isPresent()) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
@@ -103,7 +122,13 @@ public class AdminVoucherController {
     }
 
     @PostMapping("/update")
-    public String updateVoucher(@ModelAttribute VoucherEntity voucher, Model model) {
+    public String updateVoucher(@ModelAttribute VoucherEntity voucher, Model model, HttpSession session) {
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
+        }
+
         Optional<VoucherEntity> byName = voucherRepository.findByName(voucher.getName());
         if (byName.isPresent() && !byName.get().getId().equals(voucher.getId())) {
             model.addAttribute("error", "Voucher này đã tồn tại.");
@@ -111,7 +136,7 @@ public class AdminVoucherController {
             return "admin/voucher/update";
         }
 
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
         UserEntity user = userRepository.findByEmail(email).orElse(null);
         voucher.setUserEntity(user);
         voucherRepository.save(voucher);
@@ -119,8 +144,15 @@ public class AdminVoucherController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteVoucher(@PathVariable("id") Long id) {
-        voucherRepository.deleteById(id);
+    public String deleteVoucher(@PathVariable("id") Long id, HttpSession session) {
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
+        }
+        VoucherEntity voucherEntity = voucherRepository.findById(id).get();
+        voucherEntity.setStatus(0);
+        voucherRepository.save(voucherEntity);
         return "redirect:/admin/voucher?delete=true";
     }
 }

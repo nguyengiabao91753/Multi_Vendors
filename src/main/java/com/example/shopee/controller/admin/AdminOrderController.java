@@ -4,6 +4,7 @@ import com.example.shopee.entity.OrderEntity;
 import com.example.shopee.entity.UserEntity;
 import com.example.shopee.repository.OrderRepository;
 import com.example.shopee.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -29,14 +30,12 @@ public class AdminOrderController {
     @GetMapping("")
     public String orderPage(Model model,
                             @RequestParam(value = "status", required = false) Integer status,
-                            @RequestParam(value = "page", defaultValue = "0") int page,
+                            @RequestParam(value = "page", defaultValue = "0") int page, HttpSession session,
                             @RequestParam(value = "size", defaultValue = "5") int size) {
+        String email = (String) session.getAttribute("email");
 
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        UserEntity user = userRepository.findByEmail(email).orElse(null);
-        model.addAttribute("user", user);
-        if (user == null) {
-            return "redirect:/login";
+        if (email == null) {
+            return "redirect:/admin/login";
         }
 
         List<OrderEntity> orderEntities = orderRepository.findAll();
@@ -56,7 +55,12 @@ public class AdminOrderController {
     }
 
     @GetMapping("/detail/{orderId}")
-    public String orderDetail(@PathVariable("orderId") Long orderId, Model model) {
+    public String orderDetail(@PathVariable("orderId") Long orderId, Model model, HttpSession session) {
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
+        }
         OrderEntity order = orderRepository.findById(orderId).orElse(null);
         if (order == null) {
             return "redirect:/vendor/order";

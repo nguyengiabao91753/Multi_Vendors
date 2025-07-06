@@ -118,7 +118,9 @@ public class VendorVoucherController {
 
     @GetMapping("/delete/{id}")
     public String deleteVoucher(@PathVariable("id") Long id) {
-        voucherRepository.deleteById(id);
+        VoucherEntity voucherEntity = voucherRepository.findById(id).get();
+        voucherEntity.setStatus(0);
+        voucherRepository.save(voucherEntity);
         return "redirect:/vendor/voucher?delete=true";
     }
 }

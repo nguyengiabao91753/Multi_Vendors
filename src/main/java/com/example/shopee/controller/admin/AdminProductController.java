@@ -11,6 +11,7 @@ import com.example.shopee.repository.ProductRepository;
 import com.example.shopee.repository.UserRepository;
 import com.example.shopee.service.CloudinaryService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -49,8 +50,16 @@ public class AdminProductController {
                               @RequestParam(value = "categoryId", required = false) Long categoryId,
                               @RequestParam(value = "vendor", required = false) String vendor,
                               @RequestParam(value = "status", required = false) Integer status,
-                              @RequestParam(value = "page", defaultValue = "0") int page,
+                              @RequestParam(value = "page", defaultValue = "0") int page, HttpSession session,
                               @RequestParam(value = "size", defaultValue = "5") int size) {
+
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
+        }
+
+
 
         List<ProductEntity> productEntities = productRepository.findAll();
 
@@ -97,7 +106,13 @@ public class AdminProductController {
 
     @PostMapping("/update-status/{id}")
     public String updateStatus(@PathVariable("id") Long id,
-                               @RequestParam("status") Integer status) {
+                               @RequestParam("status") Integer status, HttpSession session) {
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
+        }
+
         Optional<ProductEntity> optional = productRepository.findById(id);
         if (optional.isPresent()) {
             ProductEntity product = optional.get();
@@ -109,7 +124,13 @@ public class AdminProductController {
 
 
     @GetMapping("/insert")
-    public String insertProductPage(Model model) {
+    public String insertProductPage(Model model, HttpSession session) {
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
+        }
+
         model.addAttribute("product", new ProductDto());
         model.addAttribute("categories", categoryRepository.findAll());
         return "admin/product/insert";
@@ -117,9 +138,15 @@ public class AdminProductController {
 
     @PostMapping("/save")
     public String save(@ModelAttribute("product") ProductDto dto,
-                       @ModelAttribute("listImage") MultipartFile[] listImage) {
+                       @ModelAttribute("listImage") MultipartFile[] listImage, HttpSession session) {
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
+        }
+
         ProductEntity entity = convertToEntity(dto);
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
         UserEntity user = userRepository.findByEmail(email).get();
         entity.setUser(user);
         entity.setStatus(0);
@@ -147,7 +174,13 @@ public class AdminProductController {
     }
 
     @GetMapping("/update/{id}")
-    public String updateForm(@PathVariable("id") Long id, Model model) {
+    public String updateForm(@PathVariable("id") Long id, Model model, HttpSession session) {
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
+        }
+
         Optional<ProductEntity> optional = productRepository.findById(id);
         if (optional.isPresent()) {
             ProductDto dto = convertToDto(optional.get());
@@ -161,14 +194,20 @@ public class AdminProductController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute("product") ProductDto dto,
-                         @ModelAttribute("listImage") MultipartFile[] listImage) {
+                         @ModelAttribute("listImage") MultipartFile[] listImage, HttpSession session) {
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
+        }
+
         ProductEntity entity = productRepository.findById(dto.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Sản phẩm không tồn tại"));
 
         entity.setProductName(dto.getProductName());
         entity.setDescription(dto.getDescription());
         entity.setAmount(dto.getAmount());
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
         UserEntity user = userRepository.findByEmail(email).get();
         entity.setUser(user);
         entity.setPrice(dto.getPrice() != null ? dto.getPrice() : BigDecimal.ZERO);
@@ -204,7 +243,13 @@ public class AdminProductController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id) {
+    public String delete(@PathVariable("id") Long id, HttpSession session) {
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
+        }
+
         productRepository.deleteById(id);
         return "redirect:/admin/product?delete=true";
     }
@@ -258,7 +303,13 @@ public class AdminProductController {
         return entity;
     }
     @GetMapping("/delete-image/{id}")
-    public String DeleteImage(@PathVariable Long id, HttpServletRequest request) {
+    public String DeleteImage(@PathVariable Long id, HttpServletRequest request, HttpSession session) {
+        String email = (String) session.getAttribute("email");
+
+        if (email == null) {
+            return "redirect:/admin/login";
+        }
+
         String referer = request.getHeader("Referer");
         productImageRepository.deleteById(id);
         return "redirect:" + referer + "?delete=true";

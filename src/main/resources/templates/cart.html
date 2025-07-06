@@ -23,6 +23,8 @@
     <link rel="stylesheet" th:href="@{/style/style.css}"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJ7p4M2oVNIv6toZXxw3v7l2v9DgEV5D9Wbqzhf+z1dD5HiG9i0Ev9zk69t" crossorigin="anonymous">
+
 </head>
 <body>
 
@@ -71,6 +73,51 @@
             .buy-now-button:hover {
                 background-color: #e03e00;      /* Màu đậm hơn khi hover */
             }
+            /* Custom Styles for the Vendor Section */
+            .cart-item__cell-vendor {
+                font-size: 0.9rem; /* Smaller text */
+                color: #555; /* Dark grey color */
+            }
+
+            .cart-item__cell-vendor .vendor-label {
+                font-weight: bold;
+                color: #007bff; /* Blue color for vendor label */
+            }
+
+            .cart-item__cell-vendor .vendor-name {
+                font-style: italic; /* Italicize the vendor's name for emphasis */
+                color: #333; /* Darker text for readability */
+            }
+
+            /* Adding spacing for the entire product section */
+            .cart-item__cell-overview {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .cart-item__cell-overview--image img {
+                width: 50px; /* Set a fixed size for the product image */
+                height: 50px; /* Set a fixed size for the product image */
+                object-fit: cover; /* Maintain the aspect ratio of the image */
+                border-radius: 50%; /* Rounded image */
+                margin-right: 10px;
+            }
+
+            /* Adjustments for mobile */
+            @media (max-width: 576px) {
+                .cart-item__cell-vendor {
+                    font-size: 0.8rem; /* Smaller text on mobile */
+                }
+
+                .cart-item__cell-vendor .vendor-label {
+                    font-size: 0.8rem;
+                }
+
+                .cart-item__cell-vendor .vendor-name {
+                    font-size: 0.8rem;
+                }
+            }
+
         </style>
         <div id="cart-page">
             <div class="cart-page-header">
@@ -98,8 +145,10 @@
                             <div class="cart-page-content-header__unit-price">Unit Price</div>
                             <div class="cart-page-content-header__quantity">Quantity</div>
                             <div class="cart-page-content-header__total-price">Total Price</div>
+                            <div class="cart-page-content-header__vendor">Vendor</div> <!-- Vendor Column -->
                             <div class="cart-page-content-header__action">Action</div>
                         </div>
+
                         <div th:each="item : ${cartDetails}" class="cart-page-content-section">
                             <div class="cart-page-content-section__item">
                                 <div class="cart-item">
@@ -115,6 +164,11 @@
                                                          src="/images/no-image.png" alt="No image"/>
                                                 </div>
                                                 <p th:text="${item.productEntity.productName}">Product Name</p>
+                                                <!-- Vendor (User associated with the product) -->
+                                                <div class="cart-item__cell-vendor d-flex align-items-center mt-2">
+                                                    <span class="vendor-label me-2"><img style="width: 50px; height: 50px" th:src="${item.productEntity.user.avatar}" alt=""></span>
+                                                    <p th:text="${item.productEntity.user.fullName}" class="vendor-name mb-0"></p>
+                                                </div>
                                             </a>
                                         </div>
 
@@ -139,19 +193,23 @@
                                             <span class="vnd-price" th:text="${item.quantity * item.productEntity.salePrice}"></span>
                                         </div>
 
+
+
                                         <!-- Delete -->
                                         <div class="cart-item__cell-action">
-                                            <a th:href="@{'/client/cart/remove/' + ${item.id}}">Remove</a>
-                                            <a th:href="@{'/client/checkout/' + ${item.id}}" class="buy-now-button">Buy Now</a>
+                                            <a class="btn btn-danger" th:href="@{'/client/cart/remove/' + ${item.id}}">Remove</a>
+                                            <a class="btn btn-success" th:href="@{'/client/checkout/' + ${item.id}}">Buy</a>
                                         </div>
 
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
+
 
         </div>
     </th:block>

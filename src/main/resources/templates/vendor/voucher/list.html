@@ -45,7 +45,7 @@
         </div>
     </div>
 </div>
-<th:block th:replace="layout/admin-layout :: layout">
+<th:block th:replace="layout/vendor-layout :: layout">
     <th:block th:fragment="pageContent">
 
         <div class="container mt-4">
@@ -55,7 +55,7 @@
                     <h5 class="mb-0">Voucher Filter</h5>
                 </div>
                 <div class="card-body">
-                    <form method="get" th:action="@{/admin/voucher}">
+                    <form method="get" th:action="@{/vendor/voucher}">
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <label class="form-label">Voucher Name</label>
@@ -75,7 +75,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Voucher List</h4>
-                    <a class="btn btn-primary btn-sm" th:href="@{/admin/voucher/insert}">+ Add Voucher</a>
+                    <a class="btn btn-primary btn-sm" th:href="@{/vendor/voucher/insert}">+ Add Voucher</a>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered table-hover">
@@ -101,9 +101,9 @@
                             <td th:text="${#temporals.format(voucher.startTime, 'yyyy-MM-dd HH:mm')}"></td>
                             <td th:text="${#temporals.format(voucher.endTime, 'yyyy-MM-dd HH:mm')}"></td>
                             <td>
-                                <a th:href="@{'/admin/voucher/update/' + ${voucher.id}}"
+                                <a th:href="@{'/vendor/voucher/update/' + ${voucher.id}}"
                                    class="btn btn-warning btn-sm">Edit</a>
-                                <a th:href="@{'/admin/voucher/delete/' + ${voucher.id}}"
+                                <a th:href="@{'/vendor/voucher/delete/' + ${voucher.id}}"
                                    class="btn btn-danger btn-sm"
                                    onclick="return confirm('Are you sure you want to delete this voucher?')">Delete</a>
                             </td>
@@ -118,20 +118,20 @@
                         <ul class="pagination justify-content-center mt-3">
                             <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
                                 <a class="page-link"
-                                   th:href="@{/admin/voucher(page=${currentPage - 1}, keyword=${keyword})}">Previous</a>
+                                   th:href="@{/vendor/voucher(page=${currentPage - 1}, keyword=${keyword})}">Previous</a>
                             </li>
 
                             <li class="page-item"
                                 th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
                                 th:classappend="${i == currentPage} ? 'active'">
                                 <a class="page-link"
-                                   th:href="@{/admin/voucher(page=${i}, keyword=${keyword})}"
+                                   th:href="@{/vendor/voucher(page=${i}, keyword=${keyword})}"
                                    th:text="${i + 1}">1</a>
                             </li>
 
                             <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
                                 <a class="page-link"
-                                   th:href="@{/admin/voucher(page=${currentPage + 1}, keyword=${keyword})}">Next</a>
+                                   th:href="@{/vendor/voucher(page=${currentPage + 1}, keyword=${keyword})}">Next</a>
                             </li>
                         </ul>
                     </nav>
