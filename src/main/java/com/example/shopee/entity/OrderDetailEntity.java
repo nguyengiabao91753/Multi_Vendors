@@ -48,6 +48,14 @@ public class OrderDetailEntity extends AbstractEntity {
     @JsonManagedReference
     private ReturnEntity returnEntity;
 
+    public VoucherEntity getVoucherEntity() {
+        return voucherEntity;
+    }
+
+    public void setVoucherEntity(VoucherEntity voucherEntity) {
+        this.voucherEntity = voucherEntity;
+    }
+
     public ReturnEntity getReturnEntity() {
         return returnEntity;
     }

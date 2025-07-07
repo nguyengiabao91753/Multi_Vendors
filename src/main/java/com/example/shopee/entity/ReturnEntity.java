@@ -44,6 +44,14 @@ public class ReturnEntity extends AbstractEntity{
     @JsonBackReference
     private UserEntity userEntity;
 
+    public OrderDetailEntity getOrderDetailEntity() {
+        return orderDetailEntity;
+    }
+
+    public void setOrderDetailEntity(OrderDetailEntity orderDetailEntity) {
+        this.orderDetailEntity = orderDetailEntity;
+    }
+
     public String getReason() {
         return reason;
     }
