@@ -16,7 +16,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException {
 
-        String errorMessage = "Tên đăng nhập hoặc mật khẩu không đúng";
+        String errorMessage = "Incorrect username or passwordg";
 
         if (exception instanceof InternalAuthenticationServiceException) {
             Throwable cause = exception.getCause();
@@ -26,7 +26,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
         } else if (exception instanceof UserBlockedException) {
             errorMessage = exception.getMessage();
         } else if (exception instanceof BadCredentialsException) {
-            errorMessage = "Tên đăng nhập hoặc mật khẩu không đúng";
+            errorMessage = "Incorrect username or passwordg";
         }
 
         response.sendRedirect("/login?error=true&message=" + java.net.URLEncoder.encode(errorMessage, "UTF-8"));

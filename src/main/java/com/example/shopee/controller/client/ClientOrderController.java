@@ -36,6 +36,8 @@ public class ClientOrderController {
     @Autowired
     private CloudinaryService cloudinaryService;
     private Long id = 0L;
+    @Autowired
+    private ReturnRepository returnRepository;
 
 
     @GetMapping("")
@@ -99,8 +101,7 @@ public class ClientOrderController {
         return "return";
     }
 
-    @Autowired
-    private ReturnRepository returnRepository;
+
 
     @PostMapping("/return/save")
     public String saveReturnRequest(
@@ -158,5 +159,83 @@ public class ClientOrderController {
         return "return-detail";
     }
 
+//    RETURN ORDER DETAIL
 
+    private Long detailId = 0L;
+
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
+
+    @GetMapping("/returnDetail/{id}")
+    public String returnDetailOrder(@PathVariable Long id, Model model) {
+        Optional<OrderDetailEntity> orderOptional = orderDetailRepository.findById(id);
+        this.detailId = id;
+        if (orderOptional.isEmpty()) {
+            return "redirect:/client/order";
+        }
+
+        OrderDetailEntity orderDetailEntity = orderOptional.get();
+        model.addAttribute("orderDetail", orderDetailEntity);
+
+        LocalDateTime createdAt = orderDetailEntity.getCreatedAt();
+        LocalDateTime now = LocalDateTime.now();
+
+        long daysBetween = Duration.between(createdAt, now).toDays();
+        model.addAttribute("daysBetween", daysBetween);
+        return "returnDetail";
+    }
+
+
+
+    @PostMapping("/returnDetail/save")
+    public String saveReturnDetailRequest(
+            @RequestParam("reason") String reason,
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            HttpSession session
+    ) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<UserEntity> userOpt = userRepository.findByEmail(email);
+        Optional<OrderDetailEntity> orderOpt = orderDetailRepository.findById(this.detailId);
+
+        if (userOpt.isEmpty() || orderOpt.isEmpty()) {
+            return "redirect:/client/order";
+        }
+
+        ReturnEntity returnEntity = new ReturnEntity();
+        returnEntity.setReason(reason);
+        returnEntity.setReturnStatus(ReturnStatus.PENDING);
+        returnEntity.setOrderDetailEntity(orderOpt.get());
+        returnEntity.setUserEntity(userOpt.get());
+        returnEntity.setCreatedAt(LocalDateTime.now());
+
+        if (!image.isEmpty() && image != null) {
+            String img = cloudinaryService.uploadFile(image);
+            returnEntity.setImgReturn(img);
+        }
+
+        returnRepository.save(returnEntity);
+
+        OrderDetailEntity detailEntity = orderDetailRepository.findById(this.detailId).get();
+        detailEntity.setStatus(3);
+
+        orderDetailRepository.save(detailEntity);
+
+        session.setAttribute("mess", "Đã gửi yêu cầu trả hàng!");
+        return "thankYou";
+    }
+
+    @GetMapping("/returnDetail/detail/{id}")
+    public String returnDetailDetail(@PathVariable("id") Long id, Model model) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = userRepository.findByEmail(email).orElse(null);
+        model.addAttribute("user", user);
+
+        ReturnEntity returnEntity = returnRepository.findTopByOrderDetailEntityIdOrderByIdDesc(id).orElse(null);
+        if (returnEntity == null) {
+            return "redirect:/client/order";
+        }
+
+        model.addAttribute("return", returnEntity);
+        return "returnDetail-detail";
+    }
 }

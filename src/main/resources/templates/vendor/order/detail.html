@@ -357,14 +357,21 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
+                        <tr th:if="${order.productEntity != null}">
                             <td th:text="${order.productEntity.productName}">Product Name</td>
-                            <td th:text="${order.totalCost.divide(order.quantity)}" class="vnd-price">0</td>
+                            <td th:text="${order.priceOfOne}" class="vnd-price">0</td>
                             <td th:text="${order.quantity}">1</td>
                             <td th:text="${order.totalCost}" class="vnd-price">0</td>
                         </tr>
 
+                        <tr th:each="detail : ${order.orderDetailEntities}" th:if="${order.productEntity == null}">
+                            <td th:text="${detail.product.productName}">Product Name</td>
+                            <td th:text="${detail.priceOfOne}" class="vnd-price">0</td>
+                            <td th:text="${detail.quantity}">1</td>
+                            <td th:text="${detail.totalPrice}" class="vnd-price">0</td>
+                        </tr>
                         </tbody>
+
                     </table>
                 </div>
             </div>

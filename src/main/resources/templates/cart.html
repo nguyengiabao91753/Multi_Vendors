@@ -117,6 +117,20 @@
                     font-size: 0.8rem;
                 }
             }
+            .cart-page-content-header__checkbox,
+            .cart-item__cell-checkbox {
+                width: 60px; /* hoặc auto nếu dùng grid/flex */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .cart-page-content-header__checkbox input,
+            .cart-item__cell-checkbox input {
+                width: 18px;
+                height: 18px;
+                cursor: pointer;
+            }
 
         </style>
         <div id="cart-page">
@@ -141,6 +155,7 @@
                 <div class="container">
                     <div class="cart-page-content">
                         <div class="cart-page-content-header">
+                            <div class="cart-page-content-header__checkbox">Select</div>
                             <div class="cart-page-content-header__product">Product</div>
                             <div class="cart-page-content-header__unit-price">Unit Price</div>
                             <div class="cart-page-content-header__quantity">Quantity</div>
@@ -150,6 +165,11 @@
                         </div>
 
                         <div th:each="item : ${cartDetails}" class="cart-page-content-section">
+                            <!-- Checkbox để chọn sản phẩm -->
+                            <div class="cart-item__cell-checkbox text-center">
+                                <input type="checkbox" class="form-check-input" name="selectedItemIds" th:value="${item.id}" form="checkoutForm"/>
+                            </div>
+
                             <div class="cart-page-content-section__item">
                                 <div class="cart-item">
                                     <div class="cart-item__content">
@@ -198,7 +218,6 @@
                                         <!-- Delete -->
                                         <div class="cart-item__cell-action">
                                             <a class="btn btn-danger" th:href="@{'/client/cart/remove/' + ${item.id}}">Remove</a>
-                                            <a class="btn btn-success" th:href="@{'/client/checkout/' + ${item.id}}">Buy</a>
                                         </div>
 
                                     </div>
@@ -207,6 +226,10 @@
                         </div>
 
                     </div>
+                    <form id="checkoutForm" th:action="@{/client/checkout}" method="get">
+                        <button type="submit" class="btn btn-primary mt-3">Checkout Selected</button>
+                    </form>
+
                 </div>
             </div>
 
@@ -215,6 +238,15 @@
     </th:block>
 </th:block>
 <script>
+    document.getElementById("checkoutForm").addEventListener("submit", function(event) {
+        const checked = document.querySelectorAll("input[name='selectedItemIds']:checked");
+        if (checked.length === 0) {
+            alert("Please select at least one item to checkout.");
+            event.preventDefault();
+        }
+    });
+
+
     document.querySelectorAll(".vnd-price").forEach(el => {
         const rawValue = parseFloat(el.innerText);
         el.innerText = new Intl.NumberFormat('vi-VN', {

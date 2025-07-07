@@ -104,18 +104,22 @@ public class OtpController {
     @RequestMapping(value = "forgotPass", method = RequestMethod.POST)
     public String forgotPass(@RequestParam String email, Model model, HttpSession session) {
         if (!userService.findByEmail(email).isPresent()) {
-            model.addAttribute("mess", "Email không tồn tại!");
+            model.addAttribute("mess", "Email does not exist!");
             return "forgot";
         }
+
         session.setAttribute("otp-pass", otpCode());
-        session.setMaxInactiveInterval(360);
-        String subject = "Đây là OTP của bạn";
-        String mess = "Xin chào @" + " \n" + email + "Đây là OTP của bạn: " + session.getAttribute("otp-pass") + " Hãy điền vào form!" + "\n Cảm ơn!";
+        session.setMaxInactiveInterval(360); // Session timeout set to 6 minutes
+
+        String subject = "Your OTP Code";
+        String mess = "Hello,\n" + email + "\nHere is your OTP code: " + session.getAttribute("otp-pass") + "\nPlease enter it in the form.\nThank you!";
+
         this.emailSenderService.sendEmail(email, subject, mess);
         session.setAttribute("email", email);
-        return "redirect:/otp-check-pass";
 
+        return "redirect:/otp-check-pass";
     }
+
 
     @RequestMapping(value = "otp-check-pass", method = RequestMethod.GET)
     public String indexOtpPass() {
@@ -127,14 +131,18 @@ public class OtpController {
                                @RequestParam("otp") String otp,
                                Model model,
                                RedirectAttributes redirectAttributes) {
+
         String otpRegister = (String) session.getAttribute("otp-pass");
+
         if (otp.equals(otpRegister)) {
-            redirectAttributes.addFlashAttribute("mess", "OTP chính xác. Hãy đặt lại mật khẩu");
+            redirectAttributes.addFlashAttribute("mess", "OTP is correct. Please reset your password.");
             return "redirect:/change-pass";
         }
-        model.addAttribute("mess", "OTP nhập sai! Hãy nhập lại!");
+
+        model.addAttribute("mess", "Incorrect OTP! Please try again.");
         return "otpConfirmPass";
     }
+
 
     @RequestMapping(value = "change-pass", method = RequestMethod.GET)
     public String indexResetPass() {
@@ -145,11 +153,14 @@ public class OtpController {
     public String reset(HttpSession session,
                         @RequestParam("pass") String pass,
                         RedirectAttributes redirectAttributes) {
+
         String email = (String) session.getAttribute("email");
         UserEntity userEntity = userRepository.findByEmail(email).get();
+
         userEntity.setPassword(passwordEncoder.encode(pass));
         userService.saveUser(userEntity);
-        redirectAttributes.addFlashAttribute("mess", "Mật khẩu được đặt lại thành công!");
+
+        redirectAttributes.addFlashAttribute("mess", "Password has been successfully reset!");
         return "redirect:/change-pass";
     }
 

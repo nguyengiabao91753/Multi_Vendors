@@ -54,7 +54,9 @@ public class VendorReturnController {
         }
 
         List<ReturnEntity> allOrders = returnRepository.findAllByOrderEntity_ProductEntity_User(user);
-        model.addAttribute("returns", allOrders);
+        List<ReturnEntity> allOrderDetails = returnRepository.findAllByOrderDetailEntity_Product_User(user);
+        model.addAttribute("returns1", allOrders);
+        model.addAttribute("returns2", allOrderDetails);
 
         return "vendor/return/list";
     }
@@ -78,7 +80,7 @@ public class VendorReturnController {
     ) {
         Optional<ReturnEntity> returnOpt = returnRepository.findById(id);
         if (returnOpt.isEmpty()) {
-            session.setAttribute("mess", "Không tìm thấy yêu cầu trả hàng!");
+            session.setAttribute("mess", "Return request not found!");
             return "redirect:/vendor/return";
         }
 
@@ -100,14 +102,14 @@ public class VendorReturnController {
                 }
             }
 
-
-            session.setAttribute("mess", "Cập nhật trạng thái thành công!");
+            session.setAttribute("mess", "Return status updated successfully!");
         } catch (IllegalArgumentException e) {
-            session.setAttribute("mess", "Trạng thái không hợp lệ!");
+            session.setAttribute("mess", "Invalid return status!");
         }
 
         return "redirect:/vendor/return/detail/" + id;
     }
+
 
 
     @PostMapping("/save")
@@ -116,18 +118,24 @@ public class VendorReturnController {
             @RequestParam(value = "image", required = false) MultipartFile image,
             HttpSession session
     ) {
-        ReturnEntity returnEntity = returnRepository.findById(this.id).get();
+        ReturnEntity returnEntity = returnRepository.findById(this.id).orElse(null);
+        if (returnEntity == null) {
+            session.setAttribute("mess", "Return request not found!");
+            return "redirect:/vendor/return";
+        }
+
         returnEntity.setNote(note);
 
-        if (!image.isEmpty() && image != null) {
+        if (image != null && !image.isEmpty()) {
             String img = cloudinaryService.uploadFile(image);
             returnEntity.setImgBack(img);
         }
 
         returnRepository.save(returnEntity);
 
-        session.setAttribute("mess", "Đã lưu thông tin!");
+        session.setAttribute("mess", "Return request information saved successfully!");
         return "redirect:/vendor/return/detail/" + this.id;
     }
+
 
 }

@@ -148,7 +148,7 @@ public class ClientCartController {
                 .findFirst();
 
         ProductEntity product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 
         if (optionalCartDetail.isPresent()) {
             CartDetailEntity cartDetail = optionalCartDetail.get();

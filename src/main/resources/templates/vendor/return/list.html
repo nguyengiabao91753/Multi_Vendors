@@ -339,18 +339,36 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="return : ${returns}">
+                        <!-- Lặp returns1 -->
+                        <tr th:each="return : ${returns1}">
                             <td th:text="${return.id}">#1234</td>
-                            <td th:text="${return.orderEntity.fullName}">#1234</td>
-                            <td th:text="${return.orderEntity.method}">#1234</td>
-                            <td th:text="${#temporals.format(return.orderEntity.createdAt, 'yyyy-MM-dd HH:mm')}">#1234</td>
-                            <td th:text="${#temporals.format(return.createdAt, 'yyyy-MM-dd HH:mm')}">#1234</td>
+                            <td th:text="${return.orderEntity.fullName}">Customer Name</td>
+                            <td th:text="${return.orderEntity.method}">COD</td>
+                            <td th:text="${#temporals.format(return.orderEntity.createdAt, 'yyyy-MM-dd HH:mm')}">
+                                2025-01-01 10:00
+                            </td>
+                            <td th:text="${#temporals.format(return.createdAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 10:00
+                            </td>
                             <td th:text="${return.orderEntity.totalCost}" class="vnd-price">100.000 đ</td>
                             <td th:text="${return.returnStatus.displayName}" class="vnd-price">PENDING</td>
-
                             <td>
-                                <a th:href="@{/vendor/return/detail/{id}(id=${return.id})}"
-                                   class="btn btn-info btn-sm">Xem chi tiết</a>
+                                <a th:href="@{/vendor/return/detail/{id}(id=${return.id})}" class="btn btn-info btn-sm">Details</a>
+                            </td>
+                        </tr>
+
+                        <tr th:each="return : ${returns2}">
+                            <td th:text="${return.id}">#1234</td>
+                            <td th:text="${return.orderDetailEntity.order.fullName}">Customer Name</td>
+                            <td th:text="${return.orderDetailEntity.order.method}">COD</td>
+                            <td th:text="${#temporals.format(return.orderDetailEntity.order.createdAt, 'yyyy-MM-dd HH:mm')}">
+                                2025-01-01 10:00
+                            </td>
+                            <td th:text="${#temporals.format(return.createdAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 10:00
+                            </td>
+                            <td th:text="${return.orderDetailEntity.totalPrice}" class="vnd-price">100.000 đ</td>
+                            <td th:text="${return.returnStatus.displayName}" class="vnd-price">PENDING</td>
+                            <td>
+                                <a th:href="@{/vendor/return/detail/{id}(id=${return.id})}" class="btn btn-info btn-sm">Details</a>
                             </td>
                         </tr>
                         </tbody>

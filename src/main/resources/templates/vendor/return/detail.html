@@ -20,45 +20,89 @@
             <div class="row">
                 <!-- Order Info -->
                 <div class="col-lg-6 mb-4">
-                    <div class="card">
-                        <div class="card-header">Order Information</div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><strong>Transaction ID:</strong> <span th:text="${return.orderEntity.id}"></span></li>
-                            <li class="list-group-item"><strong>Payment Method:</strong> <span th:text="${return.orderEntity.method}"></span></li>
-                            <li class="list-group-item"><strong>Voucher:</strong>
-                                <span th:if="${return.orderEntity.voucherEntity != null}" th:text="${return.orderEntity.voucherEntity.name}"></span>
-                                <span th:if="${return.orderEntity.voucherEntity == null}">Not applied</span>
-                            </li>
-                            <li class="list-group-item"><strong>Total Amount:</strong>
-                                <span th:text="${return.orderEntity.totalCost}" class="vnd-price"></span>
-                            </li>
-                        </ul>
+                    <div th:if="${return.orderEntity != null}">
+                        <div class="card">
+                            <div class="card-header">Order Information</div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><strong>Transaction ID:</strong> <span th:text="${return.orderEntity.id}"></span></li>
+                                <li class="list-group-item"><strong>Payment Method:</strong> <span th:text="${return.orderEntity.method}"></span></li>
+                                <li class="list-group-item"><strong>Voucher:</strong>
+                                    <span th:if="${return.orderEntity.voucherEntity != null}" th:text="${return.orderEntity.voucherEntity.name}"></span>
+                                    <span th:if="${return.orderEntity.voucherEntity == null}">Not applied</span>
+                                </li>
+                                <li class="list-group-item"><strong>Total Amount:</strong>
+                                    <span th:text="${return.orderEntity.totalCost}" class="vnd-price"></span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="card mt-3">
+                            <div class="card-header">Product Details</div>
+                            <div class="card-body p-0">
+                                <table class="table table-sm table-bordered mb-0">
+                                    <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Unit Price</th>
+                                        <th>Quantity</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td th:text="${return.orderEntity.productEntity.productName}">Product Name</td>
+                                        <td th:text="${return.orderEntity.priceOfOne}" class="vnd-price">0</td>
+                                        <td th:text="${return.orderEntity.quantity}">1</td>
+                                        <td th:text="${return.orderEntity.totalCost}" class="vnd-price">0</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="card mt-3">
-                        <div class="card-header">Product Details</div>
-                        <div class="card-body p-0">
-                            <table class="table table-sm table-bordered mb-0">
-                                <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Unit Price</th>
-                                    <th>Quantity</th>
-                                    <th>Subtotal</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td th:text="${return.orderEntity.productEntity.productName}">Product Name</td>
-                                    <td th:text="${return.orderEntity.priceOfOne}" class="vnd-price">0</td>
-                                    <td th:text="${return.orderEntity.quantity}">1</td>
-                                    <td th:text="${return.orderEntity.totalCost}" class="vnd-price">0</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                    <div th:if="${return.orderDetailEntity != null}">
+                        <div class="card">
+                            <div class="card-header">Order Information</div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><strong>Transaction ID:</strong> <span th:text="${return.orderDetailEntity.order.id}"></span></li>
+                                <li class="list-group-item"><strong>Payment Method:</strong> <span th:text="${return.orderDetailEntity.order.method}"></span></li>
+                                <li class="list-group-item"><strong>Voucher:</strong>
+                                    <span th:if="${return.orderDetailEntity.voucherEntity != null}" th:text="${return.orderDetailEntity.voucherEntity.name}"></span>
+                                    <span th:if="${return.orderDetailEntity.voucherEntity == null}">Not applied</span>
+                                </li>
+                                <li class="list-group-item"><strong>Total Amount:</strong>
+                                    <span th:text="${return.orderDetailEntity.totalPrice}" class="vnd-price"></span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="card mt-3">
+                            <div class="card-header">Product Details</div>
+                            <div class="card-body p-0">
+                                <table class="table table-sm table-bordered mb-0">
+                                    <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Unit Price</th>
+                                        <th>Quantity</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td th:text="${return.orderDetailEntity.product.productName}">Product Name</td>
+                                        <td th:text="${return.orderDetailEntity.priceOfOne}" class="vnd-price">0</td>
+                                        <td th:text="${return.orderDetailEntity.quantity}">1</td>
+                                        <td th:text="${return.orderDetailEntity.totalPrice}" class="vnd-price">0</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
+
 
                 <!-- Reason & Image -->
                 <div class="col-lg-6 mb-4">

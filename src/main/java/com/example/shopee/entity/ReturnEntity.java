@@ -26,11 +26,17 @@ public class ReturnEntity extends AbstractEntity{
     private String imgReturn; // Ảnh của người mua khi nhận hàng từ shipper
     private String imgBack; // Ảnh của người bán khi nhận lại
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "order_id")
     @EqualsAndHashCode.Exclude
     @JsonBackReference
     private OrderEntity orderEntity;
+
+    @OneToOne
+    @JoinColumn(name = "order_detail_id")
+    @EqualsAndHashCode.Exclude
+    @JsonBackReference
+    private OrderDetailEntity orderDetailEntity;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

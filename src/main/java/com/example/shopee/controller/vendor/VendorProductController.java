@@ -146,7 +146,7 @@ public class VendorProductController {
     public String update(@ModelAttribute("product") ProductDto dto,
                          @ModelAttribute("listImage") MultipartFile[] listImage) {
         ProductEntity entity = productRepository.findById(dto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Sản phẩm không tồn tại"));
+                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
         entity.setProductName(dto.getProductName());
         entity.setDescription(dto.getDescription());
