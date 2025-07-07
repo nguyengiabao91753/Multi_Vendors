@@ -21,6 +21,8 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     List<OrderEntity> findAllCompletedOrders(Long userId);
 
     List<OrderEntity> findAllByProductEntity_User(UserEntity userEntity);
+    List<OrderEntity> findDistinctByOrderDetailEntities_Product_User(UserEntity userEntity);
+
 
     @Query("SELECT COUNT(o) > 0 FROM OrderEntity o " +
             "WHERE o.productEntity.id = :productId AND o.userEntity.id = :userId")
@@ -39,4 +41,6 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
             "AND FUNCTION('YEAR', od.createdAt) = :year")
     BigDecimal getMonthlyRevenue(@Param("month") int month,
                                  @Param("year") int year);
+
+    List<OrderEntity> findByVnpTxnRef(String txt);
 }

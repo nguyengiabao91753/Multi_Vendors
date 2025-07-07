@@ -50,20 +50,9 @@ public class HomeController {
             model.addAttribute("email", username);
             return "redirect:/admin/dashboard";
         } else {
-            Pageable top6 = PageRequest.of(0, 6);
-
-            List<ProductEntity> bestSellingProducts = productRepository.findBestSellingProducts(top6);
-            List<ProductEntity> mostLikedProducts = wishlistRepository.findMostLikedProducts(top6);
-
-            model.addAttribute("bestSellingProducts", bestSellingProducts);
-            model.addAttribute("mostLikedProducts", mostLikedProducts);
-
-
             if (!username.isEmpty() && !"anonymousUser".equals(username)) {
                 redirectAttributes.addFlashAttribute("email", username);
                 redirectAttributes.addFlashAttribute("categories", categoryRepository.findAll());
-                redirectAttributes.addFlashAttribute("bestSellingProducts", bestSellingProducts);
-                redirectAttributes.addFlashAttribute("mostLikedProducts", mostLikedProducts);
                 return "redirect:/client/home";
             } else {
                 model.addAttribute("categories", categoryRepository.findAll());

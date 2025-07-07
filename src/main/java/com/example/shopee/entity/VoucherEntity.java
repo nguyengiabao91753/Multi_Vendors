@@ -40,6 +40,12 @@ public class VoucherEntity extends AbstractEntity {
     @JsonManagedReference
     private Set<OrderEntity> orders;
 
+    @OneToMany(mappedBy = "voucherEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonManagedReference
+    private Set<OrderDetailEntity> orderDetails;
+
     @Basic
     @Column(name = "end_time", nullable = true)
     private LocalDateTime endTime;
@@ -49,6 +55,22 @@ public class VoucherEntity extends AbstractEntity {
     @EqualsAndHashCode.Exclude
     @JsonBackReference
     private UserEntity userEntity;
+
+    public Set<OrderEntity> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<OrderEntity> orders) {
+        this.orders = orders;
+    }
+
+    public Set<OrderDetailEntity> getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(Set<OrderDetailEntity> orderDetails) {
+        this.orderDetails = orderDetails;
+    }
 
     public String getName() {
         return name;

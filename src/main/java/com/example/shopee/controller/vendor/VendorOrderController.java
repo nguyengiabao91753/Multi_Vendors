@@ -10,7 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -29,12 +32,23 @@ public class VendorOrderController {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity user = userRepository.findByEmail(email).orElse(null);
-        model.addAttribute("user", user);
         if (user == null) {
             return "redirect:/login";
         }
+        model.addAttribute("user", user);
 
-        List<OrderEntity> allOrders = orderRepository.findAllByProductEntity_User(user);
+        List<OrderEntity> ordersWithProduct = orderRepository.findAllByProductEntity_User(user);
+        List<OrderEntity> ordersWithDetails = orderRepository.findDistinctByOrderDetailEntities_Product_User(user);
+
+        Map<Long, OrderEntity> mergedOrdersMap = new LinkedHashMap<>();
+        for (OrderEntity order : ordersWithProduct) {
+            mergedOrdersMap.put(order.getId(), order);
+        }
+        for (OrderEntity order : ordersWithDetails) {
+            mergedOrdersMap.putIfAbsent(order.getId(), order);
+        }
+
+        List<OrderEntity> allOrders = new ArrayList<>(mergedOrdersMap.values());
 
         model.addAttribute("countPending", allOrders.stream().filter(o -> o.getStatus() == -1).count());
         model.addAttribute("countCancelled", allOrders.stream().filter(o -> o.getStatus() == 0).count());
@@ -45,16 +59,17 @@ public class VendorOrderController {
         List<OrderEntity> filteredOrders = allOrders;
         if (status != null) {
             filteredOrders = allOrders.stream()
-                    .filter(o -> o.getStatus() != null && o.getStatus() == status)
+                    .filter(o -> o.getStatus() != null && o.getStatus().equals(status))
                     .collect(Collectors.toList());
         }
 
         model.addAttribute("orders", filteredOrders);
         model.addAttribute("status", status);
-        model.addAttribute("statusOptions", new Integer[]{-1, 0, 1, 2});
+        model.addAttribute("statusOptions", new Integer[]{-1, 0, 1, 2, 3});
 
         return "vendor/order/list";
     }
+
 
 
     @GetMapping("/detail/{orderId}")

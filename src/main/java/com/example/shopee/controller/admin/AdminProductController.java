@@ -202,7 +202,7 @@ public class AdminProductController {
         }
 
         ProductEntity entity = productRepository.findById(dto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Sản phẩm không tồn tại"));
+                .orElseThrow(() -> new IllegalArgumentException("Product not exists"));
 
         entity.setProductName(dto.getProductName());
         entity.setDescription(dto.getDescription());

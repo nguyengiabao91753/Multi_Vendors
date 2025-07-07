@@ -9,6 +9,7 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -36,14 +37,7 @@ public class OrderEntity extends AbstractEntity{
     @JsonBackReference
     private VoucherEntity voucherEntity;
 
-    @Basic
-    @Column(name = "shipping_fee", nullable = true)
-    private BigDecimal shippingFee;
-
-    @Basic
-    @Column(name = "full_cost", nullable = true)
-    private BigDecimal fullCost;
-
+    private String vnpTxnRef;
     @Basic
     @Column(name = "quantity", nullable = true)
     private Integer quantity;
@@ -58,17 +52,72 @@ public class OrderEntity extends AbstractEntity{
     @Column(name = "price_of_one", nullable = true)
     private BigDecimal priceOfOne;
 
-    @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "orderEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonManagedReference
-    private Set<ReturnEntity> returnEntities;
+    private ReturnEntity returnEntity;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     @EqualsAndHashCode.Exclude
     @JsonBackReference
     private UserEntity userEntity;
+
+
+    @OneToMany(mappedBy = "order")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonBackReference
+    private List<OrderDetailEntity> orderDetailEntities;
+
+    public String getVnpTxnRef() {
+        return vnpTxnRef;
+    }
+
+    public void setVnpTxnRef(String vnpTxnRef) {
+        this.vnpTxnRef = vnpTxnRef;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public List<OrderDetailEntity> getOrderDetailEntities() {
+        return orderDetailEntities;
+    }
+
+    public void setOrderDetailEntities(List<OrderDetailEntity> orderDetailEntities) {
+        this.orderDetailEntities = orderDetailEntities;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public ProductEntity getProductEntity() {
+        return productEntity;
+    }
+
+    public void setProductEntity(ProductEntity productEntity) {
+        this.productEntity = productEntity;
+    }
+
+    public BigDecimal getPriceOfOne() {
+        return priceOfOne;
+    }
+
+    public void setPriceOfOne(BigDecimal priceOfOne) {
+        this.priceOfOne = priceOfOne;
+    }
+
+    public ReturnEntity getReturnEntity() {
+        return returnEntity;
+    }
+
+    public void setReturnEntity(ReturnEntity returnEntity) {
+        this.returnEntity = returnEntity;
+    }
 
     public Integer getPaymentStatus() {
         return paymentStatus;
@@ -141,23 +190,6 @@ public class OrderEntity extends AbstractEntity{
     public void setTotalCost(BigDecimal totalCost) {
         this.totalCost = totalCost;
     }
-
-    public BigDecimal getShippingFee() {
-        return shippingFee;
-    }
-
-    public void setShippingFee(BigDecimal shippingFee) {
-        this.shippingFee = shippingFee;
-    }
-
-    public BigDecimal getFullCost() {
-        return fullCost;
-    }
-
-    public void setFullCost(BigDecimal fullCost) {
-        this.fullCost = fullCost;
-    }
-
 
     public UserEntity getUserEntity() {
         return userEntity;

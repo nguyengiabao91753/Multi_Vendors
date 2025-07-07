@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch sử đơn hàng</title>
+</head>
+<body>
+<th:block th:replace="layout/user-layout :: layout">
+    <th:block th:fragment="pageContent">
+        <style>
+            body {
+                font-size: 14px;
+            }
+        </style>
+
+        <div id="user-page">
+            <div class="container">
+                <div class="user-page-wrapper">
+
+                    <div class="container mt-4">
+                        <h2 class="mb-4">Return Details</h2>
+
+                        <div th:if="${session.mess}" class="alert alert-success alert-dismissible fade show"
+                             role="alert">
+                            <span th:text="${session.mess}">Notification</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                        </div>
+
+                        <div class="row">
+                            <!-- Order Information -->
+                            <div class="col-lg-6 mb-4">
+                                <div class="card">
+                                    <div class="card-header">Order Information</div>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item"><strong>Transaction ID:</strong> <span
+                                                th:text="${return.orderDetailEntity.order.id}"></span></li>
+                                        <li class="list-group-item"><strong>Payment Method:</strong> <span
+                                                th:text="${return.orderDetailEntity.order.method}"></span></li>
+                                        <li class="list-group-item"><strong>Voucher:</strong>
+                                            <span th:if="${return.orderDetailEntity.voucherEntity != null}"
+                                                  th:text="${return.orderDetailEntity.voucherEntity.name}"></span>
+                                            <span th:if="${return.orderDetailEntity.voucherEntity == null}">Not applied</span>
+                                        </li>
+                                        <li class="list-group-item"><strong>Total Payment:</strong>
+                                            <span th:text="${return.orderDetailEntity.order.totalCost}"
+                                                  class="vnd-price"></span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="card mt-3">
+                                    <div class="card-header">Product Details</div>
+                                    <div class="card-body p-0">
+                                        <table class="table table-sm table-bordered mb-0">
+                                            <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Unit Price</th>
+                                                <th>Quantity</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td th:text="${return.orderDetailEntity.product.productName}">Product Name
+                                                </td>
+                                                <td th:text="${return.orderDetailEntity.priceOfOne}" class="vnd-price">0
+                                                </td>
+                                                <td th:text="${return.orderDetailEntity.quantity}">1</td>
+                                                <td th:text="${return.orderDetailEntity.totalPrice}" class="vnd-price">0
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Return Reason and Image -->
+                            <div class="col-lg-6 mb-4">
+                                <div class="card mb-3">
+                                    <div class="card-header">Return Reason</div>
+                                    <div class="card-body">
+                            <textarea class="form-control" name="reason" id="reason" rows="4" readonly
+                                      th:text="${return.reason}">Reason</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-header">Image of Received Product</div>
+                                    <div class="card-body text-center">
+                                        <img th:if="${return.imgReturn != null}" th:src="${return.imgReturn}"
+                                             alt="Illustrative Image"
+                                             style="max-width: 100%; max-height: 300px; border: 1px solid #ccc; padding: 5px;"/>
+                                        <p th:if="${return.imgReturn == null}">No illustrative image</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Processing Status -->
+                        <div class="row">
+                            <div class="col-lg-6 mb-4">
+                                <div class="card">
+                                    <div class="card-header">Processing Status</div>
+                                    <div class="card-body">
+                                        <!-- Status: REJECTED -->
+                                        <span th:if="${return.returnStatus.name() == 'REJECTED'}"
+                                              class="text-danger" th:text="${return.returnStatus.displayName}">
+    Status
+</span>
+
+                                        <!-- Status: COMPLETED -->
+                                        <span th:if="${return.returnStatus.name() == 'COMPLETED'}"
+                                              class="text-success" th:text="${return.returnStatus.displayName}">
+    Status
+</span>
+
+                                        <!-- Other Status -->
+                                        <span th:if="${return.returnStatus.name() != 'REJECTED' and return.returnStatus.name() != 'COMPLETED'}"
+                                              class="text-primary" th:text="${return.returnStatus.displayName}">
+    Status
+</span>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- Return Feedback -->
+                            <div class="col-lg-6 mb-4">
+                                <div class="card">
+                                    <div class="card-header">Return Feedback</div>
+                                    <div class="card-body">
+
+                                        <!-- Status Completed or Rejected -->
+                                        <div th:if="${return.returnStatus.name() == 'COMPLETED' or return.returnStatus.name() == 'REJECTED'}">
+                                            <div class="mb-3">
+                                                <label class="form-label">Notes</label>
+                                                <textarea class="form-control" readonly rows="4"
+                                                          th:text="${return.note}">No notes</textarea>
+                                            </div>
+
+                                            <div class="mb-3 text-center">
+                                                <label class="form-label">Image of Returned Product</label>
+                                                <div>
+                                                    <img th:if="${return.imgBack != null}"
+                                                         th:src="${return.imgBack}" alt="Image of returned product"
+                                                         style="max-width: 100%; max-height: 300px; border: 1px solid #ccc; padding: 5px;"/>
+                                                    <p th:if="${return.imgBack == null}">No feedback image</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Script to preview image -->
+                                        <script>
+                                            const imageInput = document.getElementById('imageInput');
+                                            const preview = document.getElementById('preview');
+                                            imageInput?.addEventListener('change', function () {
+                                                preview.innerHTML = '';
+                                                const file = this.files[0];
+                                                if (file) {
+                                                    const img = document.createElement('img');
+                                                    img.style.maxWidth = '100%';
+                                                    img.style.maxHeight = '300px';
+                                                    img.src = URL.createObjectURL(file);
+                                                    preview.appendChild(img);
+                                                }
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Back button -->
+                        <div class="text-end mt-3">
+                            <a th:href="@{/client/order}" class="btn btn-secondary">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</th:block>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".vnd-price").forEach(el => {
+            const value = parseFloat(el.innerText);
+            if (!isNaN(value)) {
+                el.innerText = new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                }).format(value);
+            }
+        });
+    });
+</script>
+</body>
+</html>

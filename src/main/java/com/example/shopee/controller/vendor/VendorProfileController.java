@@ -44,13 +44,14 @@ public class VendorProfileController {
     public String updateProfile(@RequestParam("fullName") String fullName,
                                 @RequestParam("phone") String phone,
                                 @RequestParam("address") String address,
-                                @RequestParam("avatarFile") MultipartFile avatarFile, RedirectAttributes redirectAttributes) {
+                                @RequestParam("avatarFile") MultipartFile avatarFile,
+                                RedirectAttributes redirectAttributes) {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<UserEntity> userOptional = userRepository.findByEmail(email);
 
         if (userOptional.isEmpty()) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy người dùng!");
+            redirectAttributes.addFlashAttribute("errorMessage", "User not found!");
             return "redirect:/vendor/profile";
         }
 
@@ -67,9 +68,10 @@ public class VendorProfileController {
 
         userRepository.save(existingUser);
 
-        redirectAttributes.addFlashAttribute("successMessage", "Thông tin cá nhân đã được cập nhật thành công!");
+        redirectAttributes.addFlashAttribute("successMessage", "Profile updated successfully!");
         return "redirect:/vendor/profile";
     }
+
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -84,35 +86,33 @@ public class VendorProfileController {
         Optional<UserEntity> userOptional = userRepository.findByEmail(email);
 
         if (userOptional.isEmpty()) {
-            redirectAttributes.addFlashAttribute("passwordError", "Không tìm thấy người dùng!");
+            redirectAttributes.addFlashAttribute("passwordError", "User not found!");
             return "redirect:/vendor/profile";
-
         }
 
         UserEntity user = userOptional.get();
 
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            redirectAttributes.addFlashAttribute("passwordError", "Mật khẩu hiện tại không đúng!");
+            redirectAttributes.addFlashAttribute("passwordError", "Current password is incorrect!");
             return "redirect:/vendor/profile";
-
         }
 
         if (newPassword.equals(currentPassword)) {
-            redirectAttributes.addFlashAttribute("passwordError", "Mật khẩu mới không được trùng với mật khẩu hiện tại!");
+            redirectAttributes.addFlashAttribute("passwordError", "New password must be different from the current password!");
             return "redirect:/vendor/profile";
-
         }
 
         if (!newPassword.equals(confirmPassword)) {
-            redirectAttributes.addFlashAttribute("passwordError", "Mật khẩu mới và xác nhận không khớp!");
+            redirectAttributes.addFlashAttribute("passwordError", "New password and confirmation do not match!");
             return "redirect:/vendor/profile";
-
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-        redirectAttributes.addFlashAttribute("passwordSuccess", "Đổi mật khẩu thành công!");
+
+        redirectAttributes.addFlashAttribute("passwordSuccess", "Password changed successfully!");
         return "redirect:/vendor/profile";
     }
+
 }
 

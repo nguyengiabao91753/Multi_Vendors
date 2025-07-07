@@ -35,25 +35,38 @@ public class ProfileController {
     }
 
     @GetMapping("/profile")
-    public String profile(Model model) {
+    public String profile(@RequestParam(value = "passwordError", required = false) String passwordError,
+                          @RequestParam(value = "passwordSuccess", required = false) String passwordSuccess,
+                          Model model) {
+
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<UserEntity> userOpt = userRepository.findByEmail(email);
         userOpt.ifPresent(user -> model.addAttribute("user", user));
+
+        if (passwordError != null) {
+            model.addAttribute("passwordError", passwordError);
+        }
+        if (passwordSuccess != null) {
+            model.addAttribute("passwordSuccess", passwordSuccess);
+        }
+
         return "profile";
     }
+
 
 
     @PostMapping("/profile")
     public String updateProfile(@RequestParam("fullName") String fullName,
                                 @RequestParam("phone") String phone,
                                 @RequestParam("address") String address,
-                                @RequestParam("avatarFile") MultipartFile avatarFile, RedirectAttributes redirectAttributes) {
+                                @RequestParam("avatarFile") MultipartFile avatarFile,
+                                RedirectAttributes redirectAttributes) {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<UserEntity> userOptional = userRepository.findByEmail(email);
 
         if (userOptional.isEmpty()) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy người dùng!");
+            redirectAttributes.addFlashAttribute("errorMessage", "User not found!");
             return "redirect:/user/profile";
         }
 
@@ -70,52 +83,47 @@ public class ProfileController {
 
         userRepository.save(existingUser);
 
-        redirectAttributes.addFlashAttribute("successMessage", "Thông tin cá nhân đã được cập nhật thành công!");
+        redirectAttributes.addFlashAttribute("successMessage", "Profile updated successfully!");
         return "redirect:/user/profile";
     }
 
+
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
     @PostMapping("/change-password")
     public String changePassword(@RequestParam("currentPassword") String currentPassword,
                                  @RequestParam("newPassword") String newPassword,
-                                 @RequestParam("confirmPassword") String confirmPassword,
-                                 RedirectAttributes redirectAttributes) {
+                                 @RequestParam("confirmPassword") String confirmPassword) {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<UserEntity> userOptional = userRepository.findByEmail(email);
 
         if (userOptional.isEmpty()) {
-            redirectAttributes.addFlashAttribute("passwordError", "Không tìm thấy người dùng!");
-            return "redirect:/user/profile";
-
+            return "redirect:/user/profile?passwordError=User+not+found";
         }
 
         UserEntity user = userOptional.get();
 
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            redirectAttributes.addFlashAttribute("passwordError", "Mật khẩu hiện tại không đúng!");
-            return "redirect:/user/profile";
-
+            return "redirect:/user/profile?passwordError=Current+password+is+incorrect";
         }
 
         if (newPassword.equals(currentPassword)) {
-            redirectAttributes.addFlashAttribute("passwordError", "Mật khẩu mới không được trùng với mật khẩu hiện tại!");
-            return "redirect:/user/profile";
-
+            return "redirect:/user/profile?passwordError=New+password+must+be+different+from+current";
         }
 
         if (!newPassword.equals(confirmPassword)) {
-            redirectAttributes.addFlashAttribute("passwordError", "Mật khẩu mới và xác nhận không khớp!");
-            return "redirect:/user/profile";
-
+            return "redirect:/user/profile?passwordError=New+password+and+confirmation+do+not+match";
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-        redirectAttributes.addFlashAttribute("passwordSuccess", "Đổi mật khẩu thành công!");
-        return "redirect:/user/profile";
+
+        return "redirect:/user/profile?passwordSuccess=Password+changed+successfully";
     }
+
+
 
 
 }

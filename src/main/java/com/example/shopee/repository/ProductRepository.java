@@ -18,6 +18,8 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     Page<ProductEntity> findAll(Pageable pageable);
 
     Page<ProductEntity> findAllByStatus(int status, Pageable pageable);
+
+    List<ProductEntity> findAllByStatus(int status);
     Page<ProductEntity> findAllByUserIdAndStatus(Long id, int status, Pageable pageable);
 
     @Query("SELECT p FROM ProductEntity p " +
@@ -37,6 +39,10 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     @Query("SELECT od.productEntity FROM OrderEntity od " +
             "GROUP BY od.productEntity " +
             "ORDER BY SUM(od.quantity) DESC")
-    List<ProductEntity> findBestSellingProducts(Pageable pageable);
+    List<ProductEntity> findBestSellingProducts();
 
+    @Query("SELECT w.productEntity FROM WishlistEntity w " +
+            "GROUP BY w.productEntity " +
+            "ORDER BY COUNT(w.id) DESC")
+    List<ProductEntity> findMostLikedProducts();
 }

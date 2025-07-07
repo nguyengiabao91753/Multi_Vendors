@@ -11,5 +11,8 @@ import java.util.Optional;
 @Repository
 public interface ReturnRepository extends JpaRepository<ReturnEntity, Long> {
     List<ReturnEntity> findAllByOrderEntity_ProductEntity_User(UserEntity user);
+    List<ReturnEntity> findAllByOrderDetailEntity_Product_User(UserEntity user);
     Optional<ReturnEntity> findTopByOrderEntityIdOrderByIdDesc(Long orderId);
+
+    Optional<ReturnEntity> findTopByOrderDetailEntityIdOrderByIdDesc(Long orderDetailId);
 }

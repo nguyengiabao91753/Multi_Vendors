@@ -2,17 +2,17 @@
 
 ## Tài khoản đăng nhập
 
-### Admin
+### Admin: admin/login
 - **Email:** `admin@gmail.com`
 - **Mật khẩu:** `123`
 
-### Vendor
+### Vendor: /login
 - **Email:** `vendor@gmail.com`
 - **Mật khẩu:** `111`
 
-### User
+### User: /login
 - **Email:** `chuyendizz@gmail.com`
-- **Mật khẩu:** `123`
+- **Mật khẩu:** `1234`
 
 ---
 

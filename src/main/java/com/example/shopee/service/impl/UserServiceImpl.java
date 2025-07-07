@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
 
         if (user.getStatus() == null || user.getStatus() != 1) {
             System.out.println("Người dùng không hoạt động: " + username);
-            throw new UsernameNotFoundException("Tài khoản của bạn đã bị khóa hoặc chưa được kích hoạt.");
+            throw new UsernameNotFoundException("Your account is locked or not activated.");
         }
 
         System.out.println(user);

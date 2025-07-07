@@ -81,7 +81,8 @@
                         <a href="#"><img th:src="@{/image/nav/2.png}" alt="image"/>Everything Cheap - From 1K</a>
                         <a href="#"><img th:src="@{/image/nav/3.png}" alt="image"/>International Goods</a>
                         <a href="#"><img th:src="@{/image/nav/4.png}" alt="image"/>Top-up, Services & Movies</a>
-                        <a href="#"><img th:src="@{/image/nav/5.png}" alt="image"/>Shopee Mart - Zero Shipping Market</a>
+                        <a href="#"><img th:src="@{/image/nav/5.png}" alt="image"/>Shopee Mart - Zero Shipping
+                            Market</a>
                         <a href="#"><img th:src="@{/image/nav/6.png}" alt="image"/>Extra Free Shipping</a>
                         <a href="#"><img th:src="@{/image/nav/7.png}" alt="image"/>Tech Zone - Electronics Market</a>
                         <a href="#"><img th:src="@{/image/nav/8.png}" alt="image"/>Extra Cashback</a>
@@ -100,51 +101,41 @@
 
         <section id="popular">
             <div class="container">
+
                 <div class="popular-banner">
-                    <img th:src="@{/image/banner/4a.jfif}" alt="banner"/>
+                    <img th:src="@{/image/banner/4a.jfif}" alt="banner" />
                 </div>
 
                 <div class="popular-section">
                     <div class="popular-section-wrapper">
+
                         <div class="popular-product">
                             <div class="popular-product__title">
                                 <h3>Best Selling Products</h3>
                                 <a th:href="@{/list}">See More <span>></span></a>
                             </div>
-                            <div class="popular-product__list">
-                                <div th:if="${#lists.isEmpty(bestSellingProducts)}">
-                                    <!--                                    <p class="none-item">No Best Selling Products Currently</p>-->
-                                </div>
-                                <div th:each="product : ${bestSellingProducts}" class="product-card">
-                                    <img th:src="${product.productImage[0].url}" alt="Product Image" />
-                                    <p th:text="${product.productName}">Product Name</p>
-                                    <span th:text="${#numbers.formatDecimal(product.salePrice, 0, 'COMMA', 2, 'POINT')} + ' đ'">0 đ</span>
-                                </div>
+                            <div class="popular-product__list" id="bestSellingProductsList">
                             </div>
                         </div>
 
+                        <!-- Featured Products -->
                         <div class="popular-brand">
                             <div class="popular-brand__title">
                                 <h3>Featured Products</h3>
                                 <a th:href="@{/list}">See More <span>></span></a>
                             </div>
-                            <div class="popular-brand__list">
-                                <div th:if="${#lists.isEmpty(mostLikedProducts)}">
-                                    <!--                                    <p class="none-item">No Featured Products Currently</p>-->
-                                </div>
-                                <div th:each="product : ${mostLikedProducts}" class="product-card">
-                                    <img th:src="${product.productImage[0].url}" alt="Product Image" />
-                                    <p th:text="${product.productName}">Product Name</p>
-                                    <span th:text="${#numbers.formatDecimal(product.salePrice, 0, 'COMMA', 2, 'POINT')} + ' đ'">0 đ</span>
-                                </div>
+                            <div class="popular-brand__list" id="mostLikedProductsList">
+                                <!-- Products will be injected here -->
                             </div>
                         </div>
+
                     </div>
                 </div>
 
                 <div class="popular-banner">
-                    <img th:src="@{/image/banner/4b.jfif}" alt="banner"/>
+                    <img th:src="@{/image/banner/4b.jfif}" alt="banner" />
                 </div>
+
             </div>
         </section>
 
@@ -222,8 +213,27 @@
             </div>
         </section>
 
+        <main id="main">
+            <div class="container">
+                <div class="main-title">
+                    <h3>Products</h3>
+                    <div class="main-title-banner">
+                        <img th:src="@{/image/banner/8.png }" alt="banner" />
+                    </div>
+                </div>
+                <div class="main-list">
+                    <div class="main-list-wrapper" id="productSuggestionList">
+                    </div>
+                    <div class="btn btn-more">
+                        <a th:href="@{/list}">More</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+
         <div id="shopee-skinny-banner">
-            <a href="#">
+            <a th:href="@{/list}">
                 <img th:src="@{/image/banner/9.png}" alt="image"/>
             </a>
         </div>
@@ -234,8 +244,98 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <script type="text/javascript" th:src="@{/js/custom.js}"></script>
-</body>
-</html>
+<script>
+    function renderProductCard(product) {
+        return `
+      <a href="/detail/${product.id}" class="popular-product__item">
+        <div class="popular-product__item-wrapper">
+          <div class="img-wrapper">
+            <img src="${product.productImage[0].url_Image || 'default-image.jpg'}" alt="${product.productName}" />
+          </div>
+          <p>₫${Number(product.salePrice).toLocaleString()}</p>
+        </div>
+      </a>
+    `;
+    }
+
+    fetch('/api/products/bestSellingProducts')
+        .then(res => res.json())
+        .then(data => {
+            const container = document.getElementById('bestSellingProductsList');
+            if (data.length === 0) {
+                container.innerHTML = '<p class="none-item">Cannot render</p>';
+            } else {
+                container.innerHTML = data.map(renderProductCard).join('');
+            }
+        })
+        .catch(() => {
+            document.getElementById('bestSellingProductsList').innerHTML = '<p class="none-item">Cannot render</p>';
+        });
+
+    fetch('/api/products/mostLikedProducts')
+        .then(res => res.json())
+        .then(data => {
+            const container = document.getElementById('mostLikedProductsList');
+            if (data.length === 0) {
+                container.innerHTML = '<p class="none-item">Cannot render</p>';
+            } else {
+                container.innerHTML = data.map(renderProductCard).join('');
+            }
+        })
+        .catch(() => {
+            document.getElementById('mostLikedProductsList').innerHTML = '<p class="none-item">Cannot render</p>';
+        });
+</script>
+
+<script>
+    function createProductItem(product) {
+        const imageUrl = product.productImage[0].url_Image || 'default-image.jpg';
+        const priceFormatted = Number(product.salePrice).toLocaleString();
+        const soldFormatted = product.quantity ? Number(product.quantity).toLocaleString() : '0';
+
+        return `
+      <div class="main-item">
+        <a href="/detail/${product.id}">
+          <div class="main-item-link">
+            <div class="main-item-link--image">
+              <img src="${imageUrl}" alt="${product.productName}" />
+            </div>
+            <div class="main-item-link--detail">
+              <div class="main-item-link--detail-name">
+                <h5>${product.productName}</h5>
+              </div>
+              <div class="main-item-link--detail-price">
+                <p class="price"><span>₫</span>${priceFormatted}</p>
+                <p class="sole">Stock ${soldFormatted}</p>
+              </div>
+            </div>
+          </div>
+          <div class="main-item-link--hover">
+            Details
+          </div>
+        </a>
+      </div>
+    `;
+    }
+
+    fetch('/api/products')
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then(products => {
+            const container = document.getElementById('productSuggestionList');
+            if (products.length === 0) {
+                container.innerHTML = '<p class="none-item">Cannot render</p>';
+            } else {
+                container.innerHTML = products.map(createProductItem).join('');
+            }
+        })
+        .catch(error => {
+            console.error('Error loading products:', error);
+            document.getElementById('productSuggestionList').innerHTML = '<p class="none-item">Cannot render</p>';
+        });
+</script>
 
 </body>
 </html>
