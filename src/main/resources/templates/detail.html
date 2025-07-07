@@ -31,7 +31,7 @@
         <div id="page-product" th:if="${product != null}">
             <div class="container">
                 <div class="page-product__breadcrumb">
-                    <a th:href="@{/}">Shopee</a>
+                    <a th:href="@{/}">MultiVendors</a>
                     <svg enable-background="new 0 0 11 11" viewBox="0 0 11 11" x="0" y="0" class="bQfo7W">
                         <path d="m2.5 11c .1 0 .2 0 .3-.1l6-5c .1-.1.2-.3.2-.4s-.1-.3-.2-.4l-6-5c-.2-.2-.5-.1-.7.1s-.1.5.1.7l5.5 4.6-5.5 4.6c-.2.2-.2.5-.1.7.1.1.3.2.4.2z"></path>
                     </svg>
@@ -118,8 +118,13 @@
                 </div>
                 <div class="shop-container">
                     <div class="shop-info">
-                        <img src="https://vieclam.ueh.edu.vn/images/company/avatar/KhKYCBSjQQ_Shopee-logo-512x512.png"
-                             alt="Logo">
+                        <img th:if="${product.user.avatar != null}"
+                             th:src="@{${product.user.avatar}}"
+                             alt="Avatar">
+
+                        <img th:unless="${product.user.avatar != null}"
+                             src="https://vieclam.ueh.edu.vn/images/company/avatar/KhKYCBSjQQ_Shopee-logo-512x512.png"
+                             alt="Default Logo">
                         <div class="shop-details">
                             <div class="shop-name"><span th:text="${product.user.fullName}"></span></div>
                             <div class="shop-online">Online 17 minutes ago</div>
@@ -156,7 +161,7 @@
                             <div class="details-item">
                                 <label>Category</label>
                                 <div class="details-item--link">
-                                    <a th:href="@{/}">Shopee</a>
+                                    <a th:href="@{/}">MultiVendors</a>
                                     <svg enable-background="new 0 0 11 11" viewBox="0 0 11 11" x="0" y="0"
                                          class="bQfo7W">
                                         <path d="m2.5 11c .1 0 .2 0 .3-.1l6-5c .1-.1.2-.3.2-.4s-.1-.3-.2-.4l-6-5c-.2-.2-.5-.1-.7.1s-.1.5.1.7l5.5 4.6-5.5 4.6c-.2.2-.2.5-.1.7.1.1.3.2.4.2z"></path>

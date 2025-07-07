@@ -23,7 +23,8 @@
     <link rel="stylesheet" th:href="@{/style/style.css}"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJ7p4M2oVNIv6toZXxw3v7l2v9DgEV5D9Wbqzhf+z1dD5HiG9i0Ev9zk69t" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KyZXEJ7p4M2oVNIv6toZXxw3v7l2v9DgEV5D9Wbqzhf+z1dD5HiG9i0Ev9zk69t" crossorigin="anonymous">
 
 </head>
 <body>
@@ -59,20 +60,21 @@
     <th:block th:fragment="pageContent">
         <style>
             .buy-now-button {
-                background-color: #ff4500;       /* Màu nền cam sáng */
-                color: white;                    /* Màu chữ trắng */
-                padding: 10px 20px;              /* Khoảng cách trong nút */
-                border: none;                   /* Bỏ viền mặc định */
-                border-radius: 5px;             /* Bo góc tròn */
-                font-size: 16px;                /* Cỡ chữ */
-                font-weight: bold;              /* Chữ in đậm */
-                cursor: pointer;                /* Con trỏ chuột khi hover */
+                background-color: #ff4500; /* Màu nền cam sáng */
+                color: white; /* Màu chữ trắng */
+                padding: 10px 20px; /* Khoảng cách trong nút */
+                border: none; /* Bỏ viền mặc định */
+                border-radius: 5px; /* Bo góc tròn */
+                font-size: 16px; /* Cỡ chữ */
+                font-weight: bold; /* Chữ in đậm */
+                cursor: pointer; /* Con trỏ chuột khi hover */
                 transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu */
             }
 
             .buy-now-button:hover {
-                background-color: #e03e00;      /* Màu đậm hơn khi hover */
+                background-color: #e03e00; /* Màu đậm hơn khi hover */
             }
+
             /* Custom Styles for the Vendor Section */
             .cart-item__cell-vendor {
                 font-size: 0.9rem; /* Smaller text */
@@ -117,6 +119,7 @@
                     font-size: 0.8rem;
                 }
             }
+
             .cart-page-content-header__checkbox,
             .cart-item__cell-checkbox {
                 width: 60px; /* hoặc auto nếu dùng grid/flex */
@@ -167,7 +170,8 @@
                         <div th:each="item : ${cartDetails}" class="cart-page-content-section">
                             <!-- Checkbox để chọn sản phẩm -->
                             <div class="cart-item__cell-checkbox text-center">
-                                <input type="checkbox" class="form-check-input" name="selectedItemIds" th:value="${item.id}" form="checkoutForm"/>
+                                <input type="checkbox" class="form-check-input" name="selectedItemIds"
+                                       th:value="${item.id}" form="checkoutForm"/>
                             </div>
 
                             <div class="cart-page-content-section__item">
@@ -179,16 +183,26 @@
                                             <a th:href="@{'/detail/' + ${item.productEntity.id}}">
                                                 <div class="cart-item__cell-overview--image">
                                                     <img th:if="${item.productEntity.productImage != null and !item.productEntity.productImage.isEmpty()}"
-                                                         th:src="@{${item.productEntity.productImage[0].url_Image}}" alt="image"/>
+                                                         th:src="@{${item.productEntity.productImage[0].url_Image}}"
+                                                         alt="image"/>
                                                     <img th:unless="${item.productEntity.productImage != null and !item.productEntity.productImage.isEmpty()}"
                                                          src="/images/no-image.png" alt="No image"/>
                                                 </div>
                                                 <p th:text="${item.productEntity.productName}">Product Name</p>
-                                                <!-- Vendor (User associated with the product) -->
                                                 <div class="cart-item__cell-vendor d-flex align-items-center mt-2">
-                                                    <span class="vendor-label me-2"><img style="width: 50px; height: 50px" th:src="${item.productEntity.user.avatar}" alt=""></span>
-                                                    <p th:text="${item.productEntity.user.fullName}" class="vendor-name mb-0"></p>
+    <span class="vendor-label me-2">
+        <img style="width: 50px; height: 50px"
+             th:if="${item.productEntity.user.avatar != null}"
+             th:src="@{${item.productEntity.user.avatar}}" alt="Vendor Avatar"/>
+        <img style="width: 50px; height: 50px"
+             th:unless="${item.productEntity.user.avatar != null}"
+             src="https://vieclam.ueh.edu.vn/images/company/avatar/KhKYCBSjQQ_Shopee-logo-512x512.png"
+             alt="Default Vendor Avatar"/>
+    </span>
+                                                    <p th:text="${item.productEntity.user.fullName}"
+                                                       class="vendor-name mb-0"></p>
                                                 </div>
+
                                             </a>
                                         </div>
 
@@ -200,19 +214,20 @@
                                         <!-- Quantity -->
                                         <div class="cart-item__cell-quantity">
                                             <form method="post" th:action="@{/client/cart/update}">
-                                                <input type="hidden" name="cartDetailId" th:value="${item.id}" />
-                                                <input type="hidden" name="quantity" th:value="${item.quantity}" />
+                                                <input type="hidden" name="cartDetailId" th:value="${item.id}"/>
+                                                <input type="hidden" name="quantity" th:value="${item.quantity}"/>
                                                 <button type="submit" name="action" value="decrease">-</button>
-                                                <input type="number" name="quantityInput" th:value="${item.quantity}" min="1"/>
+                                                <input type="number" name="quantityInput" th:value="${item.quantity}"
+                                                       min="1"/>
                                                 <button type="submit" name="action" value="increase">+</button>
                                             </form>
                                         </div>
 
                                         <!-- Total Price -->
                                         <div class="cart-item__cell-total-price">
-                                            <span class="vnd-price" th:text="${item.quantity * item.productEntity.salePrice}"></span>
+                                            <span class="vnd-price"
+                                                  th:text="${item.quantity * item.productEntity.salePrice}"></span>
                                         </div>
-
 
 
                                         <!-- Delete -->
@@ -238,7 +253,7 @@
     </th:block>
 </th:block>
 <script>
-    document.getElementById("checkoutForm").addEventListener("submit", function(event) {
+    document.getElementById("checkoutForm").addEventListener("submit", function (event) {
         const checked = document.querySelectorAll("input[name='selectedItemIds']:checked");
         if (checked.length === 0) {
             alert("Please select at least one item to checkout.");

@@ -151,8 +151,28 @@
     });
 </script>
 
-<<th:block th:replace="layout/user-layout :: layout">
+<th:block th:replace="layout/user-layout :: layout">
     <th:block th:fragment="pageContent">
+        <style>
+            .cart-page-content-header,
+            .cart-item__content {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .cart-page-content-header__product,
+            .cart-item__cell-overview {
+                width: 70%;
+            }
+
+            .cart-page-content-header__action,
+            .cart-item__cell-action {
+                margin-left: 510px;
+                width: 30%;
+                text-align: right;
+            }
+        </style>
         <div id="cart-page">
             <div class="cart-page-header">
                 <div class="container">
@@ -178,9 +198,7 @@
                             <div class="cart-page-content-section__item">
                                 <div class="cart-item">
                                     <div class="cart-item__content">
-
-                                        <!-- Product Overview -->
-                                        <div class="cart-item__cell-overview">
+                                        <div class="cart-page-content-header__product cart-item__cell-overview">
                                             <a th:href="@{'/detail/' + ${item.productEntity.id}}">
                                                 <div class="cart-item__cell-overview--image">
                                                     <img th:if="${item.productEntity.productImage != null and !item.productEntity.productImage.isEmpty()}"
@@ -192,15 +210,14 @@
                                             </a>
                                         </div>
 
-                                        <!-- Toggle Wishlist -->
-                                        <div class="cart-item__cell-action">
+                                        <div class="cart-page-content-header__action cart-item__cell-action">
                                             <form method="post" th:action="@{/client/wishlist/toggle}">
                                                 <input type="hidden" name="productId" th:value="${item.productEntity.id}" />
-                                                <button type="submit">Remove from Favorites</button>
+                                                <button type="submit">Remove</button>
                                             </form>
                                         </div>
-
                                     </div>
+
                                 </div>
                             </div>
                         </div>

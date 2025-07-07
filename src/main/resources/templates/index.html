@@ -81,13 +81,13 @@
                         <a href="#"><img th:src="@{/image/nav/2.png}" alt="image"/>Everything Cheap - From 1K</a>
                         <a href="#"><img th:src="@{/image/nav/3.png}" alt="image"/>International Goods</a>
                         <a href="#"><img th:src="@{/image/nav/4.png}" alt="image"/>Top-up, Services & Movies</a>
-                        <a href="#"><img th:src="@{/image/nav/5.png}" alt="image"/>Shopee Mart - Zero Shipping
+                        <a href="#"><img th:src="@{/image/nav/5.png}" alt="image"/>MultiVendors Mart - Zero Shipping
                             Market</a>
                         <a href="#"><img th:src="@{/image/nav/6.png}" alt="image"/>Extra Free Shipping</a>
                         <a href="#"><img th:src="@{/image/nav/7.png}" alt="image"/>Tech Zone - Electronics Market</a>
                         <a href="#"><img th:src="@{/image/nav/8.png}" alt="image"/>Extra Cashback</a>
                         <a href="#"><img th:src="@{/image/nav/9.png}" alt="image"/>Brand Products - 50% Off</a>
-                        <a href="#"><img th:src="@{/image/nav/10.png}" alt="image"/>Shopee Premium</a>
+                        <a href="#"><img th:src="@{/image/nav/10.png}" alt="image"/>MultiVendors Premium</a>
                     </div>
                 </div>
             </div>
@@ -213,6 +213,14 @@
             </div>
         </section>
 
+        <style>
+            .btn-more-wrapper {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+            }
+        </style>
+
         <main id="main">
             <div class="container">
                 <div class="main-title">
@@ -224,9 +232,12 @@
                 <div class="main-list">
                     <div class="main-list-wrapper" id="productSuggestionList">
                     </div>
-                    <div class="btn btn-more">
-                        <a th:href="@{/list}">More</a>
+                    <div class="btn-more-wrapper">
+                        <div class="btn btn-more">
+                            <a th:href="@{/list}">See More</a>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </main>
