@@ -91,13 +91,10 @@ public class AdminCategoryController {
     }
 
     @GetMapping("/deleteCategory/{id}")
-    public String delete(@PathVariable("id") Long id, HttpSession session) {
-        String email = (String) session.getAttribute("email");
-
-        if (email == null) {
-            return "redirect:/admin/login";
-        }
-        categoryRepository.deleteById(id);
+    public String delete(@PathVariable("id") Long id) {
+        CategoryEntity categoryEntity = categoryRepository.findById(id).get();
+        categoryEntity.setStatus(0);
+        categoryRepository.save(categoryEntity);
         return "redirect:/admin/category";
     }
 }
