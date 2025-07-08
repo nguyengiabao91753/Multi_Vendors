@@ -16,7 +16,7 @@
     />
     <link
             rel="stylesheet"
-            href="style/fontawesome-free-5.15.3-web/css/all.min.css"
+            th:href="@{/style/fontawesome-free-5.15.3-web/css/all.min.css}"
     />
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" th:href="@{/style/reset.css}"/>
@@ -268,58 +268,67 @@
                             </style>
 
                             <div class="product-list">
-                                <div class="product-item" th:each="product : ${cartDetails}">
-                                    <div class="row text-center align-items-center">
-                                        <!-- Product -->
-                                        <div class="col-5 text-start">
-                                            <div class="product-name">
-                                                <div class="img-wrapper">
-                                                    <img th:if="${not product.productEntity.productImage.empty}"
-                                                         th:src="${product.productEntity.productImage[0].url_Image}"
-                                                         alt="image" />
+                                <div th:each="entry : ${cartDetailsPerVendor}">
+                                    <div class="vendor-block mb-4">
+                                        <!-- Shop Header -->
+                                        <h5 class="fw-bold" th:text="'Shop: ' + ${entry.value[0].productEntity.user.fullName}">Shop Name</h5>
+
+                                        <!-- Products of this shop -->
+                                        <div class="product-item" th:each="product : ${entry.value}">
+                                            <div class="row text-center align-items-center">
+                                                <!-- Product Info -->
+                                                <div class="col-5 text-start">
+                                                    <div class="product-name">
+                                                        <div class="img-wrapper">
+                                                            <img th:if="${not product.productEntity.productImage.empty}"
+                                                                 th:src="${product.productEntity.productImage[0].url_Image}"
+                                                                 alt="image" />
+                                                        </div>
+                                                        <span th:text="${product.productEntity.productName}">Product Name</span>
+                                                    </div>
                                                 </div>
-                                                <span th:text="${product.productEntity.productName}">Product Name</span>
+
+                                                <!-- Unit Price -->
+                                                <div class="col-2">
+                                                    <span th:text="${product.priceOfOne}" class="vnd-price">0</span>
+                                                </div>
+
+                                                <!-- Quantity -->
+                                                <div class="col-2">
+                                                    <span th:text="${product.quantity}">0</span>
+                                                </div>
+
+                                                <!-- Total Price -->
+                                                <div class="col-3">
+                                                    <span th:text="${product.totalPrice}" class="vnd-price">0</span>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <!-- Unit Price -->
-                                        <div class="col-2">
-                                            <span th:text="${product.priceOfOne}" class="vnd-price">0</span>
-                                        </div>
-
-                                        <!-- Quantity -->
-                                        <div class="col-2">
-                                            <span th:text="${product.quantity}">0</span>
-                                        </div>
-
-                                        <!-- Total Price -->
-                                        <div class="col-3">
-                                            <span th:text="${product.totalPrice}" class="vnd-price">0</span>
-                                        </div>
-                                    </div>
-
-                                    <!-- Voucher Selection -->
-                                    <div class="row align-items-center mt-2">
-                                        <div class="col-auto">
-                                            <label class="form-label mb-0 fw-bold">Select Voucher:</label>
-                                        </div>
-                                        <div class="col-auto">
-                                            <select th:name="'voucherSelections[' + ${product.productEntity.id} + ']'"
-                                                    class="form-select form-select-sm">
-                                                <option value="">-- No voucher --</option>
-                                                <option th:each="voucher : ${vouchers[product.productEntity.id]}"
-                                                        th:value="${voucher.id}"
-                                                        th:data-voucher-id="${voucher.id}"
-                                                        th:data-amount="${voucher.amount}"
-                                                        th:data-percent="${voucher.percentDecrease}"
-                                                        th:data-product="${product.productEntity.id}"
-                                                        th:text="${voucher.name + ' - ' + voucher.code + ' - Discount ' + voucher.percentDecrease + '%'}">
-                                                </option>
-                                            </select>
+                                        <!-- Voucher Selection per shop -->
+                                        <div class="row align-items-center mt-2">
+                                            <div class="col-auto">
+                                                <label class="form-label mb-0 fw-bold">Select Voucher for this shop:</label>
+                                            </div>
+                                            <div class="col-auto">
+                                                <select th:name="'voucherSelections[' + ${entry.key} + ']'"
+                                                        class="form-select form-select-sm"
+                                                        th:data-vendor-id="${entry.key}">
+                                                    <option value="">-- No voucher --</option>
+                                                    <option th:each="voucher : ${vouchersPerVendor[entry.key]}"
+                                                            th:value="${voucher.id}"
+                                                            th:data-voucher-id="${voucher.id}"
+                                                            th:data-amount="${voucher.amount}"
+                                                            th:data-percent="${voucher.percentDecrease}"
+                                                            th:text="${voucher.name + ' - ' + voucher.code + ' - Discount ' + voucher.percentDecrease + '%'}">
+                                                    </option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
                         <!-- Footer Section -->
@@ -351,7 +360,7 @@
                                     <p>Total Payment:</p>
                                     <input type="hidden" id="originalTotal" th:value="${totalPrice}">
 
-                                    <span id="finalPrice" class="vnd-price" th:text="${totalPrice}">0</span>
+                                    <span id="finalPrice" class="product-total-price vnd-price" th:text="${totalPrice}">0</span>
                                 </div>
 
                                 <div class="order">
@@ -370,56 +379,34 @@
     document.addEventListener('DOMContentLoaded', () => {
         const selects = document.querySelectorAll('select[name^="voucherSelections"]');
         const finalPriceSpan = document.getElementById('finalPrice');
-        const productTotals = {};
 
-        document.querySelectorAll('.product-item').forEach(item => {
-            const select = item.querySelector('select');
-            const productIdMatch = select?.name.match(/\d+/);
-            if (!productIdMatch) return;
+        // Lấy tổng tiền từng vendor (shop)
+        const vendorTotals = {};
 
-            const productId = productIdMatch[0];
-            const totalEl = item.querySelector('.product-total-price span');
-            const rawValue = totalEl.textContent.replace(/[^\d.-]/g, '');
-            const price = parseFloat(rawValue);
-            productTotals[productId] = isNaN(price) ? 0 : price;
+        // Mỗi vendor block
+        document.querySelectorAll('.vendor-block').forEach(vendorBlock => {
+            const vendorId = vendorBlock.querySelector('select[name^="voucherSelections"]').dataset.vendorId;
+            let vendorTotal = 0;
+
+            // Cộng tổng tiền từng sản phẩm trong vendor này
+            vendorBlock.querySelectorAll('.product-item').forEach(productItem => {
+                const totalEl = productItem.querySelector('.vnd-price:last-of-type'); // tổng tiền sản phẩm
+                const rawValue = totalEl?.textContent.replace(/[^\d.-]/g, '') || "0";
+                const price = parseFloat(rawValue);
+                if (!isNaN(price)) {
+                    vendorTotal += price;
+                }
+            });
+
+            vendorTotals[vendorId] = vendorTotal;
         });
-
-        function getSelectedVoucherIds() {
-            const selectedIds = new Set();
-            selects.forEach(select => {
-                const selectedOption = select.options[select.selectedIndex];
-                const vid = selectedOption?.dataset?.voucherId;
-                if (vid) selectedIds.add(vid);
-            });
-            return selectedIds;
-        }
-
-        function updateVoucherOptions() {
-            const selectedIds = getSelectedVoucherIds();
-
-            selects.forEach(currentSelect => {
-                const currentSelectedId = currentSelect.options[currentSelect.selectedIndex]?.dataset?.voucherId;
-
-                Array.from(currentSelect.options).forEach(option => {
-                    const optionId = option.dataset.voucherId;
-
-                    if (!optionId) return;
-
-                    if (selectedIds.has(optionId) && optionId !== currentSelectedId) {
-                        option.disabled = true;
-                    } else {
-                        option.disabled = false;
-                    }
-                });
-            });
-        }
 
         function calculateTotal() {
             let total = 0;
 
             selects.forEach(select => {
-                const productId = select.name.match(/\d+/)[0];
-                const original = productTotals[productId] || 0;
+                const vendorId = select.dataset.vendorId;
+                const original = vendorTotals[vendorId] || 0;
 
                 const option = select.options[select.selectedIndex];
                 const amount = parseFloat(option.dataset.amount || 0);
@@ -432,6 +419,10 @@
                 total += final;
             });
 
+            if (selects.length === 0) {
+                total = Object.values(vendorTotals).reduce((a,b) => a+b, 0);
+            }
+
             finalPriceSpan.textContent = new Intl.NumberFormat('vi-VN', {
                 style: 'currency',
                 currency: 'VND'
@@ -439,19 +430,17 @@
         }
 
         function handleChange() {
-            updateVoucherOptions();
-            calculateTotal();c
+            calculateTotal();
         }
 
         selects.forEach(select => {
             select.addEventListener('change', handleChange);
         });
 
-        handleChange();
+        calculateTotal();
     });
+
 </script>
-
-
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>

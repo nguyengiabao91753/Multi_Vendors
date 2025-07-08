@@ -51,35 +51,38 @@ public class ClientCheckoutController {
     @Autowired
     private OrderDetailRepository orderDetailRepository;
 
-    public Map<Long, List<VoucherEntity>> getApplicableVouchersPerProduct(Set<CartDetailEntity> cartDetails) {
+    public Map<Long, Set<VoucherEntity>> getApplicableVouchersPerVendor(Set<CartDetailEntity> cartDetails) {
         LocalDateTime now = LocalDateTime.now();
-        Map<Long, List<VoucherEntity>> result = new HashMap<>();
+        Map<Long, Set<VoucherEntity>> result = new HashMap<>();
 
-        List<VoucherEntity> adminVouchers = voucherRepository.findAll().stream()
+        Set<VoucherEntity> adminVouchers = voucherRepository.findAll().stream()
                 .filter(v -> v.getUserEntity() != null)
                 .filter(v -> v.getUserEntity().getRoleEntities().stream().anyMatch(role -> role.getId() == 1L))
                 .filter(v -> v.getAmount() != null && v.getAmount() > 0)
                 .filter(v -> v.getStatus() == 1)
                 .filter(v -> (v.getStartTime() == null || !v.getStartTime().isAfter(now)) &&
                         (v.getEndTime() == null || !v.getEndTime().isBefore(now)))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
+
+        Set<Long> processedVendors = new HashSet<>();
 
         for (CartDetailEntity cd : cartDetails) {
-            Long productId = cd.getProductEntity().getId();
             Long vendorId = cd.getProductEntity().getUser().getId();
 
-            List<VoucherEntity> vendorVouchers = voucherRepository.findAllBySellerId(vendorId).stream()
-                    .filter(v -> v.getAmount() != null && v.getAmount() > 0)
-                    .filter(v -> v.getStatus() == 1)
-                    .filter(v -> (v.getStartTime() == null || !v.getStartTime().isAfter(now)) &&
-                            (v.getEndTime() == null || !v.getEndTime().isBefore(now)))
-                    .collect(Collectors.toList());
+            if (!processedVendors.contains(vendorId)) {
+                Set<VoucherEntity> vendorVouchers = voucherRepository.findAllBySellerId(vendorId).stream()
+                        .filter(v -> v.getAmount() != null && v.getAmount() > 0)
+                        .filter(v -> v.getStatus() == 1)
+                        .filter(v -> (v.getStartTime() == null || !v.getStartTime().isAfter(now)) &&
+                                (v.getEndTime() == null || !v.getEndTime().isBefore(now)))
+                        .collect(Collectors.toSet());
 
-            List<VoucherEntity> applicable = new ArrayList<>();
-            applicable.addAll(adminVouchers);
-            applicable.addAll(vendorVouchers);
+                Set<VoucherEntity> applicable = new HashSet<>(adminVouchers);
+                applicable.addAll(vendorVouchers);
 
-            result.put(productId, applicable);
+                result.put(vendorId, applicable);
+                processedVendors.add(vendorId);
+            }
         }
 
         return result;
@@ -117,11 +120,16 @@ public class ClientCheckoutController {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         System.out.println(totalPrice);
 
-        Map<Long, List<VoucherEntity>> vouchersPerProduct = getApplicableVouchersPerProduct(selectedCartDetails);
+        Map<Long, Set<VoucherEntity>> vouchersPerVendor = getApplicableVouchersPerVendor(selectedCartDetails);
+        model.addAttribute("vouchersPerVendor", vouchersPerVendor);
+
+        Map<Long, List<CartDetailEntity>> cartDetailsPerVendor = selectedCartDetails.stream()
+                .collect(Collectors.groupingBy(cd -> cd.getProductEntity().getUser().getId()));
+
+        model.addAttribute("cartDetailsPerVendor", cartDetailsPerVendor);
 
         model.addAttribute("cartDetails", selectedCartDetails);
         model.addAttribute("totalPrice", totalPrice);
-        model.addAttribute("vouchers", vouchersPerProduct);
 
         return "checkout";
     }
