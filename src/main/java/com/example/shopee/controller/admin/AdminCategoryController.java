@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
@@ -92,9 +95,25 @@ public class AdminCategoryController {
 
     @GetMapping("/deleteCategory/{id}")
     public String delete(@PathVariable("id") Long id) {
-        CategoryEntity categoryEntity = categoryRepository.findById(id).get();
-        categoryEntity.setStatus(0);
-        categoryRepository.save(categoryEntity);
+        Optional<CategoryEntity> categoryOpt = categoryRepository.findById(id);
+        String msg = "";
+        if (categoryOpt.isPresent()) {
+            CategoryEntity category = categoryOpt.get();
+            if (category.getProducts() != null && !category.getProducts().isEmpty()) {
+                msg = "Cannot delete category because it has associated products";
+            } else {
+                categoryRepository.deleteById(id);
+                return "redirect:/admin/category?delete=true";
+            }
+        } else {
+            msg = "Category not found";
+        }
+
+        if (!msg.isEmpty()) {
+            String encodedMsg = URLEncoder.encode(msg, StandardCharsets.UTF_8);
+            return "redirect:/admin/category?msg=" + encodedMsg;
+        }
         return "redirect:/admin/category";
     }
+
 }
