@@ -87,6 +87,7 @@
             }
 
             .cart-item__cell-vendor .vendor-name {
+				font-size: large;
                 font-style: italic; /* Italicize the vendor's name for emphasis */
                 color: #333; /* Darker text for readability */
             }
@@ -155,6 +156,22 @@
                 width: 30%;
                 text-align: right;
             }
+			
+			/* Checkout Button */
+			            #checkoutForm .btn-primary {
+			                background-color: #ff4500;
+			                border: none;
+			                padding: 12px 30px;
+			                font-size: 1rem;
+			                font-weight: 600;
+			                border-radius: 6px;
+			                transition: background-color 0.2s;
+			                float: right;
+			            }
+
+			            #checkoutForm .btn-primary:hover {
+			                background-color: #e03e00;
+			            }
         </style>
 
         <div id="cart-page">
@@ -197,18 +214,18 @@
                             <div class="cart-page-content-section__item">
 								<div class="cart-item">
 									<div class="cart-item__cell-vendor d-flex align-items-center mt-2">
-										    <span class="vendor-label me-2">
-										        <img style="width: 50px; height: 50px"
-										             th:if="${item.productEntity.user.avatar != null}"
-										             th:src="@{${item.productEntity.user.avatar}}" alt="Vendor Avatar"/>
-										        <img style="width: 50px; height: 50px"
-										             th:unless="${item.productEntity.user.avatar != null}"
-										             src="https://vieclam.ueh.edu.vn/images/company/avatar/KhKYCBSjQQ_Shopee-logo-512x512.png"
-										             alt="Default Vendor Avatar"/>
-										    </span>
-                                        <p th:text="${item.productEntity.user.fullName}"
-                                           class="vendor-name mb-0"></p>
-                                    </div>
+									    <span class="vendor-label me-2">
+									        <img style="width: 50px; height: 50px"
+									             th:if="${item.productEntity.user.avatar != null}"
+									             th:src="@{${item.productEntity.user.avatar}}" alt="Vendor Avatar"/>
+									        <img style="width: 50px; height: 50px"
+									             th:unless="${item.productEntity.user.avatar != null}"
+									             src="https://vieclam.ueh.edu.vn/images/company/avatar/KhKYCBSjQQ_Shopee-logo-512x512.png"
+									             alt="Default Vendor Avatar"/>
+									    </span>
+                                    <p th:text="${item.productEntity.user.fullName}"
+                                       class="vendor-name mb-0" ></p>
+                                </div>
 								</div>
                                 <div class="cart-item">
                                     <div class="cart-item__content">
@@ -226,7 +243,7 @@
                                                          alt="image"/>
                                                     <img th:unless="${item.productEntity.productImage != null and !item.productEntity.productImage.isEmpty()}"
                                                          src="/images/no-image.png" alt="No image"/>
-                                                </div>
+                                          		</div>
                                                 <p th:text="${item.productEntity.productName}">Product Name</p>
                                                 
 
