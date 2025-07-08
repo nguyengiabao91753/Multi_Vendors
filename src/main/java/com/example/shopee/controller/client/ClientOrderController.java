@@ -50,23 +50,25 @@ public class ClientOrderController {
 
         UserEntity user = optionalUser.get();
 
-        Set<OrderEntity> orders;
+        List<OrderEntity> orders;
 
         if (type == null || type == -99) {
-            orders = user.getOrderEntities();
-            type = -99;
+            orders = new ArrayList<>(user.getOrderEntities());
         } else {
             Integer finalType = type;
             orders = user.getOrderEntities().stream()
                     .filter(order -> order.getStatus() != null && order.getStatus().equals(finalType))
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toList());
         }
 
+        orders.sort(Comparator.comparing(OrderEntity::getCreatedAt).reversed());
+
         model.addAttribute("orders", orders);
-        model.addAttribute("type", type);
+        model.addAttribute("type", type == null ? -99 : type);
 
         return "history";
     }
+
 
 
 

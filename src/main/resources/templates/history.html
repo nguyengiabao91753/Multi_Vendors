@@ -32,6 +32,12 @@
 
                                 <div class="purchase-list" th:if="${orders != null and !#lists.isEmpty(orders)}">
                                     <div class="purchase-item" th:each="order : ${orders}">
+                                        <div class="purchase-item__total-price">
+                                            <p>Order Date Time:
+                                                <span th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}">₫0</span>
+                                            </p>
+                                        </div>
+
                                         <div th:if="${order.productEntity != null}">
                                             <!-- Hiển thị như hiện tại nếu có productEntity -->
                                             <div class="purchase-item__info">
