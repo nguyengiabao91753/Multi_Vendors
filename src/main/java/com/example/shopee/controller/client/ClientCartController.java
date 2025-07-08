@@ -59,16 +59,21 @@ public class ClientCartController {
             model.addAttribute("totalQuantity", 0);
         } else {
             CartEntity cart = cartEntityOpt.get();
-            Set<CartDetailEntity> cartDetails = cart.getCartDetailEntities();
+            Set<CartDetailEntity> cartDetailsSet = cart.getCartDetailEntities();
 
-            int totalQuantity = cartDetails.stream().mapToInt(CartDetailEntity::getQuantity).sum();
-            BigDecimal totalPrice = cartDetails.stream()
+            List<CartDetailEntity> sortedCartDetails = cartDetailsSet.stream()
+                    .sorted(Comparator.comparingLong(CartDetailEntity::getId))
+                    .toList();
+
+            int totalQuantity = sortedCartDetails.stream().mapToInt(CartDetailEntity::getQuantity).sum();
+            BigDecimal totalPrice = sortedCartDetails.stream()
                     .map(detail -> detail.getPriceOfOne().multiply(BigDecimal.valueOf(detail.getQuantity())))
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            model.addAttribute("cartDetails", cartDetails);
+            model.addAttribute("cartDetails", sortedCartDetails);
             model.addAttribute("totalQuantity", totalQuantity);
             model.addAttribute("totalPrice", totalPrice);
+
         }
 
         return "cart";
