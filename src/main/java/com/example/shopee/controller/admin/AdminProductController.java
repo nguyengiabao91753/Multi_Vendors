@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -244,14 +246,26 @@ public class AdminProductController {
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id, HttpSession session) {
-        String email = (String) session.getAttribute("email");
-
-        if (email == null) {
-            return "redirect:/admin/login";
+        Optional<ProductEntity> opt = productRepository.findById(id);
+        String msg = "";
+        if (opt.isPresent()) {
+            ProductEntity productEntity = opt.get();
+            if (productEntity.getOrderEntities() != null && !productEntity.getOrderEntities().isEmpty() &&
+                    productEntity.getOrderDetailEntities() != null && !productEntity.getOrderDetailEntities().isEmpty()) {
+                msg = "Cannot delete product because it has associated orders";
+            } else {
+                productRepository.deleteById(id);
+                return "redirect:/admin/product?delete=true";
+            }
+        } else {
+            msg = "Product not found";
         }
 
-        productRepository.deleteById(id);
-        return "redirect:/admin/product?delete=true";
+        if (!msg.isEmpty()) {
+            String encodedMsg = URLEncoder.encode(msg, StandardCharsets.UTF_8);
+            return "redirect:/admin/product?msg=" + encodedMsg;
+        }
+        return "redirect:/admin/product";
     }
 
     private ProductDto convertToDto(ProductEntity entity) {
