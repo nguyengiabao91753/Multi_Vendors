@@ -136,6 +136,27 @@
             }
 
         </style>
+        <style>
+            .cart-page-content-header,
+            .cart-item__content {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .cart-page-content-header__product,
+            .cart-item__cell-overview {
+                width: 70%;
+            }
+
+            .cart-page-content-header__action,
+            .cart-item__cell-action {
+                margin-left: 50px;
+                width: 30%;
+                text-align: right;
+            }
+        </style>
+
         <div id="cart-page">
             <div class="cart-page-header">
                 <div class="container">
@@ -154,6 +175,11 @@
                     </div>
                 </div>
             </div>
+            <style>
+                .cart-page-content-header__product {
+                    width: 24%;
+                }
+            </style>
             <div class="cart-page-container">
                 <div class="container">
                     <div class="cart-page-content">
@@ -163,7 +189,6 @@
                             <div class="cart-page-content-header__unit-price">Unit Price</div>
                             <div class="cart-page-content-header__quantity">Quantity</div>
                             <div class="cart-page-content-header__total-price">Total Price</div>
-                            <div class="cart-page-content-header__vendor">Vendor</div> <!-- Vendor Column -->
                             <div class="cart-page-content-header__action">Action</div>
                         </div>
 

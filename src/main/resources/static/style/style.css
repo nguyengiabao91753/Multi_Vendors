@@ -3440,10 +3440,6 @@ body {
       flex-wrap: nowrap;
 }
 
-#cart-page .cart-page-content-header__product {
-  width: 46.2795%;
-  color: rgba(0, 0, 0, 0.8);
-}
 
 #cart-page .cart-page-content-header__unit-price {
   width: 15.8802%;
