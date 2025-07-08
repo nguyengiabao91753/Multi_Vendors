@@ -97,7 +97,7 @@
                             <button type="submit"
                                     th:classappend="${inWishlist} ? 'btn-remove-wishlist' : 'btn-add-wishlist'"
                                     style="background: none; border: none;">
-                                <i th:class="${inWishlist} ? 'fas fa-heart text-danger' : 'far fa-heart text-dark'"></i>
+                                <label>Add to Wish List <i th:class="${inWishlist} ? 'fas fa-heart text-danger' : 'far fa-heart text-dark'"></i></label> 
                             </button>
                         </form>
                         <form th:action="@{/client/cart/add}" method="post">

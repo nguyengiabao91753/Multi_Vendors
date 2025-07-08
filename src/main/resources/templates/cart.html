@@ -193,16 +193,30 @@
                         </div>
 
                         <div th:each="item : ${cartDetails}" class="cart-page-content-section">
-                            <!-- Checkbox để chọn sản phẩm -->
-                            <div class="cart-item__cell-checkbox text-center">
-                                <input type="checkbox" class="form-check-input" name="selectedItemIds"
-                                       th:value="${item.id}" form="checkoutForm"/>
-                            </div>
-
+                           
                             <div class="cart-page-content-section__item">
+								<div class="cart-item">
+									<div class="cart-item__cell-vendor d-flex align-items-center mt-2">
+										    <span class="vendor-label me-2">
+										        <img style="width: 50px; height: 50px"
+										             th:if="${item.productEntity.user.avatar != null}"
+										             th:src="@{${item.productEntity.user.avatar}}" alt="Vendor Avatar"/>
+										        <img style="width: 50px; height: 50px"
+										             th:unless="${item.productEntity.user.avatar != null}"
+										             src="https://vieclam.ueh.edu.vn/images/company/avatar/KhKYCBSjQQ_Shopee-logo-512x512.png"
+										             alt="Default Vendor Avatar"/>
+										    </span>
+                                        <p th:text="${item.productEntity.user.fullName}"
+                                           class="vendor-name mb-0"></p>
+                                    </div>
+								</div>
                                 <div class="cart-item">
                                     <div class="cart-item__content">
-
+										<!-- Checkbox để chọn sản phẩm -->
+			                           <div class="cart-item__cell-checkbox text-center">
+			                               <input type="checkbox" class="form-check-input" name="selectedItemIds"
+			                                      th:value="${item.id}" form="checkoutForm"/>
+			                           </div>
                                         <!-- Product Overview -->
                                         <div class="cart-item__cell-overview">
                                             <a th:href="@{'/detail/' + ${item.productEntity.id}}">
@@ -214,19 +228,7 @@
                                                          src="/images/no-image.png" alt="No image"/>
                                                 </div>
                                                 <p th:text="${item.productEntity.productName}">Product Name</p>
-                                                <div class="cart-item__cell-vendor d-flex align-items-center mt-2">
-    <span class="vendor-label me-2">
-        <img style="width: 50px; height: 50px"
-             th:if="${item.productEntity.user.avatar != null}"
-             th:src="@{${item.productEntity.user.avatar}}" alt="Vendor Avatar"/>
-        <img style="width: 50px; height: 50px"
-             th:unless="${item.productEntity.user.avatar != null}"
-             src="https://vieclam.ueh.edu.vn/images/company/avatar/KhKYCBSjQQ_Shopee-logo-512x512.png"
-             alt="Default Vendor Avatar"/>
-    </span>
-                                                    <p th:text="${item.productEntity.user.fullName}"
-                                                       class="vendor-name mb-0"></p>
-                                                </div>
+                                                
 
                                             </a>
                                         </div>
@@ -267,7 +269,7 @@
 
                     </div>
                     <form id="checkoutForm" th:action="@{/client/checkout}" method="get">
-                        <button type="submit" class="btn btn-primary mt-3">Checkout Selected</button>
+                        <button type="submit" class="btn btn-primary mt-3" style="float: right;">Checkout</button>
                     </form>
 
                 </div>

@@ -45,7 +45,4 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
             "GROUP BY w.productEntity " +
             "ORDER BY COUNT(w.id) DESC")
     List<ProductEntity> findMostLikedProducts();
-    
-    
-
 }
