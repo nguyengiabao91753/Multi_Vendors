@@ -61,9 +61,24 @@
                             <span th:text="${product.productName}"></span>
                         </div>
                         <div class="product-rate">
-                            <p>No Reviews</p>
-                            <p th:if="${product.amount != null}">Sold <span th:text="${product.amount}"></span></p>
+                            <div th:if="${reviewCount > 0}">
+        <span>
+    <span th:each="i : ${#numbers.sequence(1, averageStarRounded)}">⭐</span>
+    <span th:each="i : ${#numbers.sequence(averageStarRounded + 1, 5)}">☆</span>
+</span>
+
+                                <span th:text="${reviewCount} + ' reviews'"></span>
+                            </div>
+                            <p th:if="${reviewCount == 0}">No Reviews</p>
+
+                            <p th:if="${soldCount > 0}">
+                                Sold <span th:text="${soldCount}"></span>
+                            </p>
+                            <p th:unless="${soldCount > 0}">
+                                Not sold yet
+                            </p>
                         </div>
+
                         <div class="product-price">
                             <p th:if="${product.salePrice != null}">
                                 ₫<span

@@ -1,9 +1,6 @@
 package com.example.shopee.controller;
 
-import com.example.shopee.entity.CategoryEntity;
-import com.example.shopee.entity.FeedbackEntity;
-import com.example.shopee.entity.ProductEntity;
-import com.example.shopee.entity.UserEntity;
+import com.example.shopee.entity.*;
 import com.example.shopee.repository.*;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,6 +141,44 @@ public class HomeController {
         }
 
         List<FeedbackEntity> feedbackList = feedbackRepository.findByProductEntityOrderByCreatedAtDesc(product);
+
+        int reviewCount = feedbackList.size();
+
+        double averageStar = 0.0;
+        if (!feedbackList.isEmpty()) {
+            averageStar = feedbackList.stream()
+                    .mapToInt(FeedbackEntity::getRatedStar)
+                    .average()
+                    .orElse(0.0);
+        }
+
+        List<OrderEntity> paidOrders = orderRepository.findAllPaidOrders();
+        int soldCount = 0;
+
+        for (OrderEntity order : paidOrders) {
+            if (order.getProductEntity() != null &&
+                    order.getProductEntity().getId().equals(product.getId())) {
+                soldCount += order.getQuantity() != null ? order.getQuantity() : 0;
+            }
+
+            if (order.getOrderDetailEntities() != null) {
+                for (OrderDetailEntity detail : order.getOrderDetailEntities()) {
+                    if (detail.getProduct() != null &&
+                            detail.getProduct().getId().equals(product.getId())) {
+                        soldCount += detail.getQuantity() != null ? detail.getQuantity() : 0;
+                    }
+                }
+            }
+        }
+
+        model.addAttribute("soldCount", soldCount);
+
+
+        model.addAttribute("reviewCount", reviewCount);
+        model.addAttribute("averageStar", averageStar);
+        int averageStarRounded = (int) Math.round(averageStar);
+        model.addAttribute("averageStarRounded", averageStarRounded);
+
         model.addAttribute("inWishlist", inWishlist);
         model.addAttribute("canFeedback", canFeedback);
         model.addAttribute("hasFeedback", hasFeedback);

@@ -43,4 +43,8 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
                                  @Param("year") int year);
 
     List<OrderEntity> findByVnpTxnRef(String txt);
+
+    @Query("SELECT o FROM OrderEntity o WHERE o.paymentStatus = 1")
+    List<OrderEntity> findAllPaidOrders();
+
 }
