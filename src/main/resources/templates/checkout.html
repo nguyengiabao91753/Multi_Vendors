@@ -218,13 +218,14 @@
                         </div>
 
                         <!-- Order Summary Section -->
-                        <div class="checkout-content">
-                            <div class="checkout-content-header">
-                                <p>Product</p>
-                                <p>Unit Price</p>
-                                <p>Quantity</p>
-                                <p>Total</p>
+                        <div class="checkout-content font-large">
+                            <div class="checkout-content-header row fw-bold text-center border-bottom pb-2 mb-3">
+                                <div class="col-5 text-start">Product</div>
+                                <div class="col-2">Unit Price</div>
+                                <div class="col-2">Quantity</div>
+                                <div class="col-3">Total</div>
                             </div>
+
                             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
                             <style>
@@ -241,7 +242,6 @@
                                     align-items: center;
                                     gap: 15px;
                                     font-weight: 500;
-                                    font-size: 1.1rem;
                                 }
                                 .product-name img {
                                     width: 80px;
@@ -250,48 +250,55 @@
                                     border-radius: 6px;
                                     border: 1px solid #ddd;
                                 }
-                                .product-item__details {
-                                    display: flex;
-                                    justify-content: space-between;
-                                    flex-wrap: wrap;
-                                    gap: 10px;
-                                    padding: 10px 0;
-                                }
-                                .product-item__details > div {
-                                    flex: 1 1 150px;
-                                    text-align: center;
-                                }
                                 .vnd-price {
                                     color: #dc3545;
                                     font-weight: 600;
+                                }
+                                .font-large {
+                                    font-size: 1.2rem;
+                                }
+
+                                .font-large .product-name {
+                                    font-size: 1.25rem;
+                                }
+
+                                .font-large .vnd-price {
+                                    font-size: 1.3rem;
                                 }
                             </style>
 
                             <div class="product-list">
                                 <div class="product-item" th:each="product : ${cartDetails}">
-                                    <div class="product-item__details">
-                                        <div class="product-name">
-                                            <div class="img-wrapper">
-                                                <img th:if="${not product.productEntity.productImage.empty}"
-                                                     th:src="${product.productEntity.productImage[0].url_Image}"
-                                                     alt="image"/>
+                                    <div class="row text-center align-items-center">
+                                        <!-- Product -->
+                                        <div class="col-5 text-start">
+                                            <div class="product-name">
+                                                <div class="img-wrapper">
+                                                    <img th:if="${not product.productEntity.productImage.empty}"
+                                                         th:src="${product.productEntity.productImage[0].url_Image}"
+                                                         alt="image" />
+                                                </div>
+                                                <span th:text="${product.productEntity.productName}">Product Name</span>
                                             </div>
-                                            <span th:text="${product.productEntity.productName}">Product Name</span>
                                         </div>
 
-                                        <div class="product-price">
+                                        <!-- Unit Price -->
+                                        <div class="col-2">
                                             <span th:text="${product.priceOfOne}" class="vnd-price">0</span>
                                         </div>
 
-                                        <div class="product-quantity">
+                                        <!-- Quantity -->
+                                        <div class="col-2">
                                             <span th:text="${product.quantity}">0</span>
                                         </div>
 
-                                        <div class="product-total-price">
+                                        <!-- Total Price -->
+                                        <div class="col-3">
                                             <span th:text="${product.totalPrice}" class="vnd-price">0</span>
                                         </div>
                                     </div>
 
+                                    <!-- Voucher Selection -->
                                     <div class="row align-items-center mt-2">
                                         <div class="col-auto">
                                             <label class="form-label mb-0 fw-bold">Select Voucher:</label>
@@ -308,13 +315,11 @@
                                                         th:data-product="${product.productEntity.id}"
                                                         th:text="${voucher.name + ' - ' + voucher.code + ' - Discount ' + voucher.percentDecrease + '%'}">
                                                 </option>
-
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
                         <!-- Footer Section -->
