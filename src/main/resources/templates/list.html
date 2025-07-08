@@ -59,12 +59,26 @@
                             </div>
                         </div>
                         <div class="page-search-mini-page-controller">
-                            <p><span th:text="${currentPage + 1}">1</span>/<span th:text="${totalPages}">100</span></p>
-                            <a th:href="@{/list(keyword=${searchKeyword}, page=${currentPage - 1}, size=${size}, sort=${sort}, order=${order})}"
-                               class="${currentPage == 0 ? 'disabled' : ''}"><i class="fas fa-chevron-left"></i></a>
-                            <a th:href="@{/list(keyword=${searchKeyword}, page=${currentPage + 1}, size=${size}, sort=${sort}, order=${order})}"
-                               class="${currentPage >= totalPages - 1 ? 'disabled' : ''}"><i
-                                    class="fas fa-chevron-right"></i></a>
+                            <p>
+                                <span th:text="${currentPage + 1}">1</span> /
+                                <span th:text="${totalPages}">100</span>
+                            </p>
+
+                            <span th:if="${currentPage == 0}" class="disabled">
+        <i class="fas fa-chevron-left"></i>
+    </span>
+                            <a th:if="${currentPage > 0}"
+                               th:href="@{/list(keyword=${searchKeyword}, page=${currentPage - 1}, size=${size}, sort=${sort}, order=${order})}">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+
+                            <span th:if="${currentPage >= totalPages - 1}" class="disabled">
+        <i class="fas fa-chevron-right"></i>
+    </span>
+                            <a th:if="${currentPage < totalPages - 1}"
+                               th:href="@{/list(keyword=${searchKeyword}, page=${currentPage + 1}, size=${size}, sort=${sort}, order=${order})}">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
                         </div>
                     </div>
                     <ul class="page-search-items">
@@ -90,7 +104,7 @@
                                                 <span>₫</span><span
                                                     th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></span>
                                             </p>
-                                            <p class="sole" th:if="${product.amount != null}">Sold <span
+                                            <p class="sole" th:if="${product.amount != null}">Stock <span
                                                     th:text="${product.amount}"></span></p>
                                         </div>
                                     </div>
@@ -111,26 +125,6 @@
                             No matching products found.
                         </li>
                     </ul>
-                    <div class="page-search-page-controller" th:if="${totalPages > 1}">
-                        <ul class="pagination">
-                            <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
-                                <a class="page-link"
-                                   th:href="@{/list(keyword=${searchKeyword}, page=${currentPage - 1}, size=${size}, sort=${sort}, order=${order})}"><i
-                                        class="fas fa-chevron-left"></i></a>
-                            </li>
-                            <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-                                th:classappend="${currentPage == i ? 'active' : ''}">
-                                <a class="page-link"
-                                   th:href="@{/list(keyword=${searchKeyword}, page=${i}, size=${size}, sort=${sort}, order=${order})}"
-                                   th:text="${i + 1}"></a>
-                            </li>
-                            <li class="page-item" th:classappend="${currentPage >= totalPages - 1 ? 'disabled' : ''}">
-                                <a class="page-link"
-                                   th:href="@{/list(keyword=${searchKeyword}, page=${currentPage + 1}, size=${size}, sort=${sort}, order=${order})}"><i
-                                        class="fas fa-chevron-right"></i></a>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </div>
