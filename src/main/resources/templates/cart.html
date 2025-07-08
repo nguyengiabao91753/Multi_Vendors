@@ -105,6 +105,12 @@
                 border-radius: 50%; /* Rounded image */
                 margin-right: 10px;
             }
+			.cart-item__cell-overview--productName {
+				width: auto; /* Set a fixed size for the product image */
+                height: auto; /* Set a fixed size for the product image */
+               	vertical-align: middle;
+                margin-right: 10px;
+			}
 
             /* Adjustments for mobile */
             @media (max-width: 576px) {
@@ -147,6 +153,7 @@
 
             .cart-page-content-header__product,
             .cart-item__cell-overview {
+				margin-left: 30px;
                 width: 70%;
             }
 
@@ -244,7 +251,10 @@
                                                     <img th:unless="${item.productEntity.productImage != null and !item.productEntity.productImage.isEmpty()}"
                                                          src="/images/no-image.png" alt="No image"/>
                                           		</div>
-                                                <p th:text="${item.productEntity.productName}">Product Name</p>
+												<div>
+													
+                                                	<p th:text="${item.productEntity.productName}" style="vertical-align: middle;">Product Name</p>
+												</div>
                                                 
 
                                             </a>

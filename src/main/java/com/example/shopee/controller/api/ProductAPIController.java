@@ -56,7 +56,7 @@ public class ProductAPIController {
     // ✅ Search by keyword (name, description, category)
     @GetMapping("/search")
     public Page<ProductDto> searchByKeyword(
-            @RequestParam String keyword,
+    		@RequestParam String keyword,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {

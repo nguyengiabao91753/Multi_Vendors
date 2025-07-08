@@ -310,9 +310,9 @@
                                             <div class="col-auto">
                                                 <label class="form-label mb-0 fw-bold">Select Voucher for this shop:</label>
                                             </div>
-                                            <div class="col-auto">
-                                                <select th:name="'voucherSelections[' + ${entry.key} + ']'"
-                                                        class="form-select form-select-sm"
+                                            <div class="col-auto form-group">
+                                                <select  th:name="'voucherSelections[' + ${entry.key} + ']'"
+                                                        class="form-select form-control"
                                                         th:data-vendor-id="${entry.key}">
                                                     <option value="">-- No voucher --</option>
                                                     <option th:each="voucher : ${vouchersPerVendor[entry.key]}"
