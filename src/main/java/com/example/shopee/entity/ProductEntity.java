@@ -50,6 +50,15 @@ public class ProductEntity extends AbstractEntity{
     @JsonManagedReference
     private List<ProductImageEntity> productImage;
 
+    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<OrderEntity> orderEntities;
+
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<OrderDetailEntity> orderDetailEntities;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     @EqualsAndHashCode.Exclude
@@ -68,6 +77,21 @@ public class ProductEntity extends AbstractEntity{
     @ToString.Exclude
     private Set<ProductVoucherEntity> productVoucherEntities;
 
+    public List<OrderEntity> getOrderEntities() {
+        return orderEntities;
+    }
+
+    public void setOrderEntities(List<OrderEntity> orderEntities) {
+        this.orderEntities = orderEntities;
+    }
+
+    public List<OrderDetailEntity> getOrderDetailEntities() {
+        return orderDetailEntities;
+    }
+
+    public void setOrderDetailEntities(List<OrderDetailEntity> orderDetailEntities) {
+        this.orderDetailEntities = orderDetailEntities;
+    }
 
     public Integer getMin() {
         return min;
