@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -92,6 +94,8 @@ public class AdminVoucherController {
 
         UserEntity user = userRepository.findByEmail(email).orElseThrow();
         voucher.setUserEntity(user);
+        voucher.setStatus(1);
+
         voucherRepository.save(voucher);
         return "redirect:/admin/voucher?save=true";
     }
@@ -144,15 +148,26 @@ public class AdminVoucherController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteVoucher(@PathVariable("id") Long id, HttpSession session) {
-        String email = (String) session.getAttribute("email");
-
-        if (email == null) {
-            return "redirect:/admin/login";
+    public String deleteVoucher(@PathVariable("id") Long id) {
+        Optional<VoucherEntity> opt = voucherRepository.findById(id);
+        String msg = "";
+        if (opt.isPresent()) {
+            VoucherEntity voucherEntity = opt.get();
+            if (voucherEntity.getOrderDetails() != null && !voucherEntity.getOrderDetails().isEmpty() &&
+                    voucherEntity.getOrders() != null && !voucherEntity.getOrders().isEmpty()) {
+                msg = "Cannot delete voucher because it has associated orders";
+            } else {
+                voucherRepository.deleteById(id);
+                return "redirect:/admin/voucher?delete=true";
+            }
+        } else {
+            msg = "Voucher not found";
         }
-        VoucherEntity voucherEntity = voucherRepository.findById(id).get();
-        voucherEntity.setStatus(0);
-        voucherRepository.save(voucherEntity);
-        return "redirect:/admin/voucher?delete=true";
+
+        if (!msg.isEmpty()) {
+            String encodedMsg = URLEncoder.encode(msg, StandardCharsets.UTF_8);
+            return "redirect:/admin/voucher?msg=" + encodedMsg;
+        }
+        return "redirect:/admin/URLEncoder";
     }
 }

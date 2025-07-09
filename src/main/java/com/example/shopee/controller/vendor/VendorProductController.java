@@ -11,6 +11,7 @@ import com.example.shopee.repository.ProductRepository;
 import com.example.shopee.repository.UserRepository;
 import com.example.shopee.service.CloudinaryService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -187,9 +190,27 @@ public class VendorProductController {
 
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id) {
-        productRepository.deleteById(id);
-        return "redirect:/vendor/product?delete=true";
+    public String delete(@PathVariable("id") Long id, HttpSession session) {
+        Optional<ProductEntity> opt = productRepository.findById(id);
+        String msg = "";
+        if (opt.isPresent()) {
+            ProductEntity productEntity = opt.get();
+            if (productEntity.getOrderEntities() != null && !productEntity.getOrderEntities().isEmpty() &&
+                    productEntity.getOrderDetailEntities() != null && !productEntity.getOrderDetailEntities().isEmpty()) {
+                msg = "Cannot delete product because it has associated orders";
+            } else {
+                productRepository.deleteById(id);
+                return "redirect:/vendor/product?delete=true";
+            }
+        } else {
+            msg = "Product not found";
+        }
+
+        if (!msg.isEmpty()) {
+            String encodedMsg = URLEncoder.encode(msg, StandardCharsets.UTF_8);
+            return "redirect:/vendor/product?msg=" + encodedMsg;
+        }
+        return "redirect:/vendor/product";
     }
 
     private ProductDto convertToDto(ProductEntity entity) {
