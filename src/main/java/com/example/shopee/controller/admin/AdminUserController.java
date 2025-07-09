@@ -31,7 +31,8 @@ public class AdminUserController {
                                @RequestParam(value = "email", required = false) String emailParam,
                                @RequestParam(value = "role", required = false) String roleParam,
                                @RequestParam(value = "page", defaultValue = "0") int page,
-                               @RequestParam(value = "size", defaultValue = "5") int size, HttpSession session) {
+                               @RequestParam(value = "size", defaultValue = "5") int size,
+                               HttpSession session) {
 
         String email = (String) session.getAttribute("email");
 
@@ -40,6 +41,12 @@ public class AdminUserController {
         }
 
         List<UserEntity> allUsers = userRepository.findAll();
+
+        allUsers = allUsers.stream()
+                .filter(u -> u.getRoleEntities().stream()
+                        .noneMatch(role -> role.getName() == RoleEnum.ADMIN)
+                        )
+                .collect(Collectors.toList());
 
         if (emailParam != null && !emailParam.isEmpty()) {
             allUsers = allUsers.stream()
@@ -56,10 +63,8 @@ public class AdminUserController {
 
         int totalItems = allUsers.size();
         int totalPages = (int) Math.ceil((double) totalItems / size);
-
         int start = page * size;
         int end = Math.min(start + size, totalItems);
-
         List<UserEntity> users = allUsers.subList(start, end);
 
         model.addAttribute("users", users);

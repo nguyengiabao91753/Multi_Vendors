@@ -20,22 +20,22 @@
                             <div class="col-md-6">
                                 <!-- Tên voucher -->
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Tên Voucher <span class="text-danger">*</span></label>
+                                    <label for="name" class="form-label">Name<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="name" th:field="*{name}"
                                            placeholder="Nhập tên voucher" required>
                                 </div>
 
                                 <!-- Mã code -->
                                 <div class="mb-3">
-                                    <label for="code" class="form-label">Mã Voucher <span
+                                    <label for="code" class="form-label">Code <span
                                             class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="code" th:field="*{code}"
-                                           placeholder="Nhập mã giảm giá" required>
+                                           placeholder="Enter code" required>
                                 </div>
 
                                 <!-- Số lượng -->
                                 <div class="mb-3">
-                                    <label for="amount" class="form-label">Số lượng <span
+                                    <label for="amount" class="form-label">Quantity <span
                                             class="text-danger">*</span></label>
                                     <input type="number" min="1" class="form-control" id="amount" th:field="*{amount}"
                                            placeholder="0" required>
@@ -46,7 +46,7 @@
                             <div class="col-md-6">
                                 <!-- Phần trăm giảm -->
                                 <div class="mb-3">
-                                    <label for="percentDecrease" class="form-label">% Giảm <span
+                                    <label for="percentDecrease" class="form-label">% Decrease <span
                                             class="text-danger">*</span></label>
                                     <input type="number" min="1" max="100" class="form-control" id="percentDecrease"
                                            th:field="*{percentDecrease}" placeholder="0" required>
@@ -54,15 +54,17 @@
 
                                 <!-- Thời gian bắt đầu -->
                                 <div class="mb-3">
-                                    <label for="startTime" class="form-label">Bắt đầu <span class="text-danger">*</span></label>
+                                    <label for="startTime" class="form-label">Start Time <span
+                                            class="text-danger">*</span></label>
                                     <input type="datetime-local" class="form-control" id="startTime"
-                                           th:field="*{startTime}" required>
+                                           th:field="*{startTime}" oninput="validateDateTime()" required>
                                 </div>
 
                                 <!-- Thời gian kết thúc -->
                                 <div class="mb-3">
-                                    <label for="endTime" class="form-label">Kết thúc <span class="text-danger">*</span></label>
+                                    <label for="endTime" class="form-label">End Time <span class="text-danger">*</span></label>
                                     <input type="datetime-local" class="form-control" id="endTime" th:field="*{endTime}"
+                                           oninput="validateDateTime()"
                                            required>
                                 </div>
                             </div>
@@ -70,8 +72,8 @@
 
                         <!-- Buttons -->
                         <div class="d-flex justify-content-end mt-4">
-                            <a th:href="@{/vendor/voucher}" class="btn btn-outline-secondary me-2">Hủy</a>
-                            <button type="submit" class="btn btn-primary">Lưu</button>
+                            <a th:href="@{/vendor/voucher}" class="btn btn-outline-secondary me-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Save</button>
                         </div>
                     </form>
                 </div>
@@ -79,5 +81,28 @@
         </div>
     </th:block>
 </th:block>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const now = new Date();
+        const today = now.toISOString().slice(0, 16);
+        document.getElementById('startTime').min = today;
+        document.getElementById('endTime').min = today;
+    });
+
+    function validateDateTime() {
+        const start = document.getElementById('startTime');
+        const end = document.getElementById('endTime');
+
+        if (start.value) {
+            end.min = start.value;
+        }
+
+        if (start.value && end.value && end.value < start.value) {
+            end.setCustomValidity("End Time must be after Start Time!");
+        } else {
+            end.setCustomValidity("");
+        }
+    }
+</script>
 </body>
 </html>

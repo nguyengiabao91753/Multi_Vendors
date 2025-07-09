@@ -53,22 +53,22 @@
                                 <div class="mb-3">
                                     <label class="form-label">% Decrease <span class="text-danger">*</span></label>
                                     <input type="number" min="1" max="100" class="form-control"
-                                           th:field="*{percentDecrease}" disabled>
+                                           th:field="*{percentDecrease}" required>
                                 </div>
 
                                 <!-- Ngày bắt đầu -->
                                 <div class="mb-3">
                                     <label class="form-label">Start date <span class="text-danger">*</span></label>
                                     <input type="datetime-local" class="form-control"
-                                           name="startTime"
-                                           th:value="${startTimeFormatted}" disabled>
+                                           name="startTime" oninput="validateDateTime()"
+                                           th:value="${startTimeFormatted}" required>
                                 </div>
 
                                 <!-- Ngày kết thúc -->
                                 <div class="mb-3">
                                     <label class="form-label">End date <span class="text-danger">*</span></label>
                                     <input type="datetime-local" class="form-control"
-                                           name="endTime"
+                                           name="endTime" oninput="validateDateTime()"
                                            th:value="${endTimeFormatted}" required>
                                 </div>
                             </div>
@@ -85,5 +85,28 @@
         </div>
     </th:block>
 </th:block>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const now = new Date();
+        const today = now.toISOString().slice(0, 16);
+        document.getElementById('startTime').min = today;
+        document.getElementById('endTime').min = today;
+    });
+
+    function validateDateTime() {
+        const start = document.getElementById('startTime');
+        const end = document.getElementById('endTime');
+
+        if (start.value) {
+            end.min = start.value;
+        }
+
+        if (start.value && end.value && end.value < start.value) {
+            end.setCustomValidity("End Time must be after Start Time!");
+        } else {
+            end.setCustomValidity("");
+        }
+    }
+</script>
 </body>
 </html>

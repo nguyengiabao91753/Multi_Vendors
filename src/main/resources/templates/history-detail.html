@@ -202,7 +202,7 @@
                                 <td th:text="${detail.quantity}">0</td>
                                 <td th:text="${detail.totalPrice}" class="vnd-price">0</td>
                                 <td>
-                                    <a th:href="@{'/detail/' + ${detail.product.id}}" class="btn btn-primary btn-sm">Review</a>
+                                    <a th:href="@{'/client/review/' + ${detail.product.id}}" class="btn btn-primary btn-sm">Review</a>
 
                                     <a th:if="${detail.status == 3}" th:href="@{'/client/order/returnDetail/detail/' + ${detail.id}}" class="btn btn-warning btn-sm">Detail Return</a>
 

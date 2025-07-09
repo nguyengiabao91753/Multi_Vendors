@@ -234,38 +234,6 @@
                                 <small th:text="${#temporals.format(feedback.createdAt, 'dd/MM/yyyy HH:mm')}">Date</small>
                             </div>
                         </div>
-
-                        <div th:if="${canFeedback and !hasFeedback}">
-                            <form th:action="@{/client/feedback/submit}" method="post">
-                                <input type="hidden" name="productId" th:value="${product.id}"/>
-                                <div class="mb-3">
-                                    <label for="ratedStar">Stars</label>
-                                    <select id="ratedStar" name="ratedStar" class="form-control" required>
-                                        <option th:each="i : ${#numbers.sequence(1,5)}" th:value="${i}"
-                                                th:text="${i} + ' stars'"></option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="comment">Review Content</label>
-                                    <textarea id="comment" name="comment" class="form-control" rows="3"
-                                              required></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Submit Review</button>
-                            </form>
-                        </div>
-
-                        <div th:if="${hasFeedback}">
-                            <p class="text-success">You have already reviewed this product.</p>
-                        </div>
-
-                        <div th:if="${!canFeedback and user != null}">
-                            <p class="text-warning">Only customers who have purchased this product can leave a
-                                review.</p>
-                        </div>
-
-                        <div th:if="${user == null}">
-                            <p>Please <a th:href="@{/login}">log in</a> to leave a review.</p>
-                        </div>
                     </div>
                 </div>
 

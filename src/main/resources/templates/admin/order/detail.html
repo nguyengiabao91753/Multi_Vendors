@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Details</title>
+    <title>Detail</title>
 
     <style>
         /* Tổng quan */
@@ -317,7 +317,6 @@
     </style>
 </head>
 <body>
-
 <th:block th:replace="layout/admin-layout :: layout">
     <th:block th:fragment="pageContent">
         <div class="container mt-4">
@@ -337,36 +336,42 @@
                     <p><strong>Created At:</strong> <span th:text="${order.createdAt}">01/01/2025</span></p>
                     <p><strong>Buyer:</strong> <span th:text="${order.fullName}">John Doe</span></p>
 
-                    <ul>
-                        <li><strong>Applied Voucher:</strong>
-                            <span th:if="${order.voucherEntity != null}" th:text="${order.voucherEntity.name}"></span>
-                            <span th:if="${order.voucherEntity == null}">Not Applied</span>
-                        </li>
-                        <li><strong>Total Payment:</strong> <span th:text="${order.totalCost}" class="vnd-price">0</span></li>
-                    </ul>
+                    <li><strong>Voucher Used:</strong>
+                        <span th:if="${order.voucherEntity != null}" th:text="${order.voucherEntity.name}"></span>
+                        <span th:if="${order.voucherEntity == null}">Not Applied</span>
+                    </li>
+                    <li><strong>Total Payment:</strong> <span th:text="${order.totalCost}" class="vnd-price">0</span></li>
                 </div>
             </div>
 
-            <h5 class="mt-4">Products in Order</h5>
+            <h5 class="mt-4">Products in the Order</h5>
             <div class="card">
                 <div class="card-body">
                     <table class="table">
                         <thead>
                         <tr>
                             <th>Product</th>
-                            <th>Price</th>
+                            <th>Unit Price</th>
                             <th>Quantity</th>
                             <th>Total</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
+                        <tr th:if="${order.productEntity != null}">
                             <td th:text="${order.productEntity.productName}">Product Name</td>
-                            <td th:text="${order.totalCost.divide(order.quantity)}" class="vnd-price">0</td>
+                            <td th:text="${order.priceOfOne}" class="vnd-price">0</td>
                             <td th:text="${order.quantity}">1</td>
                             <td th:text="${order.totalCost}" class="vnd-price">0</td>
                         </tr>
+
+                        <tr th:each="detail : ${order.orderDetailEntities}" th:if="${order.productEntity == null}">
+                            <td th:text="${detail.product.productName}">Product Name</td>
+                            <td th:text="${detail.priceOfOne}" class="vnd-price">0</td>
+                            <td th:text="${detail.quantity}">1</td>
+                            <td th:text="${detail.totalPrice}" class="vnd-price">0</td>
+                        </tr>
                         </tbody>
+
                     </table>
                 </div>
             </div>
@@ -377,7 +382,6 @@
         </div>
     </th:block>
 </th:block>
-
 
 
 </body>

@@ -38,9 +38,10 @@
                                             </p>
                                         </div>
 
+                                        <!-- CASE 1: Nếu order.productEntity != null -->
                                         <div th:if="${order.productEntity != null}">
-                                            <!-- Hiển thị như hiện tại nếu có productEntity -->
                                             <div class="purchase-item__info">
+                                                <!-- Sản phẩm đơn -->
                                                 <a th:href="@{'/detail/' + ${order.productEntity.id}}">
                                                     <div class="details">
                                                         <div class="img-wrapper">
@@ -51,9 +52,9 @@
                                                             <div class="category">
                                                                 Product Category:
                                                                 <span th:each="cat, iterStat : ${order.productEntity.categories}">
-                                    <span th:text="${cat.categoryName}">Category Name</span>
-                                    <span th:if="${!iterStat.last}">, </span>
-                                </span>
+                            <span th:text="${cat.categoryName}">Category Name</span>
+                            <span th:if="${!iterStat.last}">, </span>
+                        </span>
                                                             </div>
                                                             <div class="quantity" th:text="'x' + ${order.quantity}">x1</div>
                                                         </div>
@@ -63,10 +64,20 @@
                                                     </div>
                                                 </a>
                                             </div>
+
+                                            <!-- Nút điều khiển -->
+                                            <div class="purchase-item__control">
+                                                <div class="button">
+
+                                                    <a th:if="${order.status == 3}" th:href="@{'/client/order/return/detail/' + ${order.id}}">Return Order</a> 
+                                                    <a th:if="${order.status != 3}" th:href="@{'/client/order/detail/' + ${order.id}}">Details</a>
+                                                </div>
+                                            </div>
                                         </div>
 
+
+                                        <!-- CASE 2: Nếu order.productEntity == null -->
                                         <div th:if="${order.productEntity == null}">
-                                            <!-- Hiển thị theo từng orderDetail -->
                                             <div class="purchase-item__info" th:each="detail : ${order.orderDetailEntities}">
                                                 <a th:href="@{'/detail/' + ${detail.product.id}}">
                                                     <div class="details">
@@ -78,9 +89,9 @@
                                                             <div class="category">
                                                                 Product Category:
                                                                 <span th:each="cat, iterStat : ${detail.product.categories}">
-                                    <span th:text="${cat.categoryName}">Category Name</span>
-                                    <span th:if="${!iterStat.last}">, </span>
-                                </span>
+                            <span th:text="${cat.categoryName}">Category Name</span>
+                            <span th:if="${!iterStat.last}">, </span>
+                        </span>
                                                             </div>
                                                             <div class="quantity" th:text="'x' + ${detail.quantity}">x1</div>
                                                         </div>
@@ -89,8 +100,19 @@
                                                         <span th:text="${detail.priceOfOne}" class="vnd-price">₫0</span>
                                                     </div>
                                                 </a>
+
+                                                <!-- Nút điều khiển cho từng sản phẩm -->
+                                                <div class="purchase-item__control">
+                                                    <div class="button">
+
+
+                                                        <a th:if="${order.status == 3}" th:href="@{'/client/order/return/detail/' + ${order.id}}">Return Order</a> 
+                                                        <a th:if="${order.status != 3}" th:href="@{'/client/order/detail/' + ${order.id}}">Details</a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
+
 
                                         <div class="purchase-item__total-price">
                                             <p>Total Price:
@@ -98,14 +120,6 @@
                                             </p>
                                         </div>
 
-                                        <div class="purchase-item__control">
-                                            <div class="button">
-                                                <!-- Lấy link theo order, không theo product -->
-                                                <a th:href="@{'/detail/' + ${order.id}}">Review Product</a> |
-                                                <a th:if="${order.status == 3}" th:href="@{'/client/order/return/detail/' + ${order.id}}">Return Order</a> |
-                                                <a th:if="${order.status != 3}" th:href="@{'/client/order/detail/' + ${order.id}}">Details</a>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
 

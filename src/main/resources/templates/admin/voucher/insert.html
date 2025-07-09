@@ -38,7 +38,8 @@
 
                                 <!-- Quantity -->
                                 <div class="mb-3">
-                                    <label for="amount" class="form-label">Quantity <span class="text-danger">*</span></label>
+                                    <label for="amount" class="form-label">Quantity <span
+                                            class="text-danger">*</span></label>
                                     <input type="number" min="1" class="form-control" id="amount" th:field="*{amount}"
                                            placeholder="0" required>
                                 </div>
@@ -48,23 +49,23 @@
                             <div class="col-md-6">
                                 <!-- Discount Percentage -->
                                 <div class="mb-3">
-                                    <label for="percentDecrease" class="form-label">Discount % <span class="text-danger">*</span></label>
+                                    <label for="percentDecrease" class="form-label">Discount % <span
+                                            class="text-danger">*</span></label>
                                     <input type="number" min="1" max="100" class="form-control" id="percentDecrease"
                                            th:field="*{percentDecrease}" placeholder="0" required>
                                 </div>
 
-                                <!-- Start Time -->
                                 <div class="mb-3">
-                                    <label for="startTime" class="form-label">Start Time <span class="text-danger">*</span></label>
+                                    <label for="startTime" class="form-label">Start Time <span
+                                            class="text-danger">*</span></label>
                                     <input type="datetime-local" class="form-control" id="startTime"
-                                           th:field="*{startTime}" required>
+                                           th:field="*{startTime}" required oninput="validateDateTime()">
                                 </div>
 
-                                <!-- End Time -->
                                 <div class="mb-3">
                                     <label for="endTime" class="form-label">End Time <span class="text-danger">*</span></label>
-                                    <input type="datetime-local" class="form-control" id="endTime" th:field="*{endTime}"
-                                           required>
+                                    <input type="datetime-local" class="form-control" id="endTime"
+                                           th:field="*{endTime}" required oninput="validateDateTime()">
                                 </div>
                             </div>
                         </div>
@@ -80,5 +81,28 @@
         </div>
     </th:block>
 </th:block>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const now = new Date();
+        const today = now.toISOString().slice(0, 16);
+        document.getElementById('startTime').min = today;
+        document.getElementById('endTime').min = today;
+    });
+
+    function validateDateTime() {
+        const start = document.getElementById('startTime');
+        const end = document.getElementById('endTime');
+
+        if (start.value) {
+            end.min = start.value;
+        }
+
+        if (start.value && end.value && end.value < start.value) {
+            end.setCustomValidity("End Time must be after Start Time!");
+        } else {
+            end.setCustomValidity("");
+        }
+    }
+</script>
 </body>
 </html>

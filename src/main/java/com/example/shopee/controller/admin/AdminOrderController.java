@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -24,31 +24,38 @@ public class AdminOrderController {
     @Autowired
     private OrderRepository orderRepository;
 
-    @Autowired
-    private UserRepository userRepository;
 
     @GetMapping("")
     public String orderPage(Model model,
-                            @RequestParam(value = "status", required = false) Integer status,
-                            @RequestParam(value = "page", defaultValue = "0") int page, HttpSession session,
-                            @RequestParam(value = "size", defaultValue = "5") int size) {
-        String email = (String) session.getAttribute("email");
+                            @RequestParam(value = "status", required = false) Integer status) {
+        List<OrderEntity> ordersWithProduct = orderRepository.findAll();
+        List<OrderEntity> ordersWithDetails = orderRepository.findDistinctByOrderDetailEntities_ProductIsNotNull();
 
-        if (email == null) {
-            return "redirect:/admin/login";
+        Map<Long, OrderEntity> mergedOrdersMap = new LinkedHashMap<>();
+        for (OrderEntity order : ordersWithProduct) {
+            mergedOrdersMap.put(order.getId(), order);
+        }
+        for (OrderEntity order : ordersWithDetails) {
+            mergedOrdersMap.putIfAbsent(order.getId(), order);
         }
 
-        List<OrderEntity> orderEntities = orderRepository.findAll();
+        List<OrderEntity> allOrders = new ArrayList<>(mergedOrdersMap.values());
 
+        model.addAttribute("countPending", allOrders.stream().filter(o -> o.getStatus() == -1).count());
+        model.addAttribute("countCancelled", allOrders.stream().filter(o -> o.getStatus() == 0).count());
+        model.addAttribute("countDelivered", allOrders.stream().filter(o -> o.getStatus() == 1).count());
+        model.addAttribute("countShipping", allOrders.stream().filter(o -> o.getStatus() == 2).count());
+        model.addAttribute("countReturn", allOrders.stream().filter(o -> o.getStatus() == 3).count());
+
+        List<OrderEntity> filteredOrders = allOrders;
         if (status != null) {
-            orderEntities = orderEntities.stream()
-                    .filter(o -> o.getStatus() != null && o.getStatus() == status)
+            filteredOrders = allOrders.stream()
+                    .filter(o -> o.getStatus() != null && o.getStatus().equals(status))
                     .collect(Collectors.toList());
         }
 
-        model.addAttribute("orders", orderEntities);
+        model.addAttribute("orders", filteredOrders);
         model.addAttribute("status", status);
-
         model.addAttribute("statusOptions", new Integer[]{-1, 0, 1, 2, 3});
 
         return "admin/order/list";
@@ -63,11 +70,31 @@ public class AdminOrderController {
         }
         OrderEntity order = orderRepository.findById(orderId).orElse(null);
         if (order == null) {
-            return "redirect:/vendor/order";
+            return "redirect:/admin/order";
         }
 
         model.addAttribute("order", order);
 
         return "admin/order/detail";
     }
+
+    @PostMapping("/update-status/{orderId}")
+    public String updateOrderStatus(@PathVariable("orderId") Long orderId,
+                                    @RequestParam("status") Integer status) {
+        OrderEntity order = orderRepository.findById(orderId).orElse(null);
+
+        if (order != null) {
+            order.setStatus(status);
+
+            if (status == 1) {
+                order.setPaymentStatus(1);
+            }
+
+            orderRepository.save(order);
+        }
+
+        return "redirect:/admin/order?update=true";
+    }
+
+
 }

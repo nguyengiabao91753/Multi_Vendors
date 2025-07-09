@@ -11,85 +11,195 @@
 <th:block th:replace="layout/admin-layout :: layout">
     <th:block th:fragment="pageContent">
         <div class="container mt-4">
+            <h3 class="mb-4">Your Order List</h3>
 
+            <!-- Display order list -->
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">Order List</h4>
-                </div>
                 <div class="card-body">
-                    <table class="table table-bordered table-hover">
-                        <thead class="table-light">
+                    <ul class="nav nav-tabs mb-3">
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               th:classappend="${status} == null ? 'active'"
+                               th:href="@{/admin/order}">All</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               th:classappend="${status} == -1 ? 'active'"
+                               th:href="@{/admin/order(status=-1)}">
+                                Pending Confirmation (<span th:text="${countPending}">0</span>)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               th:classappend="${status} == 0 ? 'active'"
+                               th:href="@{/admin/order(status=0)}">
+                                Cancelled (<span th:text="${countCancelled}">0</span>)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               th:classappend="${status} == 1 ? 'active'"
+                               th:href="@{/admin/order(status=1)}">
+                                Delivered (<span th:text="${countDelivered}">0</span>)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               th:classappend="${status} == 2 ? 'active'"
+                               th:href="@{/admin/order(status=2)}">
+                                Shipping (<span th:text="${countShipping}">0</span>)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               th:classappend="${status} == 3 ? 'active'"
+                               th:href="@{/admin/order(status=3)}">
+                                Returning (<span th:text="${countReturn}">0</span>)
+                            </a>
+                        </li>
+                    </ul>
+                    <table class="table table-striped table-bordered">
+                        <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Customer Name</th>
-                            <th>Email</th>
-                            <th>Phone Number</th>
-                            <th>Address</th>
-                            <th>Total Amount</th>
-                            <th>Payment Method</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <th scope="col">Order</th>
+                            <th scope="col">Buyer</th>
+                            <th scope="col">Payment Method</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Total Cost</th>
+                            <th scope="col">Payment Status</th>
+                            <th scope="col">Order Status</th>
+                            <th scope="col">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="order, iterStat : ${orders}">
-                            <td th:text="${iterStat.index + 1}">1</td>
+                        <tr th:each="order : ${orders}">
+                            <td th:text="${order.id}">#1234</td>
                             <td th:text="${order.fullName}">John Doe</td>
-                            <td th:text="${order.email}">example@email.com</td>
-                            <td th:text="${order.phone}">0123456789</td>
-                            <td th:text="${order.address}">New York</td>
-                            <td th:text="${#numbers.formatDecimal(order.totalCost, 0, 'COMMA', 0, 'POINT')} + ' VND'">
-                                1,000,000 VND
+                            <td th:text="${order.method}">Credit Card</td>
+                            <td th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}">2023-01-01 12:00</td>
+                            <td th:text="${order.totalCost}" class="vnd-price">100,000 VND</td>
+                            <td>
+                                <span th:if="${order.paymentStatus == 1}" class="badge bg-success">Paid</span>
+                                <span th:if="${order.paymentStatus != 1}" class="badge bg-warning text-dark">Unpaid</span>
                             </td>
-                            <td th:text="${order.method}">Cash on Delivery</td>
-                            <td th:text="${order.status == -1 ? 'Pending Confirmation' :
-              order.status == 0 ? 'Cancelled' :
-              order.status == 1 ? 'Delivered' :
-              order.status == 2 ? 'Shipping' : 'Returning'}">Processing
+                            <td>
+                                <div th:switch="${order.status}">
+                                    <!-- Pending Confirmation -->
+                                    <div th:case="-1">
+                                        <form th:action="@{/admin/order/update-status/{orderId}(orderId=${order.id})}" method="post" style="display:inline">
+                                            <input type="hidden" name="status" value="0"/>
+                                            <button type="submit" class="btn btn-danger btn-sm">Cancel Order</button>
+                                        </form>
+                                        <form th:action="@{/admin/order/update-status/{orderId}(orderId=${order.id})}" method="post" style="display:inline">
+                                            <input type="hidden" name="status" value="2"/>
+                                            <button type="submit" class="btn btn-warning btn-sm">Shipping</button>
+                                        </form>
+                                    </div>
+
+                                    <!-- Shipping -->
+                                    <div th:case="2">
+                                        <form th:action="@{/admin/order/update-status/{orderId}(orderId=${order.id})}" method="post" style="display:inline">
+                                            <input type="hidden" name="status" value="0"/>
+                                            <button type="submit" class="btn btn-danger btn-sm">Cancel Order</button>
+                                        </form>
+                                        <form th:action="@{/admin/order/update-status/{orderId}(orderId=${order.id})}" method="post" style="display:inline">
+                                            <input type="hidden" name="status" value="1"/>
+                                            <button type="submit" class="btn btn-success btn-sm">Delivered</button>
+                                        </form>
+                                    </div>
+
+                                    <div th:case="1">
+                                        <span class="badge bg-success">Delivered</span>
+                                    </div>
+                                    <div th:case="0">
+                                        <span class="badge bg-secondary">Cancelled</span>
+                                    </div>
+                                    <div th:case="3">
+                                        <span class="badge bg-secondary">Returning</span>
+                                    </div>
+
+                                    <div th:case="*">
+                                        <span class="badge bg-dark">Unknown</span>
+                                    </div>
+                                </div>
                             </td>
 
                             <td>
-                                <a th:href="@{'/admin/order/detail/' + ${order.id}}"
-                                   class="btn btn-info btn-sm" title="Details">
-                                    <i class="bi bi-eye-fill"></i>
-                                </a>
+                                <a th:href="@{/admin/order/detail/{orderId}(orderId=${order.id})}"
+                                   class="btn btn-info btn-sm">View Details</a>
                             </td>
-                        </tr>
-                        <tr th:if="${#lists.isEmpty(orders)}">
-                            <td colspan="9" class="text-center">No orders found.</td>
                         </tr>
                         </tbody>
                     </table>
-
-                    <!-- Pagination (if any) -->
-                    <nav th:if="${totalPages > 1}">
-                        <ul class="pagination justify-content-center mt-3">
-                            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                                <a class="page-link"
-                                   th:href="@{/admin/orders(page=${currentPage - 1})}">
-                                    Previous
-                                </a>
-                            </li>
-
-                            <li class="page-item"
-                                th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-                                th:classappend="${i == currentPage} ? 'active'">
-                                <a class="page-link"
-                                   th:href="@{/admin/orders(page=${i})}"
-                                   th:text="${i + 1}"></a>
-                            </li>
-
-                            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
-                                <a class="page-link"
-                                   th:href="@{/admin/orders(page=${currentPage + 1})}">
-                                    Next
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
                 </div>
             </div>
+
+            <!-- Pagination -->
+            <nav th:if="${totalPages > 1}">
+                <ul class="pagination justify-content-center mt-3">
+                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/admin/order(page=${currentPage - 1})}">
+                            Previous
+                        </a>
+                    </li>
+
+                    <li class="page-item"
+                        th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                        th:classappend="${i == currentPage} ? 'active'">
+                        <a class="page-link"
+                           th:href="@{/admin/order(page=${i})}"
+                           th:text="${i + 1}"></a>
+                    </li>
+
+                    <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/admin/order(page=${currentPage + 1})}">
+                            Next
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                document.querySelectorAll(".vnd-price").forEach(el => {
+                    const value = parseFloat(el.innerText);
+                    if (!isNaN(value)) {
+                        el.innerText = new Intl.NumberFormat('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND'
+                        }).format(value);
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            function updateOrderStatus(selectElement) {
+                var orderId = selectElement.getAttribute('data-id');
+                var status = selectElement.value;
+
+                console.log(orderId)
+                console.log(status)
+                fetch(`/admin/order/update-status/${orderId}?status=${status}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `status=${status}`
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert("Status updated successfully");
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert("Status update failed");
+                    });
+            }
+        </script>
     </th:block>
 </th:block>
 

@@ -41,37 +41,7 @@ public class ClientHomeController {
         return "index";
     }
 
-    @PostMapping("/feedback/submit")
-    public String submitFeedback(@RequestParam Long productId,
-                                 @RequestParam Integer ratedStar,
-                                 @RequestParam String comment) {
 
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<UserEntity> optionalUser = userRepository.findByEmail(email);
-
-        if (optionalUser.isEmpty()) {
-            return "redirect:/login";
-        }
-
-        UserEntity user = optionalUser.get();
-
-        ProductEntity product = productRepository.findById(productId).orElseThrow();
-
-        boolean bought = orderRepository.hasUserBoughtProduct(productId, user.getId());
-        boolean alreadyFeedback = feedbackRepository.existsByUserEntityAndProductEntity(user, product);
-
-        if (bought && !alreadyFeedback) {
-            FeedbackEntity feedback = new FeedbackEntity();
-            feedback.setUserEntity(user);
-            feedback.setProductEntity(product);
-            feedback.setRatedStar(ratedStar);
-            feedback.setComment(comment);
-            feedback.setCreatedAt(LocalDateTime.now());
-            feedbackRepository.save(feedback);
-        }
-
-        return "redirect:/detail/" + productId;
-    }
 
 
 }

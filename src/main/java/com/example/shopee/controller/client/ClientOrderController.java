@@ -1,6 +1,7 @@
 package com.example.shopee.controller.client;
 
 import java.time.Duration;
+
 import com.example.shopee.config.VNPayConfig;
 import com.example.shopee.entity.*;
 import com.example.shopee.enums.ReturnStatus;
@@ -39,6 +40,9 @@ public class ClientOrderController {
     @Autowired
     private ReturnRepository returnRepository;
 
+    @Autowired
+    private FeedbackRepository feedbackRepository;
+
 
     @GetMapping("")
     public String orderHistory(@RequestParam(name = "type", required = false) Integer type, Model model) {
@@ -49,7 +53,6 @@ public class ClientOrderController {
         }
 
         UserEntity user = optionalUser.get();
-
         List<OrderEntity> orders;
 
         if (type == null || type == -99) {
@@ -63,13 +66,14 @@ public class ClientOrderController {
 
         orders.sort(Comparator.comparing(OrderEntity::getCreatedAt).reversed());
 
+
+
         model.addAttribute("orders", orders);
         model.addAttribute("type", type == null ? -99 : type);
 
+
         return "history";
     }
-
-
 
 
     @GetMapping("/detail/{id}")
@@ -102,7 +106,6 @@ public class ClientOrderController {
         model.addAttribute("daysBetween", daysBetween);
         return "return";
     }
-
 
 
     @PostMapping("/return/save")
@@ -186,7 +189,6 @@ public class ClientOrderController {
         model.addAttribute("daysBetween", daysBetween);
         return "returnDetail";
     }
-
 
 
     @PostMapping("/returnDetail/save")

@@ -22,21 +22,21 @@
                             <div class="col-md-6">
                                 <!-- Tên voucher -->
                                 <div class="mb-3">
-                                    <label class="form-label">Tên Voucher <span class="text-danger">*</span></label>
+                                    <label class="form-label">Name<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" th:field="*{name}" placeholder="Tên voucher"
                                            required>
                                 </div>
 
                                 <!-- Mã voucher -->
                                 <div class="mb-3">
-                                    <label class="form-label">Mã <span class="text-danger">*</span></label>
+                                    <label class="form-label">Code <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" th:field="*{code}" placeholder="Mã giảm giá"
                                            disabled>
                                 </div>
 
                                 <!-- Số lượng -->
                                 <div class="mb-3">
-                                    <label class="form-label">Số lượng <span class="text-danger">*</span></label>
+                                    <label class="form-label">Quantity <span class="text-danger">*</span></label>
                                     <input type="number" min="1" class="form-control" th:field="*{amount}" required>
                                 </div>
                             </div>
@@ -45,24 +45,24 @@
                             <div class="col-md-6">
                                 <!-- % giảm -->
                                 <div class="mb-3">
-                                    <label class="form-label">% Giảm <span class="text-danger">*</span></label>
+                                    <label class="form-label">% Decrease <span class="text-danger">*</span></label>
                                     <input type="number" min="1" max="100" class="form-control"
-                                           th:field="*{percentDecrease}" disabled>
+                                           th:field="*{percentDecrease}" required>
                                 </div>
 
                                 <!-- Ngày bắt đầu -->
                                 <div class="mb-3">
-                                    <label class="form-label">Bắt đầu <span class="text-danger">*</span></label>
+                                    <label class="form-label">Start Time <span class="text-danger">*</span></label>
                                     <input type="datetime-local" class="form-control"
-                                           name="startTime"
-                                           th:value="${startTimeFormatted}" disabled>
+                                           name="startTime" oninput="validateDateTime()"
+                                           th:value="${startTimeFormatted}" required>
                                 </div>
 
                                 <!-- Ngày kết thúc -->
                                 <div class="mb-3">
-                                    <label class="form-label">Kết thúc <span class="text-danger">*</span></label>
+                                    <label class="form-label">End Time<span class="text-danger">*</span></label>
                                     <input type="datetime-local" class="form-control"
-                                           name="endTime"
+                                           name="endTime" oninput="validateDateTime()"
                                            th:value="${endTimeFormatted}" required>
                                 </div>
                             </div>
@@ -70,7 +70,7 @@
 
                         <!-- Buttons -->
                         <div class="d-flex justify-content-end mt-4">
-                            <a th:href="@{/vendor/voucher}" class="btn btn-outline-secondary me-2">Hủy</a>
+                            <a th:href="@{/vendor/voucher}" class="btn btn-outline-secondary me-2">Cancel</a>
                             <button type="submit" class="btn btn-primary">Update</button>
                         </div>
                     </form>
@@ -79,5 +79,28 @@
         </div>
     </th:block>
 </th:block>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const now = new Date();
+        const today = now.toISOString().slice(0, 16);
+        document.getElementById('startTime').min = today;
+        document.getElementById('endTime').min = today;
+    });
+
+    function validateDateTime() {
+        const start = document.getElementById('startTime');
+        const end = document.getElementById('endTime');
+
+        if (start.value) {
+            end.min = start.value;
+        }
+
+        if (start.value && end.value && end.value < start.value) {
+            end.setCustomValidity("End Time must be after Start Time!");
+        } else {
+            end.setCustomValidity("");
+        }
+    }
+</script>
 </body>
 </html>

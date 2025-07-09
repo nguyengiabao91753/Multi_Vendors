@@ -22,10 +22,11 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
     List<OrderEntity> findAllByProductEntity_User(UserEntity userEntity);
     List<OrderEntity> findDistinctByOrderDetailEntities_Product_User(UserEntity userEntity);
+    List<OrderEntity> findDistinctByOrderDetailEntities_ProductIsNotNull();
 
 
     @Query("SELECT COUNT(o) > 0 FROM OrderEntity o " +
-            "WHERE o.productEntity.id = :productId AND o.userEntity.id = :userId")
+            "WHERE o.productEntity.id = :productId AND o.userEntity.id = :userId and o.status = 1")
     boolean hasUserBoughtProduct(@Param("productId") Long productId, @Param("userId") Long userId);
 
     @Query("SELECT SUM(od.totalCost) FROM OrderEntity od " +
