@@ -10,19 +10,21 @@
 <th:block th:replace="layout/user-layout :: layout">
     <th:block th:fragment="pageContent">
         <style>
-            body {
-                font-family: Arial, saans-serif;
-                background-color: #f8f8f8;
-                margin: 0;
-                padding: 0;
-            }
+			body {
+	            font-family: 'Helvetica Neue', Arial, sans-serif;
+	            background-color: #f5f5f5;
+	            margin: 0;
+	            padding: 0;
+	            color: #222222;
+	        }
 
             .container {
-                max-width: 960px;
+                max-width: 1000px;
                 margin: 30px auto;
                 padding: 30px;
                 background: white;
-                box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+				border-radius: 8px;
             }
 
             .checkout-status h1 {
@@ -45,7 +47,7 @@
             .order-info h3,
             .order-details h3 {
                 font-size: 22px;
-                color: #333;
+                color: #222222;
                 border-bottom: 2px solid #eee;
                 padding-bottom: 10px;
                 margin-bottom: 20px;
@@ -65,16 +67,19 @@
             .order-details table {
                 width: 100%;
                 border-collapse: collapse;
+				font-size: 14px;
             }
 
             .order-details th, .order-details td {
                 padding: 12px;
-                border: 1px solid #ddd;
+                border: 1px solid #e0e0e0;
                 text-align: left;
             }
 
             .order-details th {
-                background-color: #f7f7f7;
+				background-color: #fafafa;
+	            color: #757575;
+	            font-weight: 500;
             }
 
             .footer {
@@ -93,6 +98,51 @@
             .footer a:hover {
                 text-decoration: underline;
             }
+			.btn {
+			            padding: 6px 12px;
+			            border-radius: 4px;
+			            text-decoration: none;
+			            font-size: 12px;
+			            font-weight: 500;
+			        }
+			        .btn-primary {
+			            background-color: #ee4d2d;
+			            color: #ffffff;
+			            border: none;
+			        }
+			        .btn-primary:hover {
+			            background-color: #d0391e;
+			        }
+			        .btn-danger {
+			            background-color: #ffffff;
+			            color: #ee4d2d;
+			            border: 1px solid #ee4d2d;
+			        }
+			        .btn-danger:hover {
+			            background-color: #ee4d2d;
+			        }
+			        .vnd-price {
+			            color: #ee4d2d;
+			            font-weight: 500;
+			        }
+					.back-btn {
+					    display: inline-block;
+					    padding: 8px 15px;
+					    margin: 10px 0;
+					    background-color: #ffffff;
+					    color: #ee4d2d;
+					    border: 1px solid #ee4d2d;
+					    border-radius: 4px;
+					    text-decoration: none;
+					    font-size: 14px;
+					    font-weight: 500;
+					    transition: background-color 0.3s, color 0.3s;
+					}
+
+					.back-btn:hover {
+					    background-color: #fff5f5;
+					    color: #d0391e;
+					}
         </style>
         <style>
             #user-page {
@@ -101,7 +151,7 @@
         </style>
         <div id="user-page">
             <div class="container">
-                <div class="user-page-wrapper">
+               		<a th:href="@{/client/order}" class="back-btn">Back</a>
                     <div class="order-info">
                         <h3>Order Information</h3>
                         <ul>
@@ -152,9 +202,9 @@
                                 <td th:text="${detail.quantity}">0</td>
                                 <td th:text="${detail.totalPrice}" class="vnd-price">0</td>
                                 <td>
-                                    <a th:href="@{'/detail/' + ${detail.product.id}}" class="btn btn-primary btn-sm">Review</a> |
+                                    <a th:href="@{'/detail/' + ${detail.product.id}}" class="btn btn-primary btn-sm">Review</a>
 
-                                    <a th:if="${detail.status == 3}" th:href="@{'/client/order/returnDetail/detail/' + ${detail.id}}" class="btn btn-warning btn-sm">Detail Return</a> |
+                                    <a th:if="${detail.status == 3}" th:href="@{'/client/order/returnDetail/detail/' + ${detail.id}}" class="btn btn-warning btn-sm">Detail Return</a>
 
                                     <th:block th:if="${daysBetween <= 7 && detail.order.status == 1}">
                                         <a th:href="@{'/client/order/returnDetail/' + ${detail.id}}"
@@ -165,7 +215,7 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
+                
             </div>
         </div>
     </th:block>
