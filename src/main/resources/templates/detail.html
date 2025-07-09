@@ -64,7 +64,7 @@
                             <div th:if="${reviewCount > 0}">
         <span>
     <span th:each="i : ${#numbers.sequence(1, averageStarRounded)}">⭐</span>
-    <span th:each="i : ${#numbers.sequence(averageStarRounded + 1, 5)}">☆</span>
+    
 </span>
 
                                 <span th:text="${reviewCount} + ' reviews'"></span>
@@ -228,7 +228,7 @@
                                 <strong th:text="${feedback.userEntity.fullName}">User Name</strong>
                                 <div>
                                     <span th:each="i : ${#numbers.sequence(1, feedback.ratedStar)}">⭐</span>
-                                    <span th:each="i : ${#numbers.sequence(feedback.ratedStar + 1, 5)}">☆</span>
+                                    
                                 </div>
                                 <p th:text="${feedback.comment}">Review content</p>
                                 <small th:text="${#temporals.format(feedback.createdAt, 'dd/MM/yyyy HH:mm')}">Date</small>
